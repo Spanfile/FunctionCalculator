@@ -146,6 +146,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TREE_ELEMENT.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ARITHMETIC_TYPE.h" />
+    <ClInclude Include="interpreter.h" />
+    <ClInclude Include="parser.h" />
+    <ClInclude Include="TOKEN.h" />
+    <ClInclude Include="tokeniser.h" />
+    <ClInclude Include="TREE_ELEMENT.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
