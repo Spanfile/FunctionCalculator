@@ -21,6 +21,9 @@
     <ClCompile Include="TREE_ELEMENT.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tokeniser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tokeniser.h">

@@ -1,52 +1,49 @@
 #include "TREE_ELEMENT.h"
 
-double get_value_of_tree_element(TREE_ELEMENT &element)
+double get_tree_element_value(TREE_ELEMENT &element)
 {
-    switch (element.type)
+    // calculate a value for the element if it's an arithmetic element
+    if (element.type == ARITHMETIC)
     {
-    case NUMBER:
-        return element.value;
-
-    case ARITHMETIC:
         switch (element.arithmetic_type)
         {
         case ADDITION:
             element.value =
-                get_value_of_tree_element(*element.child1) +
-                get_value_of_tree_element(*element.child2);
+                get_tree_element_value(*element.child1) +
+                get_tree_element_value(*element.child2);
             break;
 
         case NEGATION:
             element.value =
-                get_value_of_tree_element(*element.child1) -
-                get_value_of_tree_element(*element.child2);
+                get_tree_element_value(*element.child1) -
+                get_tree_element_value(*element.child2);
             break;
 
         case MULTIPLICATION:
             element.value =
-                get_value_of_tree_element(*element.child1) *
-                get_value_of_tree_element(*element.child2);
+                get_tree_element_value(*element.child1) *
+                get_tree_element_value(*element.child2);
             break;
 
         case DIVISION:
             element.value =
-                get_value_of_tree_element(*element.child1) /
-                get_value_of_tree_element(*element.child2);
+                get_tree_element_value(*element.child1) /
+                get_tree_element_value(*element.child2);
             break;
 
         case POWER:
             element.value = pow(
-                get_value_of_tree_element(*element.child1),
-                get_value_of_tree_element(*element.child2));
+                get_tree_element_value(*element.child1),
+                get_tree_element_value(*element.child2));
             break;
 
         case REMAINDER:
             element.value = remainder(
-                get_value_of_tree_element(*element.child1),
-                get_value_of_tree_element(*element.child2));
+                get_tree_element_value(*element.child1),
+                get_tree_element_value(*element.child2));
             break;
         }
-
-        return element.value;
     }
+
+    return element.value;
 }
