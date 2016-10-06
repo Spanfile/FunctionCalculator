@@ -124,6 +124,7 @@ Toiminnat priorisoituna
 6.2          Käyttäjän omien |
      funktioiden varastointi |
                   tiedostoon | mahdollisesti toteutetaan
+7          "Lazy evaluation" | ehkä toteutetaan
                   
 Versiohistoria
 ==============

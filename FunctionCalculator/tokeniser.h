@@ -4,4 +4,4 @@
 #include "TOKEN.h"
 using namespace std;
 
-TOKEN* tokenise(char* input, int len);
+TOKEN** tokenise(char*, size_t, size_t*);
