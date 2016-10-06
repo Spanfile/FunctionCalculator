@@ -28,7 +28,7 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
                 end++;
 
                 char next = input[i + 1];
-                if ((!isdigit(next) && next != '.') || next == ' ')
+                if (!isalpha(next) || next == ' ')
                     break;
 
                 i++;
