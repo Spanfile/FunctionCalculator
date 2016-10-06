@@ -1,6 +1,5 @@
 #include <string>
 #include <ctype.h>
-#include <stdlib.h>
 #include <stdio.h>
 
 #include "tokeniser.h"
@@ -17,6 +16,9 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
         TOKEN* token_ptr = new TOKEN();
         char c = input[i];
 
+        size_t sub_len = 0;
+        int read_start = 0;
+
         if (isalpha(c)) // names
         {
             int start = i;
@@ -27,25 +29,43 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
                     break;
 
                 c = input[i];
+                end++;
 
-                if (!isalpha(c) || c == ' ')
+                char next = input[i + 1];
+                if ((!isdigit(next) && next != '.') || next == ' ')
                     break;
 
                 i++;
-                end++;
             }
 
-            size_t sub_len = end - start;
-
-            token_ptr->value_length = sub_len;
-            token_ptr->value = (char*)malloc(sub_len + 1);
-            strncpy_s(token_ptr->value, sub_len + 1, &input[start], sub_len);
+            sub_len = end - start;
+            read_start = start;
 
             token_ptr->type = NAME;
         }
         else if (isdigit(c)) // numbers
         {
+            int start = i;
+            int end = start;
+            while (true)
+            {
+                if (i >= (int)len)
+                    break;
 
+                c = input[i];
+                end++;
+
+                char next = input[i + 1];
+                if ((!isdigit(next) && next != '.') || next == ' ')
+                    break;
+
+                i++;
+            }
+
+            sub_len = end - start;
+            read_start = start;
+
+            token_ptr->type = NUMBER;
         }
         else // everything else
         {
@@ -53,8 +73,10 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
             {
             default:
                 // TODO
+                printf("Unknown character found (i %d): %c", i, c);
                 break;
 
+            case ' ':
             case '\0':
                 continue;
 
@@ -91,11 +113,15 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
                 break;
             }
 
-            size_t size = 1;
-            token_ptr->value_length = size;
-            token_ptr->value = (char*)malloc(size + 1);
-            strncpy_s(token_ptr->value, size + 1, &input[i], size);
+            /* we techically don't need the value of the token with these
+            arithmetic tokens, but ech */
+            sub_len = 1;
+            read_start = i;
         }
+
+        token_ptr->value_length = sub_len;
+        token_ptr->value = (char*)malloc(sub_len + 1);
+        strncpy_s(token_ptr->value, sub_len + 1, &input[read_start], sub_len);
 
         if (*token_count == tokens_size - 1)
             tokens = (TOKEN**)realloc(tokens, (tokens_size += 16) * sizeof(*tokens));

@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "tokeniser.h"
 
@@ -31,8 +30,6 @@ int main(void)
     read_buffer[read_len - 1] = '\0';
     read_len--;
 
-    // allocate space for just a single token, it will be reallocated later
-    // TODO: bad
     size_t token_count = 0;
     TOKEN** tokens = tokenise(read_buffer, read_len, &token_count);
 
@@ -44,6 +41,8 @@ int main(void)
     }
 
     free(tokens);
+
+    getchar();
 
     return 0;
 }
