@@ -1,7 +1,3 @@
-#include <string>
-#include <ctype.h>
-#include <stdio.h>
-
 #include "tokeniser.h"
 
 TOKEN** tokenise(char* input, size_t len, size_t* token_count)

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ARITHMETIC_TYPE.h"
 #include <math.h>
 

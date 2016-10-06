@@ -153,9 +153,11 @@
   <ItemGroup>
     <ClInclude Include="ARITHMETIC_TYPE.h" />
     <ClInclude Include="interpreter.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="TOKEN.h" />
     <ClInclude Include="tokeniser.h" />
+    <ClInclude Include="TOKENTYPE.h" />
     <ClInclude Include="TREE_ELEMENT.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

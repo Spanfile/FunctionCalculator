@@ -1,8 +1,4 @@
-#include <stdio.h>
-
-#include "tokeniser.h"
-
-using namespace std;
+#include "main.h"
 
 int main(void)
 {
