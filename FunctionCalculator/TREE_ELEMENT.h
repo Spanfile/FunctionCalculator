@@ -24,4 +24,4 @@ struct TREE_ELEMENT {
     TREE_ELEMENT* child2;
 };
 
-double get_tree_element_value(struct TREE_ELEMENT&);
+double get_tree_element_value(TREE_ELEMENT&);

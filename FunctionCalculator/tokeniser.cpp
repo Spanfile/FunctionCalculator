@@ -84,7 +84,7 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
                 break;
 
             case '*':
-                token_ptr->type = TOKEN_MUILTIPLICATION;
+                token_ptr->type = TOKEN_MULTIPLICATION;
                 break;
 
             case '/':

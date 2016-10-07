@@ -1,5 +1,7 @@
 #include "main.h"
 
+void free_elem(TREE_ELEMENT*);
+
 int main(void)
 {
     //size_t is just typedef'd to an unsigned integer
@@ -31,7 +33,7 @@ int main(void)
     int index = 0;
     TREE_ELEMENT* root_elem = parse(tokens, token_count, &index);
 
-    free(root_elem);
+    free_elem(root_elem);
 
     for (int i = 0; i < (int)token_count; i++)
         free(tokens[i]);
@@ -41,4 +43,15 @@ int main(void)
     getchar();
 
     return 0;
+}
+
+void free_elem(TREE_ELEMENT* elem)
+{
+    if (elem->child1 != nullptr)
+        free_elem(elem->child1);
+
+    if (elem->child2 != nullptr)
+        free_elem(elem->child2);
+
+    free(elem);
 }
