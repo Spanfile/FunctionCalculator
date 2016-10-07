@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="tokeniser.cpp" />
     <ClCompile Include="TREE_ELEMENT.cpp" />
   </ItemGroup>

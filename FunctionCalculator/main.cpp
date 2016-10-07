@@ -23,18 +23,18 @@ int main(void)
     } while (input != '\n');
 
     // replace the newline at the end with a null terminating byte
-    read_buffer[read_len - 1] = '\0';
-    read_len--;
+    read_buffer[--read_len] = '\0';
 
     size_t token_count = 0;
     TOKEN** tokens = tokenise(read_buffer, read_len, &token_count);
 
-    for (int i = 0; i < (int)token_count; i++)
-    {
-        printf("Token #%d: %d, %s\n", i, tokens[i]->type, tokens[i]->value);
+    int index = 0;
+    TREE_ELEMENT* root_elem = parse(tokens, token_count, &index);
 
+    free(root_elem);
+
+    for (int i = 0; i < (int)token_count; i++)
         free(tokens[i]);
-    }
 
     free(tokens);
 

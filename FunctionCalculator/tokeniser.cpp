@@ -37,7 +37,7 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
             sub_len = end - start;
             read_start = start;
 
-            token_ptr->type = NAME;
+            token_ptr->type = TOKEN_NAME;
         }
         else if (isdigit(c)) // numbers
         {
@@ -61,7 +61,7 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
             sub_len = end - start;
             read_start = start;
 
-            token_ptr->type = NUMBER;
+            token_ptr->type = TOKEN_NUMBER;
         }
         else // everything else
         {
@@ -76,35 +76,35 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
                 continue;
 
             case '+':
-                token_ptr->type = ADDITION;
+                token_ptr->type = TOKEN_ADDITION;
                 break;
 
             case '-':
-                token_ptr->type = NEGATION;
+                token_ptr->type = TOKEN_NEGATION;
                 break;
 
             case '*':
-                token_ptr->type = MUILTIPLICATION;
+                token_ptr->type = TOKEN_MUILTIPLICATION;
                 break;
 
             case '/':
-                token_ptr->type = DIVISION;
+                token_ptr->type = TOKEN_DIVISION;
                 break;
 
             case '^':
-                token_ptr->type = POWER;
+                token_ptr->type = TOKEN_POWER;
                 break;
 
             case '%':
-                token_ptr->type = REMAINDER;
+                token_ptr->type = TOKEN_REMAINDER;
                 break;
 
             case '(':
-                token_ptr->type = OPEN_BRACKET;
+                token_ptr->type = TOKEN_OPEN_BRACKET;
                 break;
 
             case ')':
-                token_ptr->type = CLOSE_BRACKET;
+                token_ptr->type = TOKEN_CLOSE_BRACKET;
                 break;
             }
 

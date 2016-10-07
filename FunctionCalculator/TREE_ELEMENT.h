@@ -4,16 +4,22 @@
 #include <math.h>
 
 enum TREE_ELEMENT_TYPE {
-    NUMBER, ARITHMETIC
+    TYPE_NUMBER, TYPE_ARITHMETIC, TYPE_NAME
 };
 
 struct TREE_ELEMENT {
     TREE_ELEMENT_TYPE type;
 
-    // for TREE_ELEMENT_TYPE.ARITHMETIC
+    // for TYPE_ARITHMETIC
     ARITHMETIC_TYPE arithmetic_type;
 
-    double value;
+    // for TYPE_NUMBER
+    double number_value;
+
+    // for TYPE_NAME
+    size_t name_value_len;
+    char* name_value;
+
     TREE_ELEMENT* child1;
     TREE_ELEMENT* child2;
 };
