@@ -2,7 +2,7 @@
 
 TOKEN** tokenise(char* input, size_t len, size_t* token_count)
 {
-    size_t tokens_size = 16;
+    size_t tokens_size = 8;
     TOKEN** tokens = (TOKEN**)malloc(tokens_size * sizeof(TOKEN));
     (*token_count) = 0;
 
@@ -68,7 +68,6 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
             switch (c)
             {
             default:
-                // TODO
                 printf("Unknown character found (i %d): %c", i, c);
                 break;
 
@@ -119,8 +118,9 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
         token_ptr->value = (char*)malloc(sub_len + 1);
         strncpy_s(token_ptr->value, sub_len + 1, &input[read_start], sub_len);
 
-        if (*token_count == tokens_size - 1)
-            tokens = (TOKEN**)realloc(tokens, (tokens_size += 16) * sizeof(*tokens));
+        // resize the token array if it's full
+        if ((*token_count) + 1 > tokens_size)
+            tokens = (TOKEN**)realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
 
         tokens[(*token_count)++] = token_ptr;
     } while (i++ < (int)len);
