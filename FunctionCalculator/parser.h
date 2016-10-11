@@ -9,6 +9,7 @@ struct PARSER_CONTAINER {
     TOKEN** tokens;
     size_t token_count;
     int* index;
+    int* precedence;
 };
 
 PARSER_CONTAINER* create_parser_container(TOKEN**, size_t, int*);

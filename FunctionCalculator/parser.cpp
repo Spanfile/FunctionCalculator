@@ -19,6 +19,9 @@ PARSER_CONTAINER* create_parser_container(TOKEN** tokens, size_t token_count, in
     container->token_count = token_count;
     container->index = index;
 
+    static int precedence = 0;
+    container->precedence = &precedence;
+
     return container;
 }
 
