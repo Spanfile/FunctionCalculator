@@ -1,6 +1,9 @@
 #include "tokeniser.h"
 
-TOKEN** tokenise(char* input, size_t len, size_t* token_count)
+int tokenise_name(char*, int*, size_t);
+int tokenise_number(char*, int*, size_t);
+
+TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 {
     size_t tokens_size = 8;
     TOKEN** tokens = (TOKEN**)malloc(tokens_size * sizeof(TOKEN));
@@ -9,7 +12,7 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
     int i = 0;
     do
     {
-        TOKEN* token_ptr = new TOKEN();
+        TOKEN* token_ptr = (TOKEN*)malloc(sizeof(TOKEN));
         char c = input[i];
 
         size_t sub_len = 0;
@@ -18,21 +21,7 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
         if (isalpha(c)) // names
         {
             int start = i;
-            int end = start;
-            while (true)
-            {
-                if (i >= (int)len)
-                    break;
-
-                c = input[i];
-                end++;
-
-                char next = input[i + 1];
-                if (!isalpha(next) || next == ' ')
-                    break;
-
-                i++;
-            }
+            int end = tokenise_name(input, &i, input_len);
 
             sub_len = end - start;
             read_start = start;
@@ -42,21 +31,7 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
         else if (isdigit(c)) // numbers
         {
             int start = i;
-            int end = start;
-            while (true)
-            {
-                if (i >= (int)len)
-                    break;
-
-                c = input[i];
-                end++;
-
-                char next = input[i + 1];
-                if ((!isdigit(next) && next != '.') || next == ' ')
-                    break;
-
-                i++;
-            }
+            int end = tokenise_number(input, &i, input_len);
 
             sub_len = end - start;
             read_start = start;
@@ -65,6 +40,9 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
         }
         else // everything else
         {
+            // note: ugly goto-blocker
+            int skip_end = 0;
+
             switch (c)
             {
             default:
@@ -80,7 +58,31 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
                 break;
 
             case '-':
+                /* special case: if there's a number after the -,
+                parse it as a number */
+
+                if (i < (int)input_len - 1)
+                {
+                    char next = input[i + 1];
+                    if (isdigit(next))
+                    {
+                        i += 1;
+                        // start parsing from the number, but include the -
+                        int start = i - 1;
+                        int end = tokenise_number(input, &i, input_len);
+
+                        sub_len = end - start;
+                        read_start = start;
+                        
+                        token_ptr->type = TOKEN_NUMBER;
+
+                        skip_end = 1;
+                        break;
+                    }
+                }
+
                 token_ptr->type = TOKEN_NEGATION;
+
                 break;
 
             case '*':
@@ -108,10 +110,13 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
                 break;
             }
 
-            /* we techically don't need the value of the token with these
-            arithmetic tokens, but ech */
-            sub_len = 1;
-            read_start = i;
+            if (skip_end == 0)
+            {
+                /* we techically don't need the value of the token with these
+                arithmetic tokens, but ech */
+                sub_len = 1;
+                read_start = i;
+            }
         }
 
         token_ptr->value_length = sub_len;
@@ -122,8 +127,55 @@ TOKEN** tokenise(char* input, size_t len, size_t* token_count)
         if ((*token_count) + 1 > tokens_size)
             tokens = (TOKEN**)realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
 
-        tokens[(*token_count)++] = token_ptr;
-    } while (i++ < (int)len);
+        tokens[*token_count] = token_ptr;
+        *token_count += 1;
+    } while (i++ < (int)input_len);
 
     return tokens;
+}
+
+int tokenise_name(char* input, int* index, size_t input_len)
+{
+    char c;
+
+    int end = *index;
+    while (true)
+    {
+        if (*index >= (int)input_len)
+            break;
+
+        c = input[*index];
+        end += 1;
+
+        c = input[*index + 1];
+        if (!isalpha(c) || c == ' ')
+            break;
+
+        *index += 1;
+    }
+
+    return end;
+}
+
+int tokenise_number(char* input, int* index, size_t input_len)
+{
+    char c;
+
+    int end = *index;
+    while (true)
+    {
+        if (*index >= (int)input_len)
+            break;
+
+        c = input[*index];
+        end += 1;
+
+        c = input[*index + 1];
+        if ((!isdigit(c) && c != '.') || c == ' ')
+            break;
+
+        *index += 1;
+    }
+
+    return end;
 }

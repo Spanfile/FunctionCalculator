@@ -24,8 +24,8 @@ PARSER_CONTAINER* create_parser_container(TOKEN** tokens, size_t token_count, in
 
 TREE_ELEMENT* parse(PARSER_CONTAINER* container)
 {
-    TOKEN* token = container->tokens[*(container->index)];
-    (*container->index) += 1;
+    TOKEN* token = container->tokens[*container->index];
+    *container->index += 1;
     TREE_ELEMENT* left = nullptr;
 
     switch (token->type)
@@ -39,11 +39,11 @@ TREE_ELEMENT* parse(PARSER_CONTAINER* container)
         break;
     }
 
-    if (*(container->index) >= (int)container->token_count)
+    if (*container->index >= (int)container->token_count)
         return left;
 
     // try parsing an arithmetic element from the element we just parsed
-    token = container->tokens[*(container->index)];
+    token = container->tokens[*container->index];
 
     switch (token->type)
     {
@@ -56,7 +56,7 @@ TREE_ELEMENT* parse(PARSER_CONTAINER* container)
     case TOKEN_DIVISION:
     case TOKEN_POWER:
     case TOKEN_REMAINDER:
-        (*container->index) += 1;
+        *container->index += 1;
         return parse_arithmetic(token, left, container);
     }
 }

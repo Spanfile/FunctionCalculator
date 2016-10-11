@@ -82,9 +82,13 @@ void print_elem(TREE_ELEMENT* elem, int indent)
 
         if (elem->child1 != nullptr)
             print_elem(elem->child1, indent + 1);
+        else
+            printf("missing child1\n");
 
         if (elem->child2 != nullptr)
             print_elem(elem->child2, indent + 1);
+        else
+            printf("missing child2\n");
         break;
     }
 }
