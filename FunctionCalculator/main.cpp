@@ -5,7 +5,6 @@ void print_elem(TREE_ELEMENT*, int);
 
 int main(void)
 {
-    //size_t is just typedef'd to an unsigned integer
     size_t read_buffer_size = 16;
     size_t read_len = 0;
     char* read_buffer = (char*)malloc(read_buffer_size);
@@ -32,7 +31,10 @@ int main(void)
     TOKEN** tokens = tokenise(read_buffer, read_len, &token_count);
 
     int index = 0;
-    TREE_ELEMENT* root_elem = parse(tokens, token_count, &index);
+    PARSER_CONTAINER* container = create_parser_container(tokens, token_count, &index);
+    TREE_ELEMENT* root_elem = parse(container);
+
+    free(container);
 
     print_elem(root_elem, 0);
     free_elem(root_elem);

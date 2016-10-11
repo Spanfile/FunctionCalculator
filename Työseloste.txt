@@ -7,8 +7,8 @@ Projektin tavoite on luoda täydellinen, mahdollisesti käyttäjän laajennetta-
 vavissa oleva funktiolaskin, jonka toiminta perustuu abstraktiin syntaksi-
 puuhun
 
-Abstrakti toiminta
-==================
+Abstrakti toiminta (suurimmaksi osaksi minun avuksi)
+====================================================
 Laskin toimii komentorivillä. Käyttäjä syöttää laskun, jonka laskin kääntää
 syntaksipuuksi, joka syötetään tulkkiin, joka laskee laskunlopullisen tuloksen.
 
@@ -124,9 +124,20 @@ Toiminnat priorisoituna
 6.2          Käyttäjän omien |
      funktioiden varastointi |
                   tiedostoon | mahdollisesti toteutetaan
-7          "Lazy evaluation" | ehkä toteutetaan
+7          "Lazy evaluation" | tuskin toteutetaan
                   
 Versiohistoria
 ==============
 0.1
     Perustoiminta; laskujen laskeminen
+
+    
+Käytetty aika
+=============
+
+ Pvm  | Aika
+-------------
+ 4.10 | 1h
+ 5.10 | 1h
+ 6.10 | 4.5h
+ 7.10 | 2h

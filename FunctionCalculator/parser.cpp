@@ -7,31 +7,43 @@ TREE_ELEMENT* create_arithmetic_element(ARITHMETIC_TYPE);
 TREE_ELEMENT* create_name_element(char*, size_t);
 
 // "parselets"
-TREE_ELEMENT* parse_name(TOKEN*, TOKEN**, size_t, int*);
-TREE_ELEMENT* parse_number(TOKEN*, TOKEN**, size_t, int*);
-TREE_ELEMENT* parse_arithmetic(TOKEN*, TREE_ELEMENT*, TOKEN**, size_t, int*);
+TREE_ELEMENT* parse_name(TOKEN*, PARSER_CONTAINER*);
+TREE_ELEMENT* parse_number(TOKEN*, PARSER_CONTAINER*);
+TREE_ELEMENT* parse_arithmetic(TOKEN*, TREE_ELEMENT*, PARSER_CONTAINER*);
 
-TREE_ELEMENT* parse(TOKEN** tokens, size_t token_count, int* index)
+PARSER_CONTAINER* create_parser_container(TOKEN** tokens, size_t token_count, int* index)
 {
-    TOKEN* token = tokens[*index];
-    (*index) += 1;
+    PARSER_CONTAINER* container = (PARSER_CONTAINER*)malloc(sizeof(PARSER_CONTAINER));
+
+    container->tokens = tokens;
+    container->token_count = token_count;
+    container->index = index;
+
+    return container;
+}
+
+TREE_ELEMENT* parse(PARSER_CONTAINER* container)
+{
+    TOKEN* token = container->tokens[*(container->index)];
+    (*container->index) += 1;
     TREE_ELEMENT* left = nullptr;
 
     switch (token->type)
     {
     case TOKEN_NAME:
-        left = parse_name(token, tokens, token_count, index);
+        left = parse_name(token, container);
         break;
 
     case TOKEN_NUMBER:
-        left = parse_number(token, tokens, token_count, index);
+        left = parse_number(token, container);
         break;
     }
 
-    if (*index >= (int)token_count)
+    if (*(container->index) >= (int)container->token_count)
         return left;
 
-    token = tokens[*index];
+    // try parsing an arithmetic element from the element we just parsed
+    token = container->tokens[*(container->index)];
 
     switch (token->type)
     {
@@ -44,8 +56,8 @@ TREE_ELEMENT* parse(TOKEN** tokens, size_t token_count, int* index)
     case TOKEN_DIVISION:
     case TOKEN_POWER:
     case TOKEN_REMAINDER:
-        (*index)++;
-        return parse_arithmetic(token, left, tokens, token_count, index);
+        (*container->index) += 1;
+        return parse_arithmetic(token, left, container);
     }
 }
 
@@ -82,25 +94,23 @@ TREE_ELEMENT* create_arithmetic_element(ARITHMETIC_TYPE type)
     return elem;
 }
 
-TREE_ELEMENT* parse_name(TOKEN* token, TOKEN** tokens,
-    size_t token_count, int* index)
+TREE_ELEMENT* parse_name(TOKEN* token, PARSER_CONTAINER* container)
 {
     TREE_ELEMENT* elem = create_name_element(token->value, token->value_length);
     return elem;
 }
 
-TREE_ELEMENT* parse_number(TOKEN* token, TOKEN** tokens,
-    size_t token_count, int* index)
+TREE_ELEMENT* parse_number(TOKEN* token, PARSER_CONTAINER* container)
 {
     char* tmp;
     TREE_ELEMENT* elem = create_number_element(strtod(token->value, &tmp));
     return elem;
 }
 
-TREE_ELEMENT* parse_arithmetic(TOKEN* token, TREE_ELEMENT* left, TOKEN** tokens,
-    size_t token_count, int* index)
+TREE_ELEMENT* parse_arithmetic(TOKEN* token, TREE_ELEMENT* left,
+    PARSER_CONTAINER* container)
 {
-    TREE_ELEMENT* right = parse(tokens, token_count, index);
+    TREE_ELEMENT* right = parse(container);
     ARITHMETIC_TYPE type;
 
     switch (token->type)
