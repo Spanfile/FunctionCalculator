@@ -33,6 +33,9 @@ TREE_ELEMENT* parse(PARSER_CONTAINER* container)
 
     switch (token->type)
     {
+    default:
+        break;
+
     case TOKEN_NAME:
         left = parse_name(token, container);
         break;

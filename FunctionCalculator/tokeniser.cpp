@@ -121,7 +121,7 @@ TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 
         token_ptr->value_length = sub_len;
         token_ptr->value = (char*)malloc(sub_len + 1);
-        strncpy_s(token_ptr->value, sub_len + 1, &input[read_start], sub_len);
+        strncpy(token_ptr->value, &input[read_start], sub_len);
 
         // resize the token array if it's full
         if ((*token_count) + 1 > tokens_size)

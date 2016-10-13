@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ARITHMETIC_TYPE.h"
+#include <stdlib.h>
 #include <math.h>
 
 enum TREE_ELEMENT_TYPE {
