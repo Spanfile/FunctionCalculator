@@ -2,9 +2,22 @@
 
 double get_tree_element_value(struct TREE_ELEMENT*);
 
+struct hashtable* hashtable = NULL;
+
+void init_interpreter(void)
+{
+    hashtable = ht_create(512);
+
+    if (hashtable == NULL) {
+        printf("Failed to create hashtable");
+    } else {
+        ht_set(hashtable, "pi", 3.1415927538);
+    }
+}
+
 double interpret(struct TREE_ELEMENT* root)
 {
-    return 0;
+    return get_tree_element_value(root);
 }
 
 double get_tree_element_value(struct TREE_ELEMENT* element)
@@ -49,7 +62,7 @@ double get_tree_element_value(struct TREE_ELEMENT* element)
             break;
         }
     } else if (element->type == TYPE_NAME) {
-        
+        ht_get(hashtable, element->name_value, &element->number_value);
     }
 
     return element->number_value;

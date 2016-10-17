@@ -26,15 +26,15 @@ struct hashtable* ht_create(size_t size)
 unsigned ht_hash(struct hashtable* ht, char* key)
 {
     // FNV hash
-    unsigned char* p = key;
+    unsigned char* u_key = key;
     unsigned h = 2166136261;
     int len = strlen(key);
 
     for (int i = 0; i < len; i++) {
-        h = (h * 16777619) ^ p[i];
+        h = (h * 16777619) ^ u_key[i];
     }
 
-    return h;
+    return h % ht->size;
 }
 
 struct hashtable_entry* ht_newentry(char* key, double value)
@@ -76,13 +76,12 @@ void ht_set(struct hashtable* ht, char* key, double value) {
     } else {
         new = ht_newentry(key, value);
 
-        // we're at the start of the linked list in this bucket
         if (next == ht->buckets[bucket]) {
             new->next = next;
             ht->buckets[bucket] = new;
-        } else if (next == NULL) { // we're at the end
+        } else if (next == NULL) {
             last->next = new;
-        } else { // we're somewhere in the middle
+        } else {
             new->next = next;
             last->next = new;
         }

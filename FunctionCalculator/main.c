@@ -17,6 +17,8 @@ int main(void)
     struct PARSER_CONTAINER* container;
     struct TREE_ELEMENT* root_elem;
 
+    init_interpreter();
+
     while (running) {
         read_buffer_size = 16;
         read_len = 0;
@@ -68,7 +70,9 @@ int main(void)
 
             free(container);
 
-            print_elem(root_elem, 0);
+            double result = interpret(root_elem);
+            printf("%f\n", result);
+            //print_elem(root_elem, 0);
             free_elem(root_elem);
 
             for (int i = 0; i < (int)token_count; i++)
