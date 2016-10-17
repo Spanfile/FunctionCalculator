@@ -19,8 +19,7 @@ struct TREE_ELEMENT* parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* 
     enum ARITHMETIC_TYPE type;
     int precedence = 0;
 
-    switch (token->type)
-    {
+    switch (token->type) {
     default: // TODO: kinda bad having addition as the default
     case TOKEN_ADDITION:
         type = ARITH_ADDITION;

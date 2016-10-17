@@ -19,8 +19,7 @@ struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
     *container->index += 1;
     struct TREE_ELEMENT* left = NULL;
 
-    switch (token->type)
-    {
+    switch (token->type) {
     default:
         break;
 
@@ -33,15 +32,14 @@ struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
         break;
     }
 
-    if (*container->index >= (int)container->token_count)
+    if (*container->index >= (int)container->token_count) {
         return left;
+    }
 
-    while (precedence < get_precedence(container))
-    {
+    while (precedence < get_precedence(container)) {
         token = container->tokens[*container->index];
 
-        switch (token->type)
-        {
+        switch (token->type) {
         default:
             return left;
 
@@ -62,11 +60,11 @@ struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
 
 int get_precedence(struct PARSER_CONTAINER* container)
 {
-    if (*container->index >= (int)container->token_count)
+    if (*container->index >= (int)container->token_count) {
         return 0;
+    }
 
-    switch (container->tokens[*container->index]->type)
-    {
+    switch (container->tokens[*container->index]->type) {
     default:
         return 0;
 

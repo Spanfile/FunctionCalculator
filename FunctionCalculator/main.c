@@ -17,16 +17,14 @@ int main(void)
     struct PARSER_CONTAINER* container;
     struct TREE_ELEMENT* root_elem;
 
-    while (running)
-    {
+    while (running) {
         read_buffer_size = 16;
         read_len = 0;
         read_buffer = (char*)malloc(read_buffer_size);
 
         // read characters into a dynamically expanding buffer
         printf("> ");
-        do
-        {
+        do {
             input = getchar();
 
             // resize the buffer if it's full
@@ -41,11 +39,9 @@ int main(void)
         read_buffer[--read_len] = '\0';
 
         // parse commands
-        if (read_buffer[0] == ':' && read_len > 1)
-        {
+        if (read_buffer[0] == ':' && read_len > 1) {
             enum COMMAND_TYPE cmd = (enum COMMAND_TYPE)read_buffer[1];
-            switch (cmd)
-            {
+            switch (cmd) {
             default:
                 printf("Invalid command: %c\nTry :h for help.", cmd);
                 break;
@@ -60,9 +56,7 @@ int main(void)
                 printf(":q - quits the application\n");
                 break;
             }
-        }
-        else // or parse math
-        {
+        } else { // or parse math
             token_count = 0;
             tokens = tokenise(read_buffer, read_len, &token_count);
 
@@ -89,24 +83,26 @@ int main(void)
 
 void free_elem(struct TREE_ELEMENT* elem)
 {
-    if (elem->child1 != NULL)
+    if (elem->child1 != NULL) {
         free_elem(elem->child1);
+    }
 
-    if (elem->child2 != NULL)
+    if (elem->child2 != NULL) {
         free_elem(elem->child2);
+    }
 
     free(elem);
 }
 
 void print_elem(struct TREE_ELEMENT* elem, int indent)
 {
-    for (int i = 0; i < indent; i++)
+    for (int i = 0; i < indent; i++) {
         printf(" ");
+    }
 
     printf("%d: ", elem->type);
 
-    switch (elem->type)
-    {
+    switch (elem->type) {
     case TYPE_NUMBER:
         printf("%f\n", elem->number_value);
         break;
@@ -118,15 +114,17 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
     case TYPE_ARITHMETIC:
         printf("%d\n", elem->arithmetic_type);
 
-        if (elem->child1 != NULL)
+        if (elem->child1 != NULL) {
             print_elem(elem->child1, indent + 1);
-        else
+        } else {
             printf("missing child1\n");
+        }
 
-        if (elem->child2 != NULL)
+        if (elem->child2 != NULL) {
             print_elem(elem->child2, indent + 1);
-        else
+        } else {
             printf("missing child2\n");
+        }
         break;
     }
 }

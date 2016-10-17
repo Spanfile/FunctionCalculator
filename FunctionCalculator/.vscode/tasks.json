@@ -11,6 +11,7 @@
         "tree_element.c",
         "parselets.c",
         "interpreter.c",
+        "hashtable.c",
         "-lm"],
     "showOutput": "always",
     "problemMatcher": {

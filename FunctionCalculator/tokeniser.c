@@ -10,16 +10,14 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
     (*token_count) = 0;
 
     int i = 0;
-    do
-    {
+    do {
         struct TOKEN* token_ptr = (struct TOKEN*)malloc(sizeof(struct TOKEN));
         char c = input[i];
 
         size_t sub_len = 0;
         int read_start = 0;
 
-        if (isalpha(c)) // names
-        {
+        if (isalpha(c)) { // names
             int start = i;
             int end = tokenise_name(input, &i, input_len);
 
@@ -27,9 +25,7 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
             read_start = start;
 
             token_ptr->type = TOKEN_NAME;
-        }
-        else if (isdigit(c)) // numbers
-        {
+        } else if (isdigit(c)) { // numbers
             int start = i;
             int end = tokenise_number(input, &i, input_len);
 
@@ -37,14 +33,11 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
             read_start = start;
 
             token_ptr->type = TOKEN_NUMBER;
-        }
-        else // everything else
-        {
+        } else { // everything else
             // note: ugly goto-blocker
             int skip_end = 0;
 
-            switch (c)
-            {
+            switch (c) {
             default:
                 printf("Unknown character found (i %d): %c", i, c);
                 break;
@@ -62,11 +55,9 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
                 parse it as a number.
                 except that this doesn't work always. you know when that happens */
 
-                if (i < (int)input_len - 1)
-                {
+                if (i < (int)input_len - 1) {
                     char next = input[i + 1];
-                    if (isdigit(next))
-                    {
+                    if (isdigit(next)) {
                         i += 1;
                         // start parsing from the number, but include the -
                         int start = i - 1;
@@ -111,8 +102,7 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
                 break;
             }
 
-            if (skip_end == 0)
-            {
+            if (skip_end == 0) {
                 /* we techically don't need the value of the token with these
                 arithmetic tokens, but ech */
                 sub_len = 1;
@@ -125,8 +115,9 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
         strncpy(token_ptr->value, &input[read_start], sub_len);
 
         // resize the token array if it's full
-        if ((*token_count) + 1 > tokens_size)
+        if ((*token_count) + 1 > tokens_size) {
             tokens = (struct TOKEN**)realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
+        }
 
         tokens[*token_count] = token_ptr;
         *token_count += 1;
@@ -163,17 +154,18 @@ int tokenise_number(char* input, int* index, size_t input_len)
     char c;
 
     int end = *index;
-    while (1)
-    {
-        if (*index >= (int)input_len)
+    while (1) {
+        if (*index >= (int)input_len) {
             break;
+        }
 
         c = input[*index];
         end += 1;
 
         c = input[*index + 1];
-        if ((!isdigit(c) && c != '.') || c == ' ')
+        if ((!isdigit(c) && c != '.') || c == ' ') {
             break;
+        }
 
         *index += 1;
     }

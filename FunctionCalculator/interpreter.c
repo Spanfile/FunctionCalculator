@@ -10,10 +10,8 @@ double interpret(struct TREE_ELEMENT* root)
 double get_tree_element_value(struct TREE_ELEMENT* element)
 {
     // calculate a value for the element if it's an arithmetic element
-    if (element->type == TYPE_ARITHMETIC)
-    {
-        switch (element->arithmetic_type)
-        {
+    if (element->type == TYPE_ARITHMETIC) {
+        switch (element->arithmetic_type) {
         case ARITH_ADDITION:
             element->number_value =
                 get_tree_element_value(element->child1) +
@@ -50,9 +48,7 @@ double get_tree_element_value(struct TREE_ELEMENT* element)
                 get_tree_element_value(element->child2));
             break;
         }
-    }
-    else if (element->type == TYPE_NAME)
-    {
+    } else if (element->type == TYPE_NAME) {
         
     }
 
