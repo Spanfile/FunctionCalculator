@@ -3,16 +3,16 @@
 int tokenise_name(char*, int*, size_t);
 int tokenise_number(char*, int*, size_t);
 
-TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
+struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 {
     size_t tokens_size = 8;
-    TOKEN** tokens = (TOKEN**)malloc(tokens_size * sizeof(TOKEN));
+    struct TOKEN** tokens = (struct TOKEN**)malloc(tokens_size * sizeof(struct TOKEN));
     (*token_count) = 0;
 
     int i = 0;
     do
     {
-        TOKEN* token_ptr = (TOKEN*)malloc(sizeof(TOKEN));
+        struct TOKEN* token_ptr = (struct TOKEN*)malloc(sizeof(struct TOKEN));
         char c = input[i];
 
         size_t sub_len = 0;
@@ -126,7 +126,7 @@ TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 
         // resize the token array if it's full
         if ((*token_count) + 1 > tokens_size)
-            tokens = (TOKEN**)realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
+            tokens = (struct TOKEN**)realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
 
         tokens[*token_count] = token_ptr;
         *token_count += 1;
@@ -140,7 +140,7 @@ int tokenise_name(char* input, int* index, size_t input_len)
     char c;
 
     int end = *index;
-    while (true)
+    while (1)
     {
         if (*index >= (int)input_len)
             break;
@@ -163,7 +163,7 @@ int tokenise_number(char* input, int* index, size_t input_len)
     char c;
 
     int end = *index;
-    while (true)
+    while (1)
     {
         if (*index >= (int)input_len)
             break;

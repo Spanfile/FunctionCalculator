@@ -1,22 +1,22 @@
 #include "parselets.h"
 
-TREE_ELEMENT* parse_name(TOKEN* token, PARSER_CONTAINER* container)
+struct TREE_ELEMENT* parse_name(struct TOKEN* token, struct PARSER_CONTAINER* container)
 {
-    TREE_ELEMENT* elem = create_name_element(token->value, token->value_length);
+    struct TREE_ELEMENT* elem = create_name_element(token->value, token->value_length);
     return elem;
 }
 
-TREE_ELEMENT* parse_number(TOKEN* token, PARSER_CONTAINER* container)
+struct TREE_ELEMENT* parse_number(struct TOKEN* token, struct PARSER_CONTAINER* container)
 {
     char* tmp;
-    TREE_ELEMENT* elem = create_number_element(strtod(token->value, &tmp));
+    struct TREE_ELEMENT* elem = create_number_element(strtod(token->value, &tmp));
     return elem;
 }
 
-TREE_ELEMENT* parse_arithmetic(TOKEN* token, TREE_ELEMENT* left,
-    PARSER_CONTAINER* container)
+struct TREE_ELEMENT* parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
+    struct PARSER_CONTAINER* container)
 {
-    ARITHMETIC_TYPE type;
+    enum ARITHMETIC_TYPE type;
     int precedence = 0;
 
     switch (token->type)
@@ -53,8 +53,8 @@ TREE_ELEMENT* parse_arithmetic(TOKEN* token, TREE_ELEMENT* left,
         break;
     }
 
-    TREE_ELEMENT* elem = create_arithmetic_element(type);
-    TREE_ELEMENT* right = parse(container, precedence);
+    struct TREE_ELEMENT* elem = create_arithmetic_element(type);
+    struct TREE_ELEMENT* right = parse(container, precedence);
 
     elem->child1 = left;
     elem->child2 = right;

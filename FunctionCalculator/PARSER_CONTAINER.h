@@ -5,7 +5,7 @@
 #include "TOKEN.h"
 
 struct PARSER_CONTAINER {
-    TOKEN** tokens;
+    struct TOKEN** tokens;
     size_t token_count;
     int* index;
 };

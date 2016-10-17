@@ -1,21 +1,21 @@
 #include "main.h"
 
-void free_elem(TREE_ELEMENT*);
-void print_elem(TREE_ELEMENT*, int);
+void free_elem(struct TREE_ELEMENT*);
+void print_elem(struct TREE_ELEMENT*, int);
 
 int main(void)
 {
     size_t read_buffer_size = 16;
     size_t read_len = 0;
-    char* read_buffer = nullptr;
+    char* read_buffer = NULL;
     char input;
-    bool running = true;
+    int running = 1;
 
-    TOKEN** tokens = nullptr;
+    struct TOKEN** tokens = NULL;
     size_t token_count = 0;
     int index = 0;
-    PARSER_CONTAINER* container;
-    TREE_ELEMENT* root_elem;
+    struct PARSER_CONTAINER* container;
+    struct TREE_ELEMENT* root_elem;
 
     while (running)
     {
@@ -43,7 +43,7 @@ int main(void)
         // parse commands
         if (read_buffer[0] == ':' && read_len > 1)
         {
-            COMMAND_TYPE cmd = (COMMAND_TYPE)read_buffer[1];
+            enum COMMAND_TYPE cmd = (enum COMMAND_TYPE)read_buffer[1];
             switch (cmd)
             {
             default:
@@ -51,7 +51,7 @@ int main(void)
                 break;
 
             case COMMAND_QUIT:
-                running = false;
+                running = 0;
                 break;
 
             case COMMAND_HELP:
@@ -87,18 +87,18 @@ int main(void)
     return 0;
 }
 
-void free_elem(TREE_ELEMENT* elem)
+void free_elem(struct TREE_ELEMENT* elem)
 {
-    if (elem->child1 != nullptr)
+    if (elem->child1 != NULL)
         free_elem(elem->child1);
 
-    if (elem->child2 != nullptr)
+    if (elem->child2 != NULL)
         free_elem(elem->child2);
 
     free(elem);
 }
 
-void print_elem(TREE_ELEMENT* elem, int indent)
+void print_elem(struct TREE_ELEMENT* elem, int indent)
 {
     for (int i = 0; i < indent; i++)
         printf(" ");
@@ -118,12 +118,12 @@ void print_elem(TREE_ELEMENT* elem, int indent)
     case TYPE_ARITHMETIC:
         printf("%d\n", elem->arithmetic_type);
 
-        if (elem->child1 != nullptr)
+        if (elem->child1 != NULL)
             print_elem(elem->child1, indent + 1);
         else
             printf("missing child1\n");
 
-        if (elem->child2 != nullptr)
+        if (elem->child2 != NULL)
             print_elem(elem->child2, indent + 1);
         else
             printf("missing child2\n");

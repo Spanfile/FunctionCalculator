@@ -130,6 +130,8 @@ Versiohistoria
 ==============
 0.1
     Perustoiminta; laskujen laskeminen
+0.2
+    Vakiomuuttujat, vakiofunktiot, edelliset tulokset
 
     
 Käytetty aika
@@ -142,3 +144,5 @@ Käytetty aika
   6.10 | 4.5h
   7.10 | 2h
  11.10 | 1h
+ 13.10 | 1h
+ 17.10 | 3h

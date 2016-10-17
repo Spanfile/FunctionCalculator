@@ -1,10 +1,10 @@
 #include "parser.h"
 
-int get_precedence(PARSER_CONTAINER*);
+int get_precedence(struct PARSER_CONTAINER*);
 
-PARSER_CONTAINER* create_parser_container(TOKEN** tokens, size_t token_count, int* index)
+struct PARSER_CONTAINER* create_parser_container(struct TOKEN** tokens, size_t token_count, int* index)
 {
-    PARSER_CONTAINER* container = (PARSER_CONTAINER*)malloc(sizeof(PARSER_CONTAINER));
+    struct PARSER_CONTAINER* container = (struct PARSER_CONTAINER*)malloc(sizeof(struct PARSER_CONTAINER));
 
     container->tokens = tokens;
     container->token_count = token_count;
@@ -13,11 +13,11 @@ PARSER_CONTAINER* create_parser_container(TOKEN** tokens, size_t token_count, in
     return container;
 }
 
-TREE_ELEMENT* parse(PARSER_CONTAINER* container, int precedence)
+struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
 {
-    TOKEN* token = container->tokens[*container->index];
+    struct TOKEN* token = container->tokens[*container->index];
     *container->index += 1;
-    TREE_ELEMENT* left = nullptr;
+    struct TREE_ELEMENT* left = NULL;
 
     switch (token->type)
     {
@@ -60,7 +60,7 @@ TREE_ELEMENT* parse(PARSER_CONTAINER* container, int precedence)
     return left;
 }
 
-int get_precedence(PARSER_CONTAINER* container)
+int get_precedence(struct PARSER_CONTAINER* container)
 {
     if (*container->index >= (int)container->token_count)
         return 0;

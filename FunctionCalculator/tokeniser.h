@@ -7,4 +7,4 @@
 
 #include "TOKEN.h"
 
-TOKEN** tokenise(char*, size_t, size_t*);
+struct TOKEN** tokenise(char*, size_t, size_t*);

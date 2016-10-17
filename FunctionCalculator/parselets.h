@@ -6,6 +6,7 @@
 #include "TOKEN.h"
 #include "PRECEDENCE.h"
 
-TREE_ELEMENT* parse_name(TOKEN*, PARSER_CONTAINER*);
-TREE_ELEMENT* parse_number(TOKEN*, PARSER_CONTAINER*);
-TREE_ELEMENT* parse_arithmetic(TOKEN*, TREE_ELEMENT*, PARSER_CONTAINER*);
+struct TREE_ELEMENT* parse_name(struct TOKEN*, struct PARSER_CONTAINER*);
+struct TREE_ELEMENT* parse_number(struct TOKEN*, struct PARSER_CONTAINER*);
+struct TREE_ELEMENT* parse_arithmetic(struct TOKEN*,
+    struct TREE_ELEMENT*, struct PARSER_CONTAINER*);
