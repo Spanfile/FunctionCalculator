@@ -25,4 +25,9 @@ struct TREE_ELEMENT {
     TREE_ELEMENT* child2;
 };
 
+TREE_ELEMENT* create_element(TREE_ELEMENT_TYPE);
+TREE_ELEMENT* create_number_element(double);
+TREE_ELEMENT* create_arithmetic_element(ARITHMETIC_TYPE);
+TREE_ELEMENT* create_name_element(char*, size_t);
+
 double get_tree_element_value(TREE_ELEMENT&);

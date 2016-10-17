@@ -5,12 +5,8 @@
 #include "TOKEN.h"
 #include "TREE_ELEMENT.h"
 #include "PRECEDENCE.h"
-
-struct PARSER_CONTAINER {
-    TOKEN** tokens;
-    size_t token_count;
-    int* index;
-};
+#include "PARSER_CONTAINER.h"
+#include "parselets.h"
 
 PARSER_CONTAINER* create_parser_container(TOKEN**, size_t, int*);
 TREE_ELEMENT* parse(PARSER_CONTAINER*, int precedence);

@@ -7,42 +7,58 @@ int main(void)
 {
     size_t read_buffer_size = 16;
     size_t read_len = 0;
-    char* read_buffer = (char*)malloc(read_buffer_size);
+    char* read_buffer = nullptr;
     char input;
+    bool running = true;
 
-    // read characters into a dynamically expanding buffer
-    printf("> ");
-    do
-    {
-        input = getchar();
-
-        // resize the buffer if it's full
-        if (read_len + 1 > read_buffer_size)
-            read_buffer = (char*)realloc(read_buffer, read_buffer_size += 8);
-
-        read_buffer[read_len++] = input;
-
-    } while (input != '\n');
-
-    // replace the newline at the end with a null terminating byte
-    read_buffer[--read_len] = '\0';
-
+    TOKEN** tokens = nullptr;
     size_t token_count = 0;
-    TOKEN** tokens = tokenise(read_buffer, read_len, &token_count);
-
     int index = 0;
-    PARSER_CONTAINER* container = create_parser_container(tokens, token_count, &index);
-    TREE_ELEMENT* root_elem = parse(container, 0);
+    PARSER_CONTAINER* container;
+    TREE_ELEMENT* root_elem;
 
-    free(container);
+    while (running)
+    {
+        read_buffer_size = 16;
+        read_len = 0;
+        read_buffer = (char*)malloc(read_buffer_size);
 
-    print_elem(root_elem, 0);
-    free_elem(root_elem);
+        // read characters into a dynamically expanding buffer
+        printf("> ");
+        do
+        {
+            input = getchar();
 
-    for (int i = 0; i < (int)token_count; i++)
-        free(tokens[i]);
+            // resize the buffer if it's full
+            if (read_len + 1 > read_buffer_size)
+                read_buffer = (char*)realloc(read_buffer, read_buffer_size += 8);
 
-    free(tokens);
+            read_buffer[read_len++] = input;
+
+        } while (input != '\n');
+
+        // replace the newline at the end with a null terminating byte
+        read_buffer[--read_len] = '\0';
+
+        token_count = 0;
+        tokens = tokenise(read_buffer, read_len, &token_count);
+
+        free(read_buffer);
+
+        index = 0;
+        container = create_parser_container(tokens, token_count, &index);
+        root_elem = parse(container, 0);
+
+        free(container);
+
+        print_elem(root_elem, 0);
+        free_elem(root_elem);
+
+        for (int i = 0; i < (int)token_count; i++)
+            free(tokens[i]);
+
+        free(tokens);
+    }
 
     getchar();
 
