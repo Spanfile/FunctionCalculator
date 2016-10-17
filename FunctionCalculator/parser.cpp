@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "PRECEDENCE.h"
 
 // element creation
 TREE_ELEMENT* create_element(TREE_ELEMENT_TYPE);
@@ -10,6 +11,7 @@ TREE_ELEMENT* create_name_element(char*, size_t);
 TREE_ELEMENT* parse_name(TOKEN*, PARSER_CONTAINER*);
 TREE_ELEMENT* parse_number(TOKEN*, PARSER_CONTAINER*);
 TREE_ELEMENT* parse_arithmetic(TOKEN*, TREE_ELEMENT*, PARSER_CONTAINER*);
+int get_precedence(PARSER_CONTAINER*);
 
 PARSER_CONTAINER* create_parser_container(TOKEN** tokens, size_t token_count, int* index)
 {
@@ -19,13 +21,10 @@ PARSER_CONTAINER* create_parser_container(TOKEN** tokens, size_t token_count, in
     container->token_count = token_count;
     container->index = index;
 
-    static int precedence = 0;
-    container->precedence = &precedence;
-
     return container;
 }
 
-TREE_ELEMENT* parse(PARSER_CONTAINER* container)
+TREE_ELEMENT* parse(PARSER_CONTAINER* container, int precedence)
 {
     TOKEN* token = container->tokens[*container->index];
     *container->index += 1;
@@ -48,23 +47,28 @@ TREE_ELEMENT* parse(PARSER_CONTAINER* container)
     if (*container->index >= (int)container->token_count)
         return left;
 
-    // try parsing an arithmetic element from the element we just parsed
-    token = container->tokens[*container->index];
-
-    switch (token->type)
+    while (precedence < get_precedence(container))
     {
-    default:
-        return left;
+        token = container->tokens[*container->index];
 
-    case TOKEN_ADDITION:
-    case TOKEN_NEGATION:
-    case TOKEN_MULTIPLICATION:
-    case TOKEN_DIVISION:
-    case TOKEN_POWER:
-    case TOKEN_REMAINDER:
-        *container->index += 1;
-        return parse_arithmetic(token, left, container);
+        switch (token->type)
+        {
+        default:
+            return left;
+
+        case TOKEN_ADDITION:
+        case TOKEN_NEGATION:
+        case TOKEN_MULTIPLICATION:
+        case TOKEN_DIVISION:
+        case TOKEN_POWER:
+        case TOKEN_REMAINDER:
+            *container->index += 1;
+            left = parse_arithmetic(token, left, container);
+            break;
+        }
     }
+
+    return left;
 }
 
 TREE_ELEMENT* create_element(TREE_ELEMENT_TYPE type)
@@ -116,39 +120,75 @@ TREE_ELEMENT* parse_number(TOKEN* token, PARSER_CONTAINER* container)
 TREE_ELEMENT* parse_arithmetic(TOKEN* token, TREE_ELEMENT* left,
     PARSER_CONTAINER* container)
 {
-    TREE_ELEMENT* right = parse(container);
     ARITHMETIC_TYPE type;
+    int precedence = 0;
 
     switch (token->type)
     {
     default: // TODO: kinda bad having addition as the default
     case TOKEN_ADDITION:
         type = ARITH_ADDITION;
+        precedence = PRECEDENCE_SUM;
         break;
 
     case TOKEN_NEGATION:
         type = ARITH_NEGATION;
+        precedence = PRECEDENCE_SUM;
         break;
 
     case TOKEN_MULTIPLICATION:
         type = ARITH_MULTIPLICATION;
+        precedence = PRECEDENCE_MULT;
         break;
 
     case TOKEN_DIVISION:
         type = ARITH_DIVISION;
+        precedence = PRECEDENCE_MULT;
         break;
 
     case TOKEN_POWER:
         type = ARITH_POWER;
+        precedence = PRECEDENCE_POWER;
         break;
 
     case TOKEN_REMAINDER:
         type = ARITH_REMAINDER;
+        precedence = PRECEDENCE_MULT;
         break;
     }
 
     TREE_ELEMENT* elem = create_arithmetic_element(type);
+    TREE_ELEMENT* right = parse(container, precedence);
+
     elem->child1 = left;
     elem->child2 = right;
     return elem;
+}
+
+int get_precedence(PARSER_CONTAINER* container)
+{
+    if (*container->index >= (int)container->token_count)
+        return 0;
+
+    switch (container->tokens[*container->index]->type)
+    {
+    default:
+        return 0;
+
+    case TOKEN_ADDITION:
+    case TOKEN_NEGATION:
+        return PRECEDENCE_SUM;
+
+    case TOKEN_MULTIPLICATION:
+    case TOKEN_DIVISION:
+    case TOKEN_REMAINDER:
+        return PRECEDENCE_MULT;
+
+    case TOKEN_POWER:
+        return PRECEDENCE_POWER;
+
+    case TOKEN_OPEN_BRACKET:
+    case TOKEN_CLOSE_BRACKET:
+        return PRECEDENCE_GROUP;
+    }
 }

@@ -59,7 +59,8 @@ TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 
             case '-':
                 /* special case: if there's a number after the -,
-                parse it as a number */
+                parse it as a number.
+                except that this doesn't work always. you know when that happens */
 
                 if (i < (int)input_len - 1)
                 {

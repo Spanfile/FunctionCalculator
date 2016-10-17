@@ -32,7 +32,7 @@ int main(void)
 
     int index = 0;
     PARSER_CONTAINER* container = create_parser_container(tokens, token_count, &index);
-    TREE_ELEMENT* root_elem = parse(container);
+    TREE_ELEMENT* root_elem = parse(container, 0);
 
     free(container);
 
