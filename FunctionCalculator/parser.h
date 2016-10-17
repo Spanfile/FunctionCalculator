@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "TOKEN.h"
-#include "TREE_ELEMENT.h"
+#include "tree_element.h"
 #include "PRECEDENCE.h"
 #include "PARSER_CONTAINER.h"
 #include "parselets.h"

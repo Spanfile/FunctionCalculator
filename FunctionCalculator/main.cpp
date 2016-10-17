@@ -40,27 +40,49 @@ int main(void)
         // replace the newline at the end with a null terminating byte
         read_buffer[--read_len] = '\0';
 
-        token_count = 0;
-        tokens = tokenise(read_buffer, read_len, &token_count);
+        // parse commands
+        if (read_buffer[0] == ':' && read_len > 1)
+        {
+            COMMAND_TYPE cmd = (COMMAND_TYPE)read_buffer[1];
+            switch (cmd)
+            {
+            default:
+                printf("Invalid command: %c\nTry :h for help.", cmd);
+                break;
 
-        free(read_buffer);
+            case COMMAND_QUIT:
+                running = false;
+                break;
 
-        index = 0;
-        container = create_parser_container(tokens, token_count, &index);
-        root_elem = parse(container, 0);
+            case COMMAND_HELP:
+                printf("Commands:\n");
+                printf(":h - displays this help\n");
+                printf(":q - quits the application\n");
+                break;
+            }
+        }
+        else // or parse math
+        {
+            token_count = 0;
+            tokens = tokenise(read_buffer, read_len, &token_count);
 
-        free(container);
+            free(read_buffer);
 
-        print_elem(root_elem, 0);
-        free_elem(root_elem);
+            index = 0;
+            container = create_parser_container(tokens, token_count, &index);
+            root_elem = parse(container, 0);
 
-        for (int i = 0; i < (int)token_count; i++)
-            free(tokens[i]);
+            free(container);
 
-        free(tokens);
+            print_elem(root_elem, 0);
+            free_elem(root_elem);
+
+            for (int i = 0; i < (int)token_count; i++)
+                free(tokens[i]);
+
+            free(tokens);
+        }
     }
-
-    getchar();
 
     return 0;
 }
