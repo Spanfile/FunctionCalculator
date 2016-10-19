@@ -30,6 +30,10 @@ struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
     case TOKEN_NUMBER:
         left = parse_number(token, container);
         break;
+
+    case TOKEN_OPEN_BRACKET:
+        left = parse_group(token, container);
+        break;
     }
 
     if (*container->index >= (int)container->token_count) {

@@ -71,7 +71,7 @@ int main(void)
 
             double result = interpret(root_elem);
             printf("%f\n", result);
-            //print_elem(root_elem, 0);
+            print_elem(root_elem, 0);
             free_elem(root_elem);
 
             for (int i = 0; i < (int)token_count; i++)

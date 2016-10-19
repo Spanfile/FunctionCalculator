@@ -59,3 +59,16 @@ struct TREE_ELEMENT* parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* 
     elem->child2 = right;
     return elem;
 }
+
+struct TREE_ELEMENT* parse_group(struct TOKEN* token, struct PARSER_CONTAINER* container)
+{
+    struct TREE_ELEMENT* inner = parse(container, 0);
+
+    if (container->tokens[*container->index]->type != TOKEN_CLOSE_BRACKET) {
+        // TODO: error
+    } else {
+        *container->index += 1;
+    }
+
+    return inner;
+}
