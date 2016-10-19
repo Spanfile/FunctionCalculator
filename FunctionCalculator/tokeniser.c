@@ -3,10 +3,11 @@
 int tokenise_name(char*, int*, size_t);
 int tokenise_number(char*, int*, size_t);
 
-struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
+enum CALCERR tokenise(char* input, size_t input_len,
+    size_t* token_count, struct TOKEN*** tokens)
 {
     size_t tokens_size = 8;
-    struct TOKEN** tokens = malloc(tokens_size * sizeof(struct TOKEN));
+    *tokens = malloc(tokens_size * sizeof(struct TOKEN));
     (*token_count) = 0;
 
     int i = 0;
@@ -39,7 +40,7 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 
             switch (c) {
             default:
-                printf("Unknown character found (i %d): %c", i, c);
+                return CALCERR_INVALID_CHARACTER;
                 break;
 
             case ' ':
@@ -117,14 +118,14 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 
         // resize the token array if it's full
         if ((*token_count) + 1 > tokens_size) {
-            tokens = realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
-        }
+            *tokens = realloc(*tokens, (tokens_size += 8) * sizeof(**tokens));
+        } // there may be something fishy going on here
 
-        tokens[*token_count] = token_ptr;
+        (*tokens)[*token_count] = token_ptr;
         *token_count += 1;
     } while (i++ < (int)input_len);
 
-    return tokens;
+    return CALCERR_NONE;
 }
 
 int tokenise_name(char* input, int* index, size_t input_len)

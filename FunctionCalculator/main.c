@@ -70,7 +70,12 @@ int main(void)
         }
 
         token_count = 0;
-        tokens = tokenise(read_buffer, read_len, &token_count);
+        error = tokenise(read_buffer, read_len, &token_count, &tokens);
+
+        if (error != CALCERR_NONE) {
+            printf("tokenising error: %s\n", CALCERR_STRING[error]);
+            continue;
+        }
 
         index = 0;
         error = create_parser_container(tokens, token_count, &index, &container);

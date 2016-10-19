@@ -6,5 +6,6 @@
 #include <string.h>
 
 #include "TOKEN.h"
+#include "CALCERR.h"
 
-struct TOKEN** tokenise(char*, size_t, size_t*);
+enum CALCERR tokenise(char*, size_t, size_t*, struct TOKEN***);
