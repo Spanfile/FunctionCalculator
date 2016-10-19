@@ -2,42 +2,55 @@
 
 int get_precedence(struct PARSER_CONTAINER*);
 
-struct PARSER_CONTAINER* create_parser_container(struct TOKEN** tokens, size_t token_count, int* index)
+enum CALCERR create_parser_container(struct TOKEN** tokens, size_t token_count, int* index,
+    struct PARSER_CONTAINER** container_out)
 {
-    struct PARSER_CONTAINER* container = malloc(sizeof(struct PARSER_CONTAINER));
+    *container_out = malloc(sizeof(struct PARSER_CONTAINER));
 
-    container->tokens = tokens;
-    container->token_count = token_count;
-    container->index = index;
+    if (*container_out == NULL) {
+        return CALCERR_CONTAINER_MALLOC_ERROR;
+    }
 
-    return container;
+    (*container_out)->tokens = tokens;
+    (*container_out)->token_count = token_count;
+    (*container_out)->index = index;
+
+    return CALCERR_NONE;
 }
 
-struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
+enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
+    struct TREE_ELEMENT** elem_out)
 {
     struct TOKEN* token = container->tokens[*container->index];
     *container->index += 1;
     struct TREE_ELEMENT* left = NULL;
+    enum CALCERR error = CALCERR_NONE;
 
     switch (token->type) {
     default:
+        error = CALCERR_TOKEN_NOT_IMPLEMENTED;
         break;
 
     case TOKEN_NAME:
-        left = parse_name(token, container);
+        error = parse_name(token, container, &left);
         break;
 
     case TOKEN_NUMBER:
-        left = parse_number(token, container);
+        error = parse_number(token, container, &left);
         break;
 
     case TOKEN_OPEN_BRACKET:
-        left = parse_group(token, container);
+        error = parse_group(token, container, &left);
         break;
     }
 
+    if (error != CALCERR_NONE) {
+        return error;
+    }
+
     if (*container->index >= (int)container->token_count) {
-        return left;
+        *elem_out = left;
+        return CALCERR_NONE;
     }
 
     while (precedence < get_precedence(container)) {
@@ -45,7 +58,8 @@ struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
 
         switch (token->type) {
         default:
-            return left;
+            *elem_out = left;
+            return CALCERR_NONE;
 
         case TOKEN_ADDITION:
         case TOKEN_NEGATION:
@@ -54,12 +68,18 @@ struct TREE_ELEMENT* parse(struct PARSER_CONTAINER* container, int precedence)
         case TOKEN_POWER:
         case TOKEN_REMAINDER:
             *container->index += 1;
-            left = parse_arithmetic(token, left, container);
+            error = parse_arithmetic(token, left, container, &left);
+
+            if (error != CALCERR_NONE) {
+                return error;
+            }
+
             break;
         }
     }
 
-    return left;
+    *elem_out = left;
+    return CALCERR_NONE;
 }
 
 int get_precedence(struct PARSER_CONTAINER* container)

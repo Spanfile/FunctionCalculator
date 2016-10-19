@@ -7,3 +7,4 @@
 #include "parser.h"
 #include "interpreter.h"
 #include "COMMAND_TYPE.h"
+#include "CALCERR.h"

@@ -40,6 +40,10 @@ struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
 
 void free_elem(struct TREE_ELEMENT* elem)
 {
+    if (elem == NULL) {
+        return;
+    }
+
     if (elem->child1 != NULL) {
         free_elem(elem->child1);
     }

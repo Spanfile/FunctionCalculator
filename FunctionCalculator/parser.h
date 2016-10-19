@@ -7,6 +7,9 @@
 #include "PRECEDENCE.h"
 #include "PARSER_CONTAINER.h"
 #include "parselets.h"
+#include "CALCERR.h"
 
-struct PARSER_CONTAINER* create_parser_container(struct TOKEN**, size_t, int*);
-struct TREE_ELEMENT* parse(struct PARSER_CONTAINER*, int precedence);
+enum CALCERR create_parser_container(struct TOKEN**, size_t, int*,
+    struct PARSER_CONTAINER**);
+enum CALCERR parse(struct PARSER_CONTAINER*, int precedence,
+    struct TREE_ELEMENT**);

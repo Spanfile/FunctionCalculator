@@ -1,6 +1,8 @@
 #include "main.h"
 
 void print_elem(struct TREE_ELEMENT*, int);
+void finalise(char*, struct TOKEN**, int, struct PARSER_CONTAINER*, struct TREE_ELEMENT*);
+void print_error(enum CALCERR, int);
 
 int main(void)
 {
@@ -9,6 +11,7 @@ int main(void)
     char* read_buffer = NULL;
     char input;
     int running = 1;
+    enum CALCERR error = CALCERR_NONE;
 
     struct TOKEN** tokens = NULL;
     size_t token_count = 0;
@@ -19,6 +22,8 @@ int main(void)
     init_interpreter();
 
     while (running) {
+        error = CALCERR_NONE;
+
         read_buffer_size = 16;
         read_len = 0;
         read_buffer = malloc(read_buffer_size);
@@ -45,40 +50,43 @@ int main(void)
             switch (cmd) {
             default:
                 printf("Invalid command: %c\nTry :h for help.\n", cmd);
-                break;
+                continue;
 
             case COMMAND_QUIT:
                 running = 0;
-                break;
+                continue;
 
             case COMMAND_HELP:
                 printf("Commands:\n");
                 printf(":h - displays this help\n");
                 printf(":q - quits the application\n");
-                break;
+                continue;
             }
-        } else { // or parse math
-            token_count = 0;
-            tokens = tokenise(read_buffer, read_len, &token_count);
-
-            free(read_buffer);
-
-            index = 0;
-            container = create_parser_container(tokens, token_count, &index);
-            root_elem = parse(container, 0);
-
-            free(container);
-
-            double result = interpret(root_elem);
-            printf("%f\n", result);
-            print_elem(root_elem, 0);
-            free_elem(root_elem);
-
-            for (int i = 0; i < (int)token_count; i++)
-                free(tokens[i]);
-
-            free(tokens);
         }
+
+        token_count = 0;
+        tokens = tokenise(read_buffer, read_len, &token_count);
+
+        index = 0;
+        error = create_parser_container(tokens, token_count, &index, &container);
+        if (error != CALCERR_NONE) {
+            print_error(error, index - 1);
+            finalise(read_buffer, tokens, token_count, container, root_elem);
+            continue;
+        }
+
+        error = parse(container, 0, &root_elem);
+        if (error != CALCERR_NONE) {
+            print_error(error, index - 1);
+            finalise(read_buffer, tokens, token_count, container, root_elem);
+            continue;
+        }
+
+        double result = interpret(root_elem);
+        printf("%f\n", result);
+        print_elem(root_elem, 0);
+
+        finalise(read_buffer, tokens, token_count, container, root_elem);
     }
 
     return 0;
@@ -117,4 +125,24 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
         }
         break;
     }
+}
+
+void finalise(char* read_buffer, struct TOKEN** tokens, int token_count,
+    struct PARSER_CONTAINER* container, struct TREE_ELEMENT* root_elem)
+{
+    free(read_buffer);
+
+    for (int i = 0; i < token_count; i++) {
+        free(tokens[i]);
+    }
+
+    free(tokens);
+
+    free(container);
+    free_elem(root_elem);
+}
+
+void print_error(enum CALCERR error, int pos)
+{
+    printf("error @ i%i: %s\n", pos, CALCERR_STRING[error]);
 }

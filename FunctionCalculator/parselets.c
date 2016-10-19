@@ -1,26 +1,31 @@
 #include "parselets.h"
 
-struct TREE_ELEMENT* parse_name(struct TOKEN* token, struct PARSER_CONTAINER* container)
+enum CALCERR parse_name(struct TOKEN* token,
+    struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out)
 {
-    struct TREE_ELEMENT* elem = create_name_element(token->value, token->value_length);
-    return elem;
+    *elem_out = create_name_element(token->value, token->value_length);
+    return CALCERR_NONE;
 }
 
-struct TREE_ELEMENT* parse_number(struct TOKEN* token, struct PARSER_CONTAINER* container)
+enum CALCERR parse_number(struct TOKEN* token,
+    struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out)
 {
     char* tmp;
-    struct TREE_ELEMENT* elem = create_number_element(strtod(token->value, &tmp));
-    return elem;
+    *elem_out = create_number_element(strtod(token->value, &tmp));
+    return CALCERR_NONE;
 }
 
-struct TREE_ELEMENT* parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
-    struct PARSER_CONTAINER* container)
+enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
+    struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out)
 {
     enum ARITHMETIC_TYPE type;
     int precedence = 0;
+    enum CALCERR error = CALCERR_NONE;
 
     switch (token->type) {
-    default: // TODO: kinda bad having addition as the default
+    default:
+        break;
+
     case TOKEN_ADDITION:
         type = ARITH_ADDITION;
         precedence = PRECEDENCE_SUM;
@@ -52,23 +57,42 @@ struct TREE_ELEMENT* parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* 
         break;
     }
 
-    struct TREE_ELEMENT* elem = create_arithmetic_element(type);
-    struct TREE_ELEMENT* right = parse(container, precedence);
-
-    elem->child1 = left;
-    elem->child2 = right;
-    return elem;
-}
-
-struct TREE_ELEMENT* parse_group(struct TOKEN* token, struct PARSER_CONTAINER* container)
-{
-    struct TREE_ELEMENT* inner = parse(container, 0);
-
-    if (container->tokens[*container->index]->type != TOKEN_CLOSE_BRACKET) {
-        // TODO: error
-    } else {
-        *container->index += 1;
+    if (error != CALCERR_NONE) {
+        return error;
     }
 
-    return inner;
+    *elem_out = create_arithmetic_element(type);
+    struct TREE_ELEMENT* right = NULL;
+    error = parse(container, precedence, &right);
+
+    if (error != CALCERR_NONE) {
+        return error;
+    }
+
+    (*elem_out)->child1 = left;
+    (*elem_out)->child2 = right;
+
+    return CALCERR_NONE;
+}
+
+enum CALCERR parse_group(struct TOKEN* token,
+    struct PARSER_CONTAINER* container, struct TREE_ELEMENT** inner)
+{
+    enum CALCERR error = parse(container, 0, inner);
+
+    if (error != CALCERR_NONE) {
+        return error;
+    }
+
+    if (*container->index >= container->token_count) {
+        return CALCERR_EXPECTED_CLOSING_BRACKET;
+    }
+
+    if (container->tokens[*container->index]->type != TOKEN_CLOSE_BRACKET) {
+        return CALCERR_EXPECTED_CLOSING_BRACKET;
+    }
+    
+    *container->index += 1;
+
+    return CALCERR_NONE;
 }

@@ -1,0 +1,18 @@
+#pragma once
+
+#define FOREACH_CALCERR(CALCERR)                    \
+        CALCERR(CALCERR_NONE)                       \
+        CALCERR(CALCERR_TOKEN_NOT_IMPLEMENTED)      \
+        CALCERR(CALCERR_EXPECTED_CLOSING_BRACKET)   \
+        CALCERR(CALCERR_CONTAINER_MALLOC_ERROR)     \
+
+#define GENERATE_ENUM(ENUM) ENUM,
+#define GENERATE_STRING(STR) #STR,
+
+enum CALCERR {
+    FOREACH_CALCERR(GENERATE_ENUM)
+};
+
+static const char* CALCERR_STRING[] = {
+    FOREACH_CALCERR(GENERATE_STRING)
+};
