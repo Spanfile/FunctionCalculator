@@ -30,3 +30,5 @@ struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE);
 struct TREE_ELEMENT* create_number_element(double);
 struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE);
 struct TREE_ELEMENT* create_name_element(char*, size_t);
+
+void free_elem(struct TREE_ELEMENT*);

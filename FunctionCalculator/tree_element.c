@@ -37,3 +37,20 @@ struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
     elem->arithmetic_type = type;
     return elem;
 }
+
+void free_elem(struct TREE_ELEMENT* elem)
+{
+    if (elem->child1 != NULL) {
+        free_elem(elem->child1);
+    }
+
+    if (elem->child2 != NULL) {
+        free_elem(elem->child2);
+    }
+    
+    if (elem->name_value != NULL) {
+        free(elem->name_value);
+    }
+
+    free(elem);
+}

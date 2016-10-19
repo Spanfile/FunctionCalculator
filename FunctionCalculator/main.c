@@ -1,6 +1,5 @@
 #include "main.h"
 
-void free_elem(struct TREE_ELEMENT*);
 void print_elem(struct TREE_ELEMENT*, int);
 
 int main(void)
@@ -83,23 +82,6 @@ int main(void)
     }
 
     return 0;
-}
-
-void free_elem(struct TREE_ELEMENT* elem)
-{
-    if (elem->child1 != NULL) {
-        free_elem(elem->child1);
-    }
-
-    if (elem->child2 != NULL) {
-        free_elem(elem->child2);
-    }
-    
-    if (elem->name_value != NULL) {
-        free(elem->name_value);
-    }
-
-    free(elem);
 }
 
 void print_elem(struct TREE_ELEMENT* elem, int indent)
