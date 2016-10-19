@@ -2,17 +2,9 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "0.1.0",
-    "command": "gcc",
+    "command": "sh",
     "isShellCommand": true,
-    "args": ["-g", "-Wall", "-o", "FunctionCalculator.out",
-        "main.c",
-        "parser.c",
-        "tokeniser.c",
-        "tree_element.c",
-        "parselets.c",
-        "interpreter.c",
-        "hashtable.c",
-        "-lm"],
+    "args": ["build.sh"],
     "showOutput": "always",
     "problemMatcher": {
         "owner": "cpp",
