@@ -11,7 +11,9 @@ void init_interpreter(void)
     if (hashtable == NULL) {
         printf("Failed to create hashtable");
     } else {
-        ht_set(hashtable, "pi", 3.1415927538);
+        // these constants may not always be defined
+        ht_set(hashtable, "pi", M_PI);
+        ht_set(hashtable, "e", M_E);
     }
 }
 
