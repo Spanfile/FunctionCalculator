@@ -22,7 +22,7 @@ int main(void)
     while (running) {
         read_buffer_size = 16;
         read_len = 0;
-        read_buffer = (char*)malloc(read_buffer_size);
+        read_buffer = malloc(read_buffer_size);
 
         // read characters into a dynamically expanding buffer
         printf("> ");
@@ -31,7 +31,7 @@ int main(void)
 
             // resize the buffer if it's full
             if (read_len + 1 > read_buffer_size)
-                read_buffer = (char*)realloc(read_buffer, read_buffer_size += 8);
+                read_buffer = realloc(read_buffer, read_buffer_size += 8);
 
             read_buffer[read_len++] = input;
 
@@ -42,7 +42,7 @@ int main(void)
 
         // parse commands
         if (read_buffer[0] == ':' && read_len > 1) {
-            enum COMMAND_TYPE cmd = (enum COMMAND_TYPE)read_buffer[1];
+            enum COMMAND_TYPE cmd = read_buffer[1];
             switch (cmd) {
             default:
                 printf("Invalid command: %c\nTry :h for help.\n", cmd);

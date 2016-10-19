@@ -4,7 +4,7 @@ int get_precedence(struct PARSER_CONTAINER*);
 
 struct PARSER_CONTAINER* create_parser_container(struct TOKEN** tokens, size_t token_count, int* index)
 {
-    struct PARSER_CONTAINER* container = (struct PARSER_CONTAINER*)malloc(sizeof(struct PARSER_CONTAINER));
+    struct PARSER_CONTAINER* container = malloc(sizeof(struct PARSER_CONTAINER));
 
     container->tokens = tokens;
     container->token_count = token_count;
