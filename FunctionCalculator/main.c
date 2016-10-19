@@ -45,7 +45,7 @@ int main(void)
             enum COMMAND_TYPE cmd = (enum COMMAND_TYPE)read_buffer[1];
             switch (cmd) {
             default:
-                printf("Invalid command: %c\nTry :h for help.", cmd);
+                printf("Invalid command: %c\nTry :h for help.\n", cmd);
                 break;
 
             case COMMAND_QUIT:
