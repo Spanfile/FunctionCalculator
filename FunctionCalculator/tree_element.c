@@ -2,11 +2,16 @@
 
 struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
 {
-    struct TREE_ELEMENT* elem = (struct TREE_ELEMENT*)malloc(sizeof(struct TREE_ELEMENT));
+    struct TREE_ELEMENT* elem = malloc(sizeof(struct TREE_ELEMENT));
     elem->type = type;
 
+    // initialise all fields to default values
     elem->child1 = NULL;
     elem->child2 = NULL;
+    elem->name_value = NULL;
+    elem->name_value_len = 0;
+    elem->arithmetic_type = ARITH_ADDITION;
+    elem->number_value = 0;
 
     return elem;
 }

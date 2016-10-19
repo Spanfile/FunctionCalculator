@@ -6,12 +6,12 @@ int tokenise_number(char*, int*, size_t);
 struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
 {
     size_t tokens_size = 8;
-    struct TOKEN** tokens = (struct TOKEN**)malloc(tokens_size * sizeof(struct TOKEN));
+    struct TOKEN** tokens = malloc(tokens_size * sizeof(struct TOKEN));
     (*token_count) = 0;
 
     int i = 0;
     do {
-        struct TOKEN* token_ptr = (struct TOKEN*)malloc(sizeof(struct TOKEN));
+        struct TOKEN* token_ptr = malloc(sizeof(struct TOKEN));
         char c = input[i];
 
         size_t sub_len = 0;
@@ -111,12 +111,13 @@ struct TOKEN** tokenise(char* input, size_t input_len, size_t* token_count)
         }
 
         token_ptr->value_length = sub_len;
-        token_ptr->value = (char*)malloc(sub_len + 1);
+        token_ptr->value = malloc(sub_len + 1);
         strncpy(token_ptr->value, &input[read_start], sub_len);
+        token_ptr->value[sub_len] = '\0';
 
         // resize the token array if it's full
         if ((*token_count) + 1 > tokens_size) {
-            tokens = (struct TOKEN**)realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
+            tokens = realloc(tokens, (tokens_size += 8) * sizeof(*tokens));
         }
 
         tokens[*token_count] = token_ptr;

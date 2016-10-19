@@ -94,6 +94,10 @@ void free_elem(struct TREE_ELEMENT* elem)
     if (elem->child2 != NULL) {
         free_elem(elem->child2);
     }
+    
+    if (elem->name_value != NULL) {
+        free(elem->name_value);
+    }
 
     free(elem);
 }
