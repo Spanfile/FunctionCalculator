@@ -17,5 +17,5 @@ struct hashtable {
 struct hashtable* ht_create(size_t size);
 unsigned ht_hash(struct hashtable*, char*);
 struct hashtable_entry* ht_newentry(char*, double);
-void ht_set(struct hashtable*, char*, double);
-void ht_get(struct hashtable*, char*, double*);
+int ht_set(struct hashtable*, char*, double);
+int ht_get(struct hashtable*, char*, double*);

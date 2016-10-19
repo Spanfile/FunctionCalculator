@@ -56,7 +56,7 @@ struct hashtable_entry* ht_newentry(char* key, double value)
     return entry;
 }
 
-void ht_set(struct hashtable* ht, char* key, double value) {
+int ht_set(struct hashtable* ht, char* key, double value) {
     int bucket = 0;
     struct hashtable_entry* new = NULL;
     struct hashtable_entry* next = NULL;
@@ -76,6 +76,10 @@ void ht_set(struct hashtable* ht, char* key, double value) {
     } else {
         new = ht_newentry(key, value);
 
+        if (new == NULL) {
+            return 0;
+        }
+
         if (next == ht->buckets[bucket]) {
             new->next = next;
             ht->buckets[bucket] = new;
@@ -86,9 +90,11 @@ void ht_set(struct hashtable* ht, char* key, double value) {
             last->next = new;
         }
     }
+
+    return 1;
 }
 
-void ht_get(struct hashtable* ht, char* key, double* out) {
+int ht_get(struct hashtable* ht, char* key, double* out) {
     int bucket = 0;
     struct hashtable_entry* entry = NULL;
 
@@ -100,8 +106,9 @@ void ht_get(struct hashtable* ht, char* key, double* out) {
     }
 
     if (entry == NULL || entry->key == NULL || strcmp(key, entry->key) != 0) {
-        out = NULL;
+        return 0;
     }
 
     *out = entry->value;
+    return 1;
 }

@@ -19,7 +19,12 @@ int main(void)
     struct PARSER_CONTAINER* container;
     struct TREE_ELEMENT* root_elem;
 
-    init_interpreter();
+    error = init_interpreter();
+
+    if (error != CALCERR_NONE) {
+        printf("error: %s", CALCERR_STRING[error]);
+        return 1; // this is a critical error
+    }
 
     while (running) {
         error = CALCERR_NONE;
@@ -69,21 +74,30 @@ int main(void)
 
         index = 0;
         error = create_parser_container(tokens, token_count, &index, &container);
+
         if (error != CALCERR_NONE) {
-            print_error(error, index - 1);
+            printf("error: %s\n", CALCERR_STRING[error]);
             finalise(read_buffer, tokens, token_count, container, root_elem);
             continue;
         }
 
         error = parse(container, 0, &root_elem);
+
         if (error != CALCERR_NONE) {
-            print_error(error, index - 1);
+            printf("parsing error @ i%i: %s\n", index - 1, CALCERR_STRING[error]);
             finalise(read_buffer, tokens, token_count, container, root_elem);
             continue;
         }
 
-        double result = interpret(root_elem);
-        printf("%f\n", result);
+        error = evaluate_element(root_elem);
+
+        if (error != CALCERR_NONE) {
+            printf("evaluation error: %s\n", CALCERR_STRING[error]);
+            finalise(read_buffer, tokens, token_count, container, root_elem);
+            continue;
+        }
+
+        printf("%f\n", root_elem->number_value);
         print_elem(root_elem, 0);
 
         finalise(read_buffer, tokens, token_count, container, root_elem);
@@ -128,7 +142,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 }
 
 void finalise(char* read_buffer, struct TOKEN** tokens, int token_count,
-    struct PARSER_CONTAINER* container, struct TREE_ELEMENT* root_elem)
+    struct PARSER_CONTAINER* container, struct TREE_ELEMENT* root_elem) // UGHH GET RID OF THIS
 {
     free(read_buffer);
 
@@ -140,9 +154,4 @@ void finalise(char* read_buffer, struct TOKEN** tokens, int token_count,
 
     free(container);
     free_elem(root_elem);
-}
-
-void print_error(enum CALCERR error, int pos)
-{
-    printf("error @ i%i: %s\n", pos, CALCERR_STRING[error]);
 }

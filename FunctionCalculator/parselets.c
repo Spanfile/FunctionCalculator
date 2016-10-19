@@ -24,6 +24,7 @@ enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
 
     switch (token->type) {
     default:
+        error = CALCERR_UNEXPECTED_TOKEN;
         break;
 
     case TOKEN_ADDITION:
@@ -85,13 +86,13 @@ enum CALCERR parse_group(struct TOKEN* token,
     }
 
     if (*container->index >= container->token_count) {
-        return CALCERR_EXPECTED_CLOSING_BRACKET;
+        return CALCERR_UNEXPECTED_END_OF_INPUT;
     }
 
     if (container->tokens[*container->index]->type != TOKEN_CLOSE_BRACKET) {
         return CALCERR_EXPECTED_CLOSING_BRACKET;
     }
-    
+
     *container->index += 1;
 
     return CALCERR_NONE;

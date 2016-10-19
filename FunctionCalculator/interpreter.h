@@ -5,6 +5,7 @@
 
 #include "tree_element.h"
 #include "hashtable.h"
+#include "CALCERR.h"
 
-void init_interpreter(void);
-double interpret(struct TREE_ELEMENT*);
+enum CALCERR init_interpreter(void);
+enum CALCERR evaluate_element(struct TREE_ELEMENT*);

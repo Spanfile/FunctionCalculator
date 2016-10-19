@@ -21,6 +21,10 @@ enum CALCERR create_parser_container(struct TOKEN** tokens, size_t token_count, 
 enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
     struct TREE_ELEMENT** elem_out)
 {
+    if (*container->index >= container->token_count) {
+        return CALCERR_UNEXPECTED_END_OF_INPUT;
+    }
+
     struct TOKEN* token = container->tokens[*container->index];
     *container->index += 1;
     struct TREE_ELEMENT* left = NULL;
@@ -28,7 +32,7 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
 
     switch (token->type) {
     default:
-        error = CALCERR_TOKEN_NOT_IMPLEMENTED;
+        error = CALCERR_UNEXPECTED_TOKEN;
         break;
 
     case TOKEN_NAME:
