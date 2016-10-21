@@ -52,6 +52,7 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         return error;
     }
 
+    // no more tokens? we're done
     if (*container->index >= (int)container->token_count) {
         *elem_out = left;
         return CALCERR_NONE;
@@ -72,9 +73,8 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         case TOKEN_POWER:
         case TOKEN_REMAINDER:
             *container->index += 1;
-            error = parse_arithmetic(token, left, container, &left);
 
-            if (error != CALCERR_NONE) {
+            if ((error = parse_arithmetic(token, left, container, &left)) != CALCERR_NONE) {
                 return error;
             }
 

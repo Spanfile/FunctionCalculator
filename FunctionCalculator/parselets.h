@@ -7,8 +7,13 @@
 #include "PRECEDENCE.h"
 #include "CALCERR.h"
 
+// "prefix" parselets
 enum CALCERR parse_name(struct TOKEN*, struct PARSER_CONTAINER*, struct TREE_ELEMENT**);
 enum CALCERR parse_number(struct TOKEN*, struct PARSER_CONTAINER*, struct TREE_ELEMENT**);
-enum CALCERR parse_arithmetic(struct TOKEN*,
-    struct TREE_ELEMENT*, struct PARSER_CONTAINER*, struct TREE_ELEMENT**);
 enum CALCERR parse_group(struct TOKEN*, struct PARSER_CONTAINER*, struct TREE_ELEMENT**);
+
+// "postfix" parselets
+enum CALCERR parse_arithmetic(struct TOKEN*, struct TREE_ELEMENT*,
+    struct PARSER_CONTAINER*, struct TREE_ELEMENT**);
+enum CALCERR parse_function(struct TOKEN*, struct TREE_ELEMENT*,
+     struct PARSER_CONTAINER*, struct TREE_ELEMENT**);

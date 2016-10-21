@@ -64,9 +64,8 @@ enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
 
     *elem_out = create_arithmetic_element(type);
     struct TREE_ELEMENT* right = NULL;
-    error = parse(container, precedence, &right);
 
-    if (error != CALCERR_NONE) {
+    if ((error = parse(container, precedence, &right)) != CALCERR_NONE) {
         return error;
     }
 
@@ -96,4 +95,14 @@ enum CALCERR parse_group(struct TOKEN* token,
     *container->index += 1;
 
     return CALCERR_NONE;
+}
+
+enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
+    struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out)
+{
+    if (left->type != TOKEN_NAME) {
+        return CALCERR_INVALID_TOKEN;
+    }
+
+    
 }

@@ -71,6 +71,7 @@ int main(void)
             }
         }
 
+        // or parse math
         if ((error = tokenise(read_buffer, read_len, &token_count, &tokens))
             != CALCERR_NONE) {
             printf("tokenising error: %s\n", CALCERR_STRING[error]);
