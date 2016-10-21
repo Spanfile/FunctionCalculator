@@ -1,7 +1,7 @@
 #include "main.h"
 
 void print_elem(struct TREE_ELEMENT*, int);
-void finalise(char*, struct TOKEN**, int, struct PARSER_CONTAINER*, struct TREE_ELEMENT*);
+void free_tokens(struct TOKEN**, size_t);
 void print_error(enum CALCERR, int);
 
 int main(void)
@@ -31,7 +31,9 @@ int main(void)
 
         read_buffer_size = 16;
         read_len = 0;
-        read_buffer = malloc(read_buffer_size);
+        read_buffer = malloc(read_buffer_size); // TODO: memory check?
+        token_count = 0;
+        index = 0;
 
         // read characters into a dynamically expanding buffer
         printf("> ");
@@ -69,43 +71,34 @@ int main(void)
             }
         }
 
-        token_count = 0;
-        error = tokenise(read_buffer, read_len, &token_count, &tokens);
-
-        if (error != CALCERR_NONE) {
+        if ((error = tokenise(read_buffer, read_len, &token_count, &tokens))
+            != CALCERR_NONE) {
             printf("tokenising error: %s\n", CALCERR_STRING[error]);
-            continue;
-        }
-
-        index = 0;
-        error = create_parser_container(tokens, token_count, &index, &container);
-
-        if (error != CALCERR_NONE) {
+        } else if ((error = create_parser_container(tokens, token_count, &index, &container))
+            != CALCERR_NONE) {
             printf("error: %s\n", CALCERR_STRING[error]);
-            finalise(read_buffer, tokens, token_count, container, root_elem);
-            continue;
-        }
-
-        error = parse(container, 0, &root_elem);
-
-        if (error != CALCERR_NONE) {
+        } else if ((error = parse(container, 0, &root_elem)) != CALCERR_NONE) {
             printf("parsing error @ i%i: %s\n", index - 1, CALCERR_STRING[error]);
-            finalise(read_buffer, tokens, token_count, container, root_elem);
-            continue;
-        }
-
-        error = evaluate_element(root_elem);
-
-        if (error != CALCERR_NONE) {
+        } else if ((error = evaluate_element(root_elem)) != CALCERR_NONE) {
             printf("evaluation error: %s\n", CALCERR_STRING[error]);
-            finalise(read_buffer, tokens, token_count, container, root_elem);
-            continue;
+        } else {
+            printf("%f\n", root_elem->number_value);
+            print_elem(root_elem, 0);
         }
 
-        printf("%f\n", root_elem->number_value);
-        print_elem(root_elem, 0);
+        free(read_buffer);
+        
+        if (tokens != NULL) {
+            free_tokens(tokens, token_count);
+        }
 
-        finalise(read_buffer, tokens, token_count, container, root_elem);
+        if (container != NULL) {
+            free(container);
+        }
+
+        if (root_elem != NULL) {
+            free_elem(root_elem);
+        }
     }
 
     return 0;
@@ -146,17 +139,11 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
     }
 }
 
-void finalise(char* read_buffer, struct TOKEN** tokens, int token_count,
-    struct PARSER_CONTAINER* container, struct TREE_ELEMENT* root_elem) // UGHH GET RID OF THIS
+void free_tokens(struct TOKEN** tokens, size_t token_count)
 {
-    free(read_buffer);
-
     for (int i = 0; i < token_count; i++) {
         free(tokens[i]);
     }
 
     free(tokens);
-
-    free(container);
-    free_elem(root_elem);
 }
