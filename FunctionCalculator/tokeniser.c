@@ -7,7 +7,7 @@ enum CALCERR tokenise(char* input, size_t input_len,
     size_t* token_count, struct TOKEN*** tokens)
 {
     size_t tokens_size = 8;
-    *tokens = malloc(tokens_size * sizeof(struct TOKEN));
+    *tokens = malloc(tokens_size * sizeof(struct TOKEN*));
     (*token_count) = 0;
 
     int i = 0;
@@ -100,6 +100,10 @@ enum CALCERR tokenise(char* input, size_t input_len,
 
             case ')':
                 token_ptr->type = TOKEN_CLOSE_BRACKET;
+                break;
+
+            case ',':
+                token_ptr->type = TOKEN_COMMA;
                 break;
             }
 

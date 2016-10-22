@@ -12,6 +12,8 @@ struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
     elem->name_value_len = 0;
     elem->arithmetic_type = ARITH_ADDITION;
     elem->number_value = 0;
+    elem->args = NULL;
+    elem->args_len = 0;
 
     return elem;
 }
@@ -35,6 +37,17 @@ struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
 {
     struct TREE_ELEMENT* elem = create_element(TYPE_ARITHMETIC);
     elem->arithmetic_type = type;
+    return elem;
+}
+
+struct TREE_ELEMENT* create_function_element(char* value, size_t value_len,
+    struct TREE_ELEMENT** args, size_t args_len)
+{
+    struct TREE_ELEMENT* elem = create_element(TYPE_FUNCTION);
+    elem->name_value = value;
+    elem->name_value_len = value_len;
+    elem->args = args;
+    elem->args_len = args_len;
     return elem;
 }
 

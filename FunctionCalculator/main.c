@@ -136,6 +136,16 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
         } else {
             printf("missing child2\n");
         }
+
+        break;
+
+    case TYPE_FUNCTION:
+        printf("%s\n", elem->name_value);
+
+        for (int i = 0; i < elem->args_len; i++) {
+            print_elem(elem->args[i], indent + 1);
+        }
+
         break;
     }
 }

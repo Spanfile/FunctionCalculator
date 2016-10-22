@@ -79,6 +79,15 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
             }
 
             break;
+
+        case TOKEN_OPEN_BRACKET:
+            *container->index += 1;
+
+            if ((error = parse_function(token, left, container, &left)) != CALCERR_NONE) {
+                return error;
+            }
+            
+            break;
         }
     }
 
