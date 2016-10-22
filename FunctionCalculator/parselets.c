@@ -1,4 +1,5 @@
 #include "parselets.h"
+#include <stdio.h>
 
 enum CALCERR parse_list(struct PARSER_CONTAINER*, struct TREE_ELEMENT***, size_t*);
 
@@ -128,22 +129,21 @@ enum CALCERR parse_list(struct PARSER_CONTAINER* container,
     *elems = malloc(elem_array_size * sizeof(struct TREE_ELEMENT*));
     *elem_count = 0;
 
-    // TODO FIX THIS SHIT AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     while ((token = container->tokens[*container->index])->type != TOKEN_CLOSE_BRACKET) {
         switch (token->type) {
         default:
             return CALCERR_UNEXPECTED_TOKEN;
 
-        case TOKEN_COMMA:
+        case TOKEN_COMMA: // commas act as separators
             *container->index += 1;
             continue;
 
         case TOKEN_NAME:
-            error = parse_name(token, container, &*elems[*elem_count]);
+            error = parse_name(token, container, &(*elems)[*elem_count]);
             break;
 
         case TOKEN_NUMBER:
-            error = parse_number(token, container, &*elems[*elem_count]);
+            error = parse_number(token, container, &(*elems)[*elem_count]);
             break;
         }
 

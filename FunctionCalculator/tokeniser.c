@@ -120,9 +120,11 @@ enum CALCERR tokenise(char* input, size_t input_len,
         strncpy(token_ptr->value, &input[read_start], sub_len);
         token_ptr->value[sub_len] = '\0';
 
+        //printf("%i @ %i,%i: %s\n", token_ptr->type, i, (int)*token_count, token_ptr->value);
+
         // resize the token array if it's full
         if ((*token_count) + 1 > tokens_size) {
-            *tokens = realloc(*tokens, (tokens_size += 8) * sizeof(**tokens));
+            *tokens = realloc(*tokens, (tokens_size += 8) * sizeof(struct TOKEN*));
         } // there may be something fishy going on here
 
         (*tokens)[*token_count] = token_ptr;
