@@ -8,7 +8,7 @@ enum CALCERR create_parser_container(struct TOKEN** tokens, size_t token_count, 
     *container_out = malloc(sizeof(struct PARSER_CONTAINER));
 
     if (*container_out == NULL) {
-        return CALCERR_CONTAINER_MALLOC_ERROR;
+        return CALCERR_MALLOC_FAILED;
     }
 
     (*container_out)->tokens = tokens;
@@ -86,7 +86,7 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
             if ((error = parse_function(token, left, container, &left)) != CALCERR_NONE) {
                 return error;
             }
-            
+
             break;
         }
     }
