@@ -1,15 +1,15 @@
 #include "hashtable.h"
 
-struct hashtable* ht_create(size_t size)
+struct HASHTABLE* ht_create(size_t size)
 {
-    struct hashtable* ht = NULL;
+    struct HASHTABLE* ht = NULL;
 
-    ht = malloc(sizeof(struct hashtable));
+    ht = malloc(sizeof(struct HASHTABLE));
     if (ht == NULL) {
         return NULL;
     }
 
-    ht->buckets = malloc(sizeof(struct hashtable_entry*) * size);
+    ht->buckets = malloc(sizeof(struct HASHTABLE_ENTRY*) * size);
     if (ht->buckets == NULL) {
         return NULL;
     }
@@ -23,7 +23,7 @@ struct hashtable* ht_create(size_t size)
     return ht;
 }
 
-unsigned ht_hash(struct hashtable* ht, char* key)
+unsigned ht_hash(struct HASHTABLE* ht, char* key)
 {
     // FNV hash
     unsigned char* u_key = key;
@@ -37,9 +37,9 @@ unsigned ht_hash(struct hashtable* ht, char* key)
     return h % ht->size;
 }
 
-struct hashtable_entry* ht_newentry(char* key, double value)
+struct HASHTABLE_ENTRY* ht_newentry(char* key, double value)
 {
-    struct hashtable_entry* entry = malloc(sizeof(struct hashtable_entry));
+    struct HASHTABLE_ENTRY* entry = malloc(sizeof(struct HASHTABLE_ENTRY));
 
     if (entry == NULL) {
         return NULL;
@@ -56,11 +56,11 @@ struct hashtable_entry* ht_newentry(char* key, double value)
     return entry;
 }
 
-int ht_set(struct hashtable* ht, char* key, double value) {
+int ht_set(struct HASHTABLE* ht, char* key, double value) {
     int bucket = 0;
-    struct hashtable_entry* new = NULL;
-    struct hashtable_entry* next = NULL;
-    struct hashtable_entry* last = NULL;
+    struct HASHTABLE_ENTRY* new = NULL;
+    struct HASHTABLE_ENTRY* next = NULL;
+    struct HASHTABLE_ENTRY* last = NULL;
 
     bucket = ht_hash(ht, key);
     next = ht->buckets[bucket];
@@ -94,9 +94,9 @@ int ht_set(struct hashtable* ht, char* key, double value) {
     return 1;
 }
 
-int ht_get(struct hashtable* ht, char* key, double* out) {
+int ht_get(struct HASHTABLE* ht, char* key, double* out) {
     int bucket = 0;
-    struct hashtable_entry* entry = NULL;
+    struct HASHTABLE_ENTRY* entry = NULL;
 
     bucket = ht_hash(ht, key);
     entry = ht->buckets[bucket];

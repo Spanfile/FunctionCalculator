@@ -3,19 +3,19 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct hashtable_entry {
+struct HASHTABLE_ENTRY {
     char* key;
     double value;
-    struct hashtable_entry* next;
+    struct HASHTABLE_ENTRY* next;
 };
 
-struct hashtable {
+struct HASHTABLE {
     size_t size;
-    struct hashtable_entry** buckets;
+    struct HASHTABLE_ENTRY** buckets;
 };
 
-struct hashtable* ht_create(size_t size);
-unsigned ht_hash(struct hashtable*, char*);
-struct hashtable_entry* ht_newentry(char*, double);
-int ht_set(struct hashtable*, char*, double);
-int ht_get(struct hashtable*, char*, double*);
+struct HASHTABLE* ht_create(size_t size);
+unsigned ht_hash(struct HASHTABLE*, char*);
+struct HASHTABLE_ENTRY* ht_newentry(char*, double);
+int ht_set(struct HASHTABLE*, char*, double);
+int ht_get(struct HASHTABLE*, char*, double*);

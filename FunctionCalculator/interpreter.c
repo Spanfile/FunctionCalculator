@@ -1,21 +1,21 @@
 #include "interpreter.h"
 
-struct hashtable* hashtable = NULL;
+struct HASHTABLE* names_ht = NULL;
 
 enum CALCERR init_interpreter(void)
 {
-    hashtable = ht_create(512);
+    names_ht = ht_create(512);
 
-    if (hashtable == NULL) {
-        return CALCERR_INTERPRETER_INIT_FAILED;
+    if (names_ht == NULL) {
+        return CALCERR_INTR_INIT_FAILED;
     } else {
-        // these constants may not always be defined
-        if (!ht_set(hashtable, "pi", M_PI)) {
-            return CALCERR_INTERPRETER_VALUE_SET_FAILED;
+        // these math constants may not always be defined
+        if (!ht_set(names_ht, "pi", M_PI)) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
         }
 
-        if (!ht_set(hashtable, "e", M_E)) {
-            return CALCERR_INTERPRETER_VALUE_SET_FAILED;
+        if (!ht_set(names_ht, "e", M_E)) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
         }
     }
 
@@ -24,17 +24,20 @@ enum CALCERR init_interpreter(void)
 
 enum CALCERR evaluate_element(struct TREE_ELEMENT* element)
 {
-    // calculate a value for the element if it's an arithmetic element
-    if (element->type == TYPE_ARITHMETIC) {
-        enum CALCERR error = evaluate_element(element->child1);
+    enum CALCERR error = CALCERR_NONE;
+    switch (element->type) {
+    default:
+        return CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED;
+        
+    case TYPE_NUMBER:
+        break; // number elements already have their number value set
 
-        if (error != CALCERR_NONE) {
+    case TYPE_ARITHMETIC:
+        if ((error = evaluate_element(element->child1)) != CALCERR_NONE) {
             return error;
         }
 
-        error = evaluate_element(element->child2);
-
-        if (error != CALCERR_NONE) {
+        if ((error = evaluate_element(element->child2)) != CALCERR_NONE) {
             return error;
         }
 
@@ -79,8 +82,15 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element)
                 element->child2->number_value);
             break;
         }
-    } else if (element->type == TYPE_NAME) {
-        ht_get(hashtable, element->name_value, &element->number_value);
+
+        break;
+
+    case TYPE_NAME:
+        if (!ht_get(names_ht, element->name_value, &element->number_value)) {
+            return CALCERR_NAME_NOT_FOUND;
+        }
+
+        break;
     }
 
     return CALCERR_NONE;
