@@ -37,7 +37,7 @@ unsigned ht_hash(struct HASHTABLE* ht, char* key)
     return h % ht->size;
 }
 
-struct HASHTABLE_ENTRY* ht_newentry(char* key, double value)
+struct HASHTABLE_ENTRY* ht_newentry(char* key, void* value_ptr)
 {
     struct HASHTABLE_ENTRY* entry = malloc(sizeof(struct HASHTABLE_ENTRY));
 
@@ -50,13 +50,13 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, double value)
         return NULL;
     }
 
-    entry->value = value;
+    entry->value_ptr = value_ptr;
     entry->next = NULL;
 
     return entry;
 }
 
-int ht_set(struct HASHTABLE* ht, char* key, double value) {
+int ht_set(struct HASHTABLE* ht, char* key, void* value_ptr) {
     int bucket = 0;
     struct HASHTABLE_ENTRY* new = NULL;
     struct HASHTABLE_ENTRY* next = NULL;
@@ -72,9 +72,9 @@ int ht_set(struct HASHTABLE* ht, char* key, double value) {
 
     // there's an entry with the same key, replace it
     if (next != NULL && next->key != NULL && strcmp(key, next->key) == 0) {
-        next->value = value;
+        next->value_ptr = value_ptr;
     } else {
-        new = ht_newentry(key, value);
+        new = ht_newentry(key, value_ptr);
 
         if (new == NULL) {
             return 0;
@@ -94,7 +94,7 @@ int ht_set(struct HASHTABLE* ht, char* key, double value) {
     return 1;
 }
 
-int ht_get(struct HASHTABLE* ht, char* key, double* out) {
+int ht_get(struct HASHTABLE* ht, char* key, void* out) {
     int bucket = 0;
     struct HASHTABLE_ENTRY* entry = NULL;
 
@@ -109,6 +109,6 @@ int ht_get(struct HASHTABLE* ht, char* key, double* out) {
         return 0;
     }
 
-    *out = entry->value;
+    *out = *entry->value_ptr;
     return 1;
 }

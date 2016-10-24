@@ -80,7 +80,7 @@ int main(void)
             printf("error: %s\n", CALCERR_STRING[error]);
         } else if ((error = parse(container, 0, &root_elem)) != CALCERR_NONE) {
             printf("parsing error @ i%i: %s\n", index - 1, CALCERR_STRING[error]);
-        } else if ((error = evaluate_element(root_elem)) != CALCERR_NONE) {
+        } else if ((error = evaluate_element(root_elem, NULL)) != CALCERR_NONE) {
             printf("evaluation error: %s\n", CALCERR_STRING[error]);
         } else {
             printf("%f\n", root_elem->number_value);

@@ -5,7 +5,7 @@
 
 struct HASHTABLE_ENTRY {
     char* key;
-    double value;
+    void* value_ptr;
     struct HASHTABLE_ENTRY* next;
 };
 
@@ -16,6 +16,6 @@ struct HASHTABLE {
 
 struct HASHTABLE* ht_create(size_t size);
 unsigned ht_hash(struct HASHTABLE*, char*);
-struct HASHTABLE_ENTRY* ht_newentry(char*, double);
-int ht_set(struct HASHTABLE*, char*, double);
-int ht_get(struct HASHTABLE*, char*, double*);
+struct HASHTABLE_ENTRY* ht_newentry(char*, void*);
+int ht_set(struct HASHTABLE*, char*, void*);
+int ht_get(struct HASHTABLE*, char*, void*);
