@@ -6,6 +6,7 @@
 #include "TOKEN.h"
 #include "PRECEDENCE.h"
 #include "CALCERR.h"
+#include "pointer_help.h"
 
 /* "prefix" parselets
     they take in their associated token, the parser container and a pointer to

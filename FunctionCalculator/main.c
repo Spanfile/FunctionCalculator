@@ -83,7 +83,7 @@ int main(void)
         } else if ((error = evaluate_element(root_elem, NULL)) != CALCERR_NONE) {
             printf("evaluation error: %s\n", CALCERR_STRING[error]);
         } else {
-            printf("%f\n", root_elem->number_value);
+            printf("%f\n", *root_elem->number_value);
             print_elem(root_elem, 0);
         }
 
@@ -115,7 +115,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
     switch (elem->type) {
     case TYPE_NUMBER:
-        printf("%f\n", elem->number_value);
+        printf("%f\n", *elem->number_value);
         break;
 
     case TYPE_NAME:

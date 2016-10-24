@@ -56,7 +56,8 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, void* value_ptr)
     return entry;
 }
 
-int ht_set(struct HASHTABLE* ht, char* key, void* value_ptr) {
+int ht_set(struct HASHTABLE* ht, char* key, void* value_ptr)
+{
     int bucket = 0;
     struct HASHTABLE_ENTRY* new = NULL;
     struct HASHTABLE_ENTRY* next = NULL;
@@ -94,7 +95,8 @@ int ht_set(struct HASHTABLE* ht, char* key, void* value_ptr) {
     return 1;
 }
 
-int ht_get(struct HASHTABLE* ht, char* key, void* out) {
+int ht_get(struct HASHTABLE* ht, char* key, void** out)
+{
     int bucket = 0;
     struct HASHTABLE_ENTRY* entry = NULL;
 
@@ -109,6 +111,6 @@ int ht_get(struct HASHTABLE* ht, char* key, void* out) {
         return 0;
     }
 
-    *out = *entry->value_ptr;
+    *out = entry->value_ptr;
     return 1;
 }

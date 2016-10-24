@@ -16,7 +16,7 @@ struct TREE_ELEMENT {
     enum ARITHMETIC_TYPE arithmetic_type;
 
     // for TYPE_NUMBER
-    double number_value;
+    double* number_value;
 
     // for TYPE_NAME and TYPE_FUNCTION
     size_t name_value_len;
@@ -31,7 +31,7 @@ struct TREE_ELEMENT {
 };
 
 struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE);
-struct TREE_ELEMENT* create_number_element(double);
+struct TREE_ELEMENT* create_number_element(double*);
 struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE);
 struct TREE_ELEMENT* create_name_element(char*, size_t);
 struct TREE_ELEMENT* create_function_element(char*, size_t, struct TREE_ELEMENT**, size_t);

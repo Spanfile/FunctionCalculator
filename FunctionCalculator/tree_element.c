@@ -11,7 +11,7 @@ struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
     elem->name_value = NULL;
     elem->name_value_len = 0;
     elem->arithmetic_type = ARITH_ADDITION;
-    elem->number_value = 0;
+    elem->number_value = NULL;
     elem->args = NULL;
     elem->args_len = 0;
 
@@ -26,7 +26,7 @@ struct TREE_ELEMENT* create_name_element(char* value, size_t value_len)
     return elem;
 }
 
-struct TREE_ELEMENT* create_number_element(double value)
+struct TREE_ELEMENT* create_number_element(double* value)
 {
     struct TREE_ELEMENT* elem = create_element(TYPE_NUMBER);
     elem->number_value = value;

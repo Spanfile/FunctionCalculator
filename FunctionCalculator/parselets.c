@@ -14,7 +14,7 @@ enum CALCERR parse_number(struct TOKEN* token,
     struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out)
 {
     char* tmp;
-    *elem_out = create_number_element(strtod(token->value, &tmp));
+    *elem_out = create_number_element(double_to_heap(strtod(token->value, &tmp)));
     return CALCERR_NONE;
 }
 

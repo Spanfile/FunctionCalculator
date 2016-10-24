@@ -6,6 +6,7 @@
 #include "tree_element.h"
 #include "hashtable.h"
 #include "CALCERR.h"
+#include "pointer_help.h"
 
 enum CALCERR init_interpreter(void);
 // extra_names is used for function calls
