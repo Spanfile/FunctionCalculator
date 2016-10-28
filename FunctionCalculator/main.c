@@ -19,10 +19,8 @@ int main(void)
     struct PARSER_CONTAINER* container;
     struct TREE_ELEMENT* root_elem;
 
-    error = init_interpreter();
-
-    if (error != CALCERR_NONE) {
-        printf("error: %s", CALCERR_STRING[error]);
+    if ((error = init_interpreter()) != CALCERR_NONE) {
+        printf("error initialising interpreter: %s", CALCERR_STRING[error]);
         return 1; // this is a critical error
     }
 
@@ -100,6 +98,11 @@ int main(void)
         if (root_elem != NULL) {
             free_elem(root_elem);
         }
+    }
+
+    if ((error = free_interpreter()) != CALCERR_NONE) {
+        printf("error freeing interpreter: %s", CALCERR_STRING[error]);
+        return 1;
     }
 
     return 0;

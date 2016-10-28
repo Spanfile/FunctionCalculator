@@ -12,7 +12,6 @@ enum CALCERR init_interpreter(void)
         // these math constants may not always be defined
         if (!ht_set(names_ht, "pi", double_to_heap(M_PI))) {
             return CALCERR_INTR_VALUE_SET_FAILED;
-            // TODO: FUCKING FREE THE MEMORY YOU ALLOCATE
         }
 
         if (!ht_set(names_ht, "e", double_to_heap(M_E))) {
@@ -23,22 +22,31 @@ enum CALCERR init_interpreter(void)
     return CALCERR_NONE;
 }
 
-enum CALCERR evaluate_element(struct TREE_ELEMENT* element, struct HASHTABLE* extra_names)
+enum CALCERR free_interpreter(void)
+{
+    ht_free(names_ht);
+    return CALCERR_NONE;
+}
+
+enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
+                              struct HASHTABLE* extra_names)
 {
     enum CALCERR error = CALCERR_NONE;
     switch (element->type) {
     default:
         return CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED;
-        
+
     case TYPE_NUMBER:
         break; // number elements already have their number value set
 
     case TYPE_ARITHMETIC:
-        if ((error = evaluate_element(element->child1, extra_names)) != CALCERR_NONE) {
+        if ((error = evaluate_element(element->child1, extra_names)) !=
+            CALCERR_NONE) {
             return error;
         }
 
-        if ((error = evaluate_element(element->child2, extra_names)) != CALCERR_NONE) {
+        if ((error = evaluate_element(element->child2, extra_names)) !=
+            CALCERR_NONE) {
             return error;
         }
 
@@ -46,20 +54,17 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element, struct HASHTABLE* ex
         switch (element->arithmetic_type) {
         case ARITH_ADDITION:
             *val =
-                *element->child1->number_value +
-                *element->child2->number_value;
+                *element->child1->number_value + *element->child2->number_value;
             break;
 
         case ARITH_NEGATION:
             *val =
-                *element->child1->number_value -
-                *element->child2->number_value;
+                *element->child1->number_value - *element->child2->number_value;
             break;
 
         case ARITH_MULTIPLICATION:
             *val =
-                *element->child1->number_value *
-                *element->child2->number_value;
+                *element->child1->number_value * *element->child2->number_value;
             break;
 
         case ARITH_DIVISION:
@@ -68,20 +73,17 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element, struct HASHTABLE* ex
             }
 
             *val =
-                *element->child1->number_value /
-                *element->child2->number_value;
+                *element->child1->number_value / *element->child2->number_value;
             break;
 
         case ARITH_POWER:
-            *val = pow(
-                *element->child1->number_value,
-                *element->child2->number_value);
+            *val = pow(*element->child1->number_value,
+                       *element->child2->number_value);
             break;
 
         case ARITH_REMAINDER:
-            *val = remainder(
-                *element->child1->number_value,
-                *element->child2->number_value);
+            *val = remainder(*element->child1->number_value,
+                             *element->child2->number_value);
             break;
         }
 
@@ -90,9 +92,11 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element, struct HASHTABLE* ex
         break;
 
     case TYPE_NAME:
-        if (!ht_get(names_ht, element->name_value, (void**)&element->number_value)) {
+        if (!ht_get(names_ht, element->name_value,
+                    (void**)&element->number_value)) {
             if (extra_names != NULL) {
-                if (ht_get(extra_names, element->name_value, (void**)&element->number_value)) {
+                if (ht_get(extra_names, element->name_value,
+                           (void**)&element->number_value)) {
                     break;
                 }
             }
