@@ -71,7 +71,6 @@ int ht_set(struct HASHTABLE* ht, char* key, void* value_ptr)
         next = next->next; // well that sounds stupid
     }
 
-    // there's an entry with the same key, replace it
     if (next != NULL && next->key != NULL && strcmp(key, next->key) == 0) {
         next->value_ptr = value_ptr;
     } else {
@@ -113,4 +112,13 @@ int ht_get(struct HASHTABLE* ht, char* key, void** out)
 
     *out = entry->value_ptr;
     return 1;
+}
+
+void ht_free(struct HASHTABLE* ht)
+{
+    struct HASHTABLE_ENTRY* entry = NULL;
+    for (int i = 0; i < ht->size; i++) {
+        if (ht->buckets[i] != NULL) {
+        }
+    }
 }
