@@ -1,10 +1,12 @@
 #include "interpreter.h"
 
 struct HASHTABLE* names_ht = NULL;
+struct HASHTABLE* functions_ht = NULL;
 
 enum CALCERR init_interpreter(void)
 {
     names_ht = ht_create(512);
+    functions_ht = ht_create(512);
 
     if (names_ht == NULL) {
         return CALCERR_INTR_INIT_FAILED;
@@ -17,6 +19,12 @@ enum CALCERR init_interpreter(void)
         if (!ht_set(names_ht, "e", double_to_heap(M_E))) {
             return CALCERR_INTR_VALUE_SET_FAILED;
         }
+    }
+
+    if (functions_ht == NULL) {
+        return CALCERR_INTR_INIT_FAILED;
+    } else {
+        
     }
 
     return CALCERR_NONE;
