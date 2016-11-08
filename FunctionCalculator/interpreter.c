@@ -24,7 +24,9 @@ enum CALCERR init_interpreter(void)
     if (functions_ht == NULL) {
         return CALCERR_INTR_INIT_FAILED;
     } else {
-        
+        if (!ht_set(functions_ht, "sin", create_ext_func_one_arg(sin))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
     }
 
     return CALCERR_NONE;
@@ -40,6 +42,8 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                               struct HASHTABLE* extra_names)
 {
     enum CALCERR error = CALCERR_NONE;
+    struct FUNC* func = NULL;
+
     switch (element->type) {
     default:
         return CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED;
@@ -111,6 +115,14 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             return CALCERR_NAME_NOT_FOUND;
         }
 
+        break;
+
+    case TYPE_FUNCTION:
+        if (!ht_get(functions_ht, element->name_value, (void**)&func)) {
+            return CALCERR_NAME_NOT_FOUND;
+        }
+        double temp = 0;
+        element->number_value = &temp;
         break;
     }
 

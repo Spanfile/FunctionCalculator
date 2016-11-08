@@ -7,6 +7,7 @@
 #include "hashtable.h"
 #include "CALCERR.h"
 #include "pointer_help.h"
+#include "func.h"
 
 enum CALCERR init_interpreter(void);
 enum CALCERR free_interpreter(void);

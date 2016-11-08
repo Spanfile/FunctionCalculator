@@ -2,16 +2,13 @@
 
 #include "arg.h"
 
-enum FUNC_TYPE {
-    FUNC_TYPE_EXTERNAL,
-    FUNC_TYPE_INTERNAL
-}
+enum FUNC_TYPE { FUNC_TYPE_EXTERNAL, FUNC_TYPE_INTERNAL };
 
 struct FUNC {
     enum ARG_TYPE* arg_types;
     size_t arg_types_count;
 
-    char* name;
+    //char* name;
 
     enum FUNC_TYPE type;
 
@@ -20,7 +17,7 @@ struct FUNC {
     double (*ext_func_two_arg)(double, double);
 };
 
-struct FUNC* create_ext_func_one_arg(char*, double (*)(double));
-struct FUNC* create_ext_func_two_arg(char*, double (*)(double, double));
+struct FUNC* create_ext_func_one_arg(/*char*,*/ double (*)(double));
+struct FUNC* create_ext_func_two_arg(/*char*,*/ double (*)(double, double));
 
 enum CALCERR call_func(struct FUNC*, struct ARG*, size_t, double*);

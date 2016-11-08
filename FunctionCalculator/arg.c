@@ -17,7 +17,7 @@ int argcmp(const enum ARG_TYPE* args1, const size_t args1_len,
     return 1;
 }
 
-enum CALCERR create_args(const enum ARG_TYPE* types, void*** values,
+enum CALCERR create_args(const enum ARG_TYPE* types, double* values,
                          const size_t len, struct ARG*** out)
 {
     *out = malloc(len * sizeof(struct ARG));

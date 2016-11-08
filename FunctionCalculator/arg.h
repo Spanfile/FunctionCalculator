@@ -14,4 +14,4 @@ struct ARG {
 };
 
 int argcmp(const enum ARG_TYPE*, const size_t, const enum ARG_TYPE*, const size_t);
-enum CALCERR create_args(const enum ARG_TYPE*, void***, const size_t, struct ARG***);
+enum CALCERR create_args(const enum ARG_TYPE*, double*, const size_t, struct ARG***);
