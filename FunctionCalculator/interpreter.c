@@ -121,8 +121,16 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         if (!ht_get(functions_ht, element->name_value, (void**)&func)) {
             return CALCERR_NAME_NOT_FOUND;
         }
-        double temp = 0;
-        element->number_value = &temp;
+
+        struct ARG** args = NULL;
+        if ((error = create_args_from_tree(*element->args, element->args_len, &args)) != CALCERR_NONE) {
+            return error;
+        }
+
+        if ((error = call_func(func, args, element->args_len, element->number_value)) != CALCERR_NONE) {
+            return error;
+        }
+
         break;
     }
 

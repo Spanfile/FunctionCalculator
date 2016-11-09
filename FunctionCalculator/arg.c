@@ -17,15 +17,27 @@ int argcmp(const enum ARG_TYPE* args1, const size_t args1_len,
     return 1;
 }
 
-enum CALCERR create_args(const enum ARG_TYPE* types, double* values,
-                         const size_t len, struct ARG*** out)
+enum CALCERR create_args_from_tree(const struct TREE_ELEMENT* elems,
+                                   const size_t len, struct ARG*** out)
 {
     *out = malloc(len * sizeof(struct ARG));
 
     for (int i = 0; i < len; i++) {
         (*out)[i] = malloc(sizeof(struct ARG));
-        (*out)[i]->type = types[i];
-        (*out)[i]->value = values[i];
+
+        switch (elems[i].type) {
+        default:
+            return CALCERR_ARG_CONVERSION_FAILED;
+
+        case TYPE_NAME:
+            (*out)[i]->type = ARG_TYPE_NAME;
+            break;
+
+        case TYPE_NUMBER:
+            (*out)[i]->type = ARG_TYPE_NUMBER;
+            (*out)[i]->value = *elems[i].number_value;
+            break;
+        }
     }
 
     return CALCERR_NONE;

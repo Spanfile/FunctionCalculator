@@ -20,4 +20,4 @@ struct FUNC {
 struct FUNC* create_ext_func_one_arg(/*char*,*/ double (*)(double));
 struct FUNC* create_ext_func_two_arg(/*char*,*/ double (*)(double, double));
 
-enum CALCERR call_func(struct FUNC*, struct ARG*, size_t, double*);
+enum CALCERR call_func(struct FUNC*, struct ARG**, size_t, double*);
