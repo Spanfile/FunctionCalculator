@@ -27,7 +27,7 @@ enum CALCERR parse_group(struct TOKEN* token,
 {
     enum CALCERR error = CALCERR_NONE;
 
-    if ((error = parse(container, 0, inner)) != CALCERR_NONE) {
+    if ((error = parse(container, PRECEDENCE_DEFAULT, inner)) != CALCERR_NONE) {
         return error;
     }
 
@@ -51,7 +51,7 @@ enum CALCERR parse_negation(struct TOKEN* token,
     enum CALCERR error = CALCERR_NONE;
     struct TREE_ELEMENT* elem = NULL;
 
-    if ((error = parse(container, PRECEDENCE_GROUP, &elem)) != CALCERR_NONE) {
+    if ((error = parse(container, PRECEDENCE_DEFAULT, &elem)) != CALCERR_NONE) {
         free_elem(elem);
         return error;
     }
