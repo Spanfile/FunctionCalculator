@@ -34,6 +34,12 @@ struct TREE_ELEMENT* create_number_element(double* value)
     return elem;
 }
 
+struct TREE_ELEMENT* create_negation_element()
+{
+    struct TREE_ELEMENT* elem = create_element(ELEM_TYPE_NEGATION);
+    return elem;
+}
+
 struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
 {
     struct TREE_ELEMENT* elem = create_element(ELEM_TYPE_ARITHMETIC);

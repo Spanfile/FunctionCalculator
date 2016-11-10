@@ -70,15 +70,18 @@ int main(void)
         }
 
         // or parse math
-        if ((error = tokenise(read_buffer, read_len, &token_count, &tokens))
-            != CALCERR_NONE) {
+        if ((error = tokenise(read_buffer, read_len, &token_count, &tokens)) !=
+            CALCERR_NONE) {
             printf("tokenising error: %s\n", CALCERR_STRING[error]);
-        } else if ((error = create_parser_container(tokens, token_count, &index, &container))
-            != CALCERR_NONE) {
+        } else if ((error = create_parser_container(tokens, token_count, &index,
+                                                    &container)) !=
+                   CALCERR_NONE) {
             printf("error: %s\n", CALCERR_STRING[error]);
         } else if ((error = parse(container, 0, &root_elem)) != CALCERR_NONE) {
-            printf("parsing error @ i%i: %s\n", index - 1, CALCERR_STRING[error]);
-        } else if ((error = evaluate_element(root_elem, NULL)) != CALCERR_NONE) {
+            printf("parsing error @ i%i: %s\n", index - 1,
+                   CALCERR_STRING[error]);
+        } else if ((error = evaluate_element(root_elem, NULL)) !=
+                   CALCERR_NONE) {
             printf("evaluation error: %s\n", CALCERR_STRING[error]);
         } else {
             printf("%f\n", *root_elem->number_value);
@@ -86,7 +89,7 @@ int main(void)
         }
 
         free(read_buffer);
-        
+
         if (tokens != NULL) {
             free_tokens(tokens, token_count);
         }
@@ -117,6 +120,17 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
     printf("%d: ", elem->elem_type);
 
     switch (elem->elem_type) {
+    case ELEM_TYPE_NUMBER:
+        printf("%f\n", *elem->number_value);
+        break;
+
+    case ELEM_TYPE_NEGATION:
+        printf("\n");
+        if (elem->child1 != NULL) {
+            print_elem(elem->child1, indent + 1);
+        }
+        break;
+
     case ELEM_TYPE_NAME:
         printf("%s\n", elem->name_value);
         break;

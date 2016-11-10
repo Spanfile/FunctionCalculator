@@ -51,6 +51,15 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
     case ELEM_TYPE_NUMBER:
         break; // number elements already have their number value set
 
+    case ELEM_TYPE_NEGATION:
+        if ((error = evaluate_element(element->child1, extra_names)) !=
+            CALCERR_NONE) {
+            return error;
+        }
+
+        *element->number_value = -*element->child1->number_value;
+        break;
+
     case ELEM_TYPE_ARITHMETIC:
         if ((error = evaluate_element(element->child1, extra_names)) !=
             CALCERR_NONE) {
@@ -123,7 +132,8 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         }
 
         for (size_t i = 0; i < element->args_len; i++) {
-            if ((error = evaluate_element(element->args[i], extra_names)) != CALCERR_NONE) {
+            if ((error = evaluate_element(element->args[i], extra_names)) !=
+                CALCERR_NONE) {
                 return error;
             }
         }

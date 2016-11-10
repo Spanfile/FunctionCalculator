@@ -2,8 +2,9 @@
 
 int get_precedence(struct PARSER_CONTAINER*);
 
-enum CALCERR create_parser_container(struct TOKEN** tokens, size_t token_count, int* index,
-    struct PARSER_CONTAINER** container_out)
+enum CALCERR create_parser_container(struct TOKEN** tokens, size_t token_count,
+                                     int* index,
+                                     struct PARSER_CONTAINER** container_out)
 {
     *container_out = malloc(sizeof(struct PARSER_CONTAINER));
 
@@ -19,7 +20,7 @@ enum CALCERR create_parser_container(struct TOKEN** tokens, size_t token_count, 
 }
 
 enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
-    struct TREE_ELEMENT** elem_out)
+                   struct TREE_ELEMENT** elem_out)
 {
     if (*container->index >= container->token_count) {
         return CALCERR_UNEXPECTED_END_OF_INPUT;
@@ -41,6 +42,10 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
 
     case TOKEN_NUMBER:
         error = parse_number(token, container, &left);
+        break;
+
+    case TOKEN_NEGATION:
+        error = parse_negation(token, container, &left);
         break;
 
     case TOKEN_OPEN_BRACKET:
@@ -74,7 +79,8 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         case TOKEN_REMAINDER:
             *container->index += 1;
 
-            if ((error = parse_arithmetic(token, left, container, &left)) != CALCERR_NONE) {
+            if ((error = parse_arithmetic(token, left, container, &left)) !=
+                CALCERR_NONE) {
                 return error;
             }
 
@@ -83,7 +89,8 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         case TOKEN_OPEN_BRACKET:
             *container->index += 1;
 
-            if ((error = parse_function(token, left, container, &left)) != CALCERR_NONE) {
+            if ((error = parse_function(token, left, container, &left)) !=
+                CALCERR_NONE) {
                 return error;
             }
 

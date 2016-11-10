@@ -52,28 +52,6 @@ enum CALCERR tokenise(char* input, size_t input_len,
                 break;
 
             case '-':
-                /* special case: if there's a number after the -,
-                parse it as a number.
-                except that this doesn't work always. you know when that happens */
-
-                if (i < (int)input_len - 1) {
-                    char next = input[i + 1];
-                    if (isdigit(next)) {
-                        i += 1;
-                        // start parsing from the number, but include the -
-                        int start = i - 1;
-                        int end = tokenise_number(input, &i, input_len);
-
-                        sub_len = end - start;
-                        read_start = start;
-                        
-                        token_ptr->type = TOKEN_NUMBER;
-
-                        skip_end = 1;
-                        break;
-                    }
-                }
-
                 token_ptr->type = TOKEN_NEGATION;
 
                 break;
