@@ -10,7 +10,7 @@ enum ARG_TYPE {
 };
 
 struct ARG {
-    enum ARG_TYPE type;
+    enum ARG_TYPE arg_type;
     double value;
 };
 

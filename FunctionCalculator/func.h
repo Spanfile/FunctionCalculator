@@ -10,7 +10,7 @@ struct FUNC {
 
     //char* name;
 
-    enum FUNC_TYPE type;
+    enum FUNC_TYPE func_type;
 
     // for external methods (i.e. from math.h)
     double (*ext_func_one_arg)(double);

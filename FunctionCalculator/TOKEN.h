@@ -8,7 +8,7 @@ enum TOKEN_TYPE {
 };
 
 struct TOKEN {
-    enum TOKEN_TYPE type;
+    enum TOKEN_TYPE token_type;
     size_t value_length;
     char* value;
 };

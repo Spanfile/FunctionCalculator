@@ -31,7 +31,7 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
     struct TREE_ELEMENT* left = NULL;
     enum CALCERR error = CALCERR_NONE;
 
-    switch (token->type) {
+    switch (token->token_type) {
     default:
         error = CALCERR_UNEXPECTED_TOKEN;
         break;
@@ -66,7 +66,7 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
     while (precedence < get_precedence(container)) {
         token = container->tokens[*container->index];
 
-        switch (token->type) {
+        switch (token->token_type) {
         default:
             *elem_out = left;
             return CALCERR_NONE;
@@ -108,7 +108,7 @@ int get_precedence(struct PARSER_CONTAINER* container)
         return 0;
     }
 
-    switch (container->tokens[*container->index]->type) {
+    switch (container->tokens[*container->index]->token_type) {
     default:
         return 0;
 

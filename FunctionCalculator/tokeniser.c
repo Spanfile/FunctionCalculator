@@ -25,7 +25,7 @@ enum CALCERR tokenise(char* input, size_t input_len,
             sub_len = end - start;
             read_start = start;
 
-            token_ptr->type = TOKEN_NAME;
+            token_ptr->token_type = TOKEN_NAME;
         } else if (isdigit(c)) { // numbers
             int start = i;
             int end = tokenise_number(input, &i, input_len);
@@ -33,7 +33,7 @@ enum CALCERR tokenise(char* input, size_t input_len,
             sub_len = end - start;
             read_start = start;
 
-            token_ptr->type = TOKEN_NUMBER;
+            token_ptr->token_type = TOKEN_NUMBER;
         } else { // everything else
             // note: ugly goto-blocker
             int skip_end = 0;
@@ -48,40 +48,40 @@ enum CALCERR tokenise(char* input, size_t input_len,
                 continue;
 
             case '+':
-                token_ptr->type = TOKEN_ADDITION;
+                token_ptr->token_type = TOKEN_ADDITION;
                 break;
 
             case '-':
-                token_ptr->type = TOKEN_NEGATION;
+                token_ptr->token_type = TOKEN_NEGATION;
 
                 break;
 
             case '*':
-                token_ptr->type = TOKEN_MULTIPLICATION;
+                token_ptr->token_type = TOKEN_MULTIPLICATION;
                 break;
 
             case '/':
-                token_ptr->type = TOKEN_DIVISION;
+                token_ptr->token_type = TOKEN_DIVISION;
                 break;
 
             case '^':
-                token_ptr->type = TOKEN_POWER;
+                token_ptr->token_type = TOKEN_POWER;
                 break;
 
             case '%':
-                token_ptr->type = TOKEN_REMAINDER;
+                token_ptr->token_type = TOKEN_REMAINDER;
                 break;
 
             case '(':
-                token_ptr->type = TOKEN_OPEN_BRACKET;
+                token_ptr->token_type = TOKEN_OPEN_BRACKET;
                 break;
 
             case ')':
-                token_ptr->type = TOKEN_CLOSE_BRACKET;
+                token_ptr->token_type = TOKEN_CLOSE_BRACKET;
                 break;
 
             case ',':
-                token_ptr->type = TOKEN_COMMA;
+                token_ptr->token_type = TOKEN_COMMA;
                 break;
             }
 

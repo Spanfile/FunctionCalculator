@@ -30,13 +30,13 @@ enum CALCERR create_args_from_tree(const struct TREE_ELEMENT* elems,
             return CALCERR_ARG_CONVERSION_FAILED;
 
         case ELEM_TYPE_NAME:
-            (*out)[i]->type = ARG_TYPE_NAME;
+            (*out)[i]->arg_type = ARG_TYPE_NAME;
             break;
 
         case ELEM_TYPE_ARITHMETIC:
         case ELEM_TYPE_FUNCTION:
         case ELEM_TYPE_NUMBER:
-            (*out)[i]->type = ARG_TYPE_NUMBER;
+            (*out)[i]->arg_type = ARG_TYPE_NUMBER;
             (*out)[i]->value = *elems[i].number_value;
             break;
         }
