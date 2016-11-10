@@ -6,14 +6,14 @@
 #include "ARITHMETIC_TYPE.h"
 
 enum TREE_ELEMENT_TYPE {
-    TYPE_NUMBER,
-    TYPE_ARITHMETIC,
-    TYPE_NAME,
-    TYPE_FUNCTION
+    ELEM_TYPE_NUMBER,
+    ELEM_TYPE_ARITHMETIC,
+    ELEM_TYPE_NAME,
+    ELEM_TYPE_FUNCTION
 };
 
 struct TREE_ELEMENT {
-    enum TREE_ELEMENT_TYPE type;
+    enum TREE_ELEMENT_TYPE elem_type;
 
     // for TYPE_ARITHMETIC
     enum ARITHMETIC_TYPE arithmetic_type;

@@ -119,6 +119,7 @@ int get_precedence(struct PARSER_CONTAINER* container)
 
     case TOKEN_OPEN_BRACKET:
     case TOKEN_CLOSE_BRACKET:
+    case TOKEN_COMMA:
         return PRECEDENCE_GROUP;
     }
 }

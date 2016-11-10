@@ -103,7 +103,7 @@ enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
 enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
     struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out)
 {
-    if (left->type != TYPE_NAME) {
+    if (left->elem_type != ELEM_TYPE_NAME) {
         return CALCERR_INVALID_ELEMENT;
     }
 
@@ -130,24 +130,12 @@ enum CALCERR parse_list(struct PARSER_CONTAINER* container,
     *elem_count = 0;
 
     while ((token = container->tokens[*container->index])->type != TOKEN_CLOSE_BRACKET) {
-        switch (token->type) {
-        default:
-            return CALCERR_UNEXPECTED_TOKEN;
-
-        case TOKEN_COMMA: // commas act as separators
+        if (token->type == TOKEN_COMMA) {
             *container->index += 1;
             continue;
-
-        case TOKEN_NAME:
-            error = parse_name(token, container, &(*elems)[*elem_count]);
-            break;
-
-        case TOKEN_NUMBER:
-            error = parse_number(token, container, &(*elems)[*elem_count]);
-            break;
         }
 
-        if (error != CALCERR_NONE) {
+        if ((error = parse(container, 0, &(*elems)[*elem_count])) != CALCERR_NONE) {
             for (int i = 0; i < elem_array_size; i++) {
                 free(*elems[i]);
             }
@@ -161,7 +149,7 @@ enum CALCERR parse_list(struct PARSER_CONTAINER* container,
             *elems = realloc(*elems, (elem_array_size += 4) * sizeof(struct TREE_ELEMENT*));
         }
 
-        *container->index += 1;
+        //*container->index += 1;
     }
 
     return CALCERR_NONE;

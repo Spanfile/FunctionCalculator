@@ -25,15 +25,17 @@ enum CALCERR create_args_from_tree(const struct TREE_ELEMENT* elems,
     for (int i = 0; i < len; i++) {
         (*out)[i] = malloc(sizeof(struct ARG));
 
-        switch (elems[i].type) {
+        switch (elems[i].elem_type) {
         default:
             return CALCERR_ARG_CONVERSION_FAILED;
 
-        case TYPE_NAME:
+        case ELEM_TYPE_NAME:
             (*out)[i]->type = ARG_TYPE_NAME;
             break;
 
-        case TYPE_NUMBER:
+        case ELEM_TYPE_ARITHMETIC:
+        case ELEM_TYPE_FUNCTION:
+        case ELEM_TYPE_NUMBER:
             (*out)[i]->type = ARG_TYPE_NUMBER;
             (*out)[i]->value = *elems[i].number_value;
             break;

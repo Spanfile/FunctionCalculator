@@ -44,14 +44,14 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
     enum CALCERR error = CALCERR_NONE;
     struct FUNC* func = NULL;
 
-    switch (element->type) {
+    switch (element->elem_type) {
     default:
         return CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED;
 
-    case TYPE_NUMBER:
+    case ELEM_TYPE_NUMBER:
         break; // number elements already have their number value set
 
-    case TYPE_ARITHMETIC:
+    case ELEM_TYPE_ARITHMETIC:
         if ((error = evaluate_element(element->child1, extra_names)) !=
             CALCERR_NONE) {
             return error;
@@ -103,7 +103,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         break;
 
-    case TYPE_NAME:
+    case ELEM_TYPE_NAME:
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
             if (extra_names != NULL) {
@@ -117,17 +117,25 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         break;
 
-    case TYPE_FUNCTION:
+    case ELEM_TYPE_FUNCTION:
         if (!ht_get(functions_ht, element->name_value, (void**)&func)) {
             return CALCERR_NAME_NOT_FOUND;
         }
 
+        for (size_t i = 0; i < element->args_len; i++) {
+            if ((error = evaluate_element(element->args[i], extra_names)) != CALCERR_NONE) {
+                return error;
+            }
+        }
+
         struct ARG** args = NULL;
-        if ((error = create_args_from_tree(*element->args, element->args_len, &args)) != CALCERR_NONE) {
+        if ((error = create_args_from_tree(*element->args, element->args_len,
+                                           &args)) != CALCERR_NONE) {
             return error;
         }
 
-        if ((error = call_func(func, args, element->args_len, element->number_value)) != CALCERR_NONE) {
+        if ((error = call_func(func, args, element->args_len,
+                               element->number_value)) != CALCERR_NONE) {
             return error;
         }
 

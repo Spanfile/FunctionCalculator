@@ -114,18 +114,14 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
         printf(" ");
     }
 
-    printf("%d: ", elem->type);
+    printf("%d: ", elem->elem_type);
 
-    switch (elem->type) {
-    case TYPE_NUMBER:
-        printf("%f\n", *elem->number_value);
-        break;
-
-    case TYPE_NAME:
+    switch (elem->elem_type) {
+    case ELEM_TYPE_NAME:
         printf("%s\n", elem->name_value);
         break;
 
-    case TYPE_ARITHMETIC:
+    case ELEM_TYPE_ARITHMETIC:
         printf("%d\n", elem->arithmetic_type);
 
         if (elem->child1 != NULL) {
@@ -142,7 +138,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
         break;
 
-    case TYPE_FUNCTION:
+    case ELEM_TYPE_FUNCTION:
         printf("%s\n", elem->name_value);
 
         for (int i = 0; i < elem->args_len; i++) {
