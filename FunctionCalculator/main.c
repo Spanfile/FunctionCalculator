@@ -85,6 +85,9 @@ int main(void)
             printf("evaluation error: %s\n", CALCERR_STRING[error]);
         } else {
             printf("%f\n", *root_elem->number_value);
+        }
+
+        if (root_elem != NULL) {
             print_elem(root_elem, 0);
         }
 
