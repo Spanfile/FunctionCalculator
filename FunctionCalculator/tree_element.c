@@ -77,9 +77,5 @@ void free_elem(struct TREE_ELEMENT* elem)
         free(elem->name_value);
     }
 
-    if (elem->number_value != NULL) {
-        free(elem->number_value);
-    }
-
     free(elem);
 }
