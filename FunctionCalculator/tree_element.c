@@ -48,7 +48,8 @@ struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
 }
 
 struct TREE_ELEMENT* create_function_element(char* value, size_t value_len,
-    struct TREE_ELEMENT** args, size_t args_len)
+                                             struct TREE_ELEMENT** args,
+                                             size_t args_len)
 {
     struct TREE_ELEMENT* elem = create_element(ELEM_FUNCTION);
     elem->name_value = value;
@@ -71,7 +72,7 @@ void free_elem(struct TREE_ELEMENT* elem)
     if (elem->child2 != NULL) {
         free_elem(elem->child2);
     }
-    
+
     if (elem->name_value != NULL) {
         free(elem->name_value);
     }
@@ -79,6 +80,6 @@ void free_elem(struct TREE_ELEMENT* elem)
     if (elem->number_value != NULL) {
         free(elem->number_value);
     }
-    
+
     free(elem);
 }

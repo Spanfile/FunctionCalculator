@@ -8,7 +8,7 @@ struct FUNC {
     enum ARG_TYPE* arg_types;
     size_t arg_types_count;
 
-    //char* name;
+    // char* name;
 
     enum FUNC_TYPE func_type;
 

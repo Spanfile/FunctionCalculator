@@ -6,10 +6,10 @@
 #include "ARITHMETIC_TYPE.h"
 
 #define FOREACH_ELEM_TYPE(ELEM_TYPE)                                           \
-    ELEM_TYPE(ELEM_NUMBER)                                                \
-    ELEM_TYPE(ELEM_NEGATION)                                              \
-    ELEM_TYPE(ELEM_ARITHMETIC)                                            \
-    ELEM_TYPE(ELEM_NAME)                                                  \
+    ELEM_TYPE(ELEM_NUMBER)                                                     \
+    ELEM_TYPE(ELEM_NEGATION)                                                   \
+    ELEM_TYPE(ELEM_ARITHMETIC)                                                 \
+    ELEM_TYPE(ELEM_NAME)                                                       \
     ELEM_TYPE(ELEM_FUNCTION)
 
 #ifndef GENERATE_ENUM
