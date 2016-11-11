@@ -126,7 +126,7 @@ int tokenise_name(char* input, int* index, size_t input_len)
         end += 1;
 
         c = input[*index + 1];
-        if (!isalpha(c) || c == ' ')
+        if ((!isalpha(c) && !isdigit(c)) || c == ' ')
             break;
 
         *index += 1;
