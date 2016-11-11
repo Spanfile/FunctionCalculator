@@ -27,6 +27,62 @@ enum CALCERR init_interpreter(void)
         if (!ht_set(functions_ht, "sin", create_ext_func_one_arg(sin))) {
             return CALCERR_INTR_VALUE_SET_FAILED;
         }
+
+        if (!ht_set(functions_ht, "cos", create_ext_func_one_arg(cos))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "tan", create_ext_func_one_arg(tan))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "asin", create_ext_func_one_arg(asin))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "acos", create_ext_func_one_arg(acos))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "atan", create_ext_func_one_arg(atan))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "atan2", create_ext_func_two_arg(atan2))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "sin", create_ext_func_one_arg(sinh))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "cosh", create_ext_func_one_arg(cosh))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "tanh", create_ext_func_one_arg(tanh))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "log", create_ext_func_one_arg(log))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "log10", create_ext_func_one_arg(log10))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        } // TODO: numbers in names
+
+        if (!ht_set(functions_ht, "sqrt", create_ext_func_one_arg(sqrt))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "floor", create_ext_func_one_arg(floor))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        if (!ht_set(functions_ht, "ceil", create_ext_func_one_arg(ceil))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
     }
 
     return CALCERR_NONE;
