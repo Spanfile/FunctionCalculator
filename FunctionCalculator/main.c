@@ -89,20 +89,21 @@ int main(void)
 
         if (root_elem != NULL) {
             print_elem(root_elem, 0);
+            free_elem(root_elem);
+            root_elem = NULL;
         }
 
         free(read_buffer);
+        read_buffer = NULL;
 
         if (tokens != NULL) {
             free_tokens(tokens, token_count);
+            tokens = NULL;
         }
 
         if (container != NULL) {
             free(container);
-        }
-
-        if (root_elem != NULL) {
-            free_elem(root_elem);
+            container = NULL;
         }
     }
 

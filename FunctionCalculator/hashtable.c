@@ -131,4 +131,5 @@ void ht_free(struct HASHTABLE* ht)
 
     free(ht->buckets);
     free(ht);
+    ht = NULL;
 }
