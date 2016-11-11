@@ -14,6 +14,7 @@ struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
     elem->number_value = malloc(sizeof(double));
     elem->args = NULL;
     elem->args_len = 0;
+    elem->free_number_value = 1;
 
     return elem;
 }
