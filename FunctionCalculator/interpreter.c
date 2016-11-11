@@ -104,10 +104,10 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
     default:
         return CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED;
 
-    case ELEM_TYPE_NUMBER:
+    case ELEM_NUMBER:
         break; // number elements already have their number value set
 
-    case ELEM_TYPE_NEGATION:
+    case ELEM_NEGATION:
         if ((error = evaluate_element(element->child1, extra_names)) !=
             CALCERR_NONE) {
             return error;
@@ -116,7 +116,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         *element->number_value = -*element->child1->number_value;
         break;
 
-    case ELEM_TYPE_ARITHMETIC:
+    case ELEM_ARITHMETIC:
         if ((error = evaluate_element(element->child1, extra_names)) !=
             CALCERR_NONE) {
             return error;
@@ -168,7 +168,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         break;
 
-    case ELEM_TYPE_NAME:
+    case ELEM_NAME:
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
             if (extra_names != NULL) {
@@ -182,7 +182,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         break;
 
-    case ELEM_TYPE_FUNCTION:
+    case ELEM_FUNCTION:
         if (!ht_get(functions_ht, element->name_value, (void**)&func)) {
             return CALCERR_NAME_NOT_FOUND;
         }

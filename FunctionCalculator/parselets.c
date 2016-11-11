@@ -127,7 +127,7 @@ enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
                             struct PARSER_CONTAINER* container,
                             struct TREE_ELEMENT** elem_out)
 {
-    if (left->elem_type != ELEM_TYPE_NAME) {
+    if (left->elem_type != ELEM_NAME) {
         return CALCERR_INVALID_ELEMENT;
     }
 

@@ -5,13 +5,23 @@
 
 #include "ARITHMETIC_TYPE.h"
 
-enum TREE_ELEMENT_TYPE {
-    ELEM_TYPE_NUMBER,
-    ELEM_TYPE_NEGATION,
-    ELEM_TYPE_ARITHMETIC,
-    ELEM_TYPE_NAME,
-    ELEM_TYPE_FUNCTION
-};
+#define FOREACH_ELEM_TYPE(ELEM_TYPE)                                           \
+    ELEM_TYPE(ELEM_NUMBER)                                                \
+    ELEM_TYPE(ELEM_NEGATION)                                              \
+    ELEM_TYPE(ELEM_ARITHMETIC)                                            \
+    ELEM_TYPE(ELEM_NAME)                                                  \
+    ELEM_TYPE(ELEM_FUNCTION)
+
+#ifndef GENERATE_ENUM
+#define GENERATE_ENUM(ENUM) ENUM,
+#define GENERATE_STRING(STR) #STR,
+#endif
+
+enum TREE_ELEMENT_TYPE { FOREACH_ELEM_TYPE(GENERATE_ENUM) };
+
+#pragma GCC diagnostic ignored "-Wunused-variable"
+static const char* TREE_ELEMENT_TYPE_STRING[] = {
+    FOREACH_ELEM_TYPE(GENERATE_STRING)};
 
 struct TREE_ELEMENT {
     enum TREE_ELEMENT_TYPE elem_type;
