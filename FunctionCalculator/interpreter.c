@@ -139,6 +139,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         break;
 
     case ELEM_NAME:
+        element->free_number_value = 0;
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
             if (extra_names != NULL) {

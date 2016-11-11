@@ -30,6 +30,7 @@ struct TREE_ELEMENT {
     enum ARITHMETIC_TYPE arithmetic_type;
 
     // for TYPE_NUMBER
+    int free_number_value = 1;
     double* number_value;
 
     // for TYPE_NAME and TYPE_FUNCTION
