@@ -14,7 +14,7 @@ struct HASHTABLE* ht_create(size_t size)
         return NULL;
     }
 
-    for (int i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         ht->buckets[i] = NULL;
     }
 
@@ -119,7 +119,7 @@ void ht_free(struct HASHTABLE* ht)
     struct HASHTABLE_ENTRY* entry = NULL;
     struct HASHTABLE_ENTRY* next = NULL;
 
-    for (int i = 0; i < ht->size; i++) {
+    for (size_t i = 0; i < ht->size; i++) {
         if ((entry = ht->buckets[i]) != NULL) {
             while (entry != NULL) {
                 next = entry->next;

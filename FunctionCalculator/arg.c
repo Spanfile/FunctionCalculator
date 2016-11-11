@@ -8,7 +8,7 @@ int argcmp(const enum ARG_TYPE* args1, const size_t args1_len,
         len = args2_len;
     }
 
-    for (int i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
         if (args1[i] != args2[i]) {
             return 0;
         }
@@ -22,7 +22,7 @@ enum CALCERR create_args_from_tree(const struct TREE_ELEMENT* elems,
 {
     *out = malloc(len * sizeof(struct ARG));
 
-    for (int i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
         (*out)[i] = malloc(sizeof(struct ARG));
 
         switch (elems[i].elem_type) {

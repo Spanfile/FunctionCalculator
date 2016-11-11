@@ -117,9 +117,13 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
         printf(" ");
     }
 
-    printf("%s: ",  TREE_ELEMENT_TYPE_STRING[elem->elem_type]);
+    printf("%s: ", TREE_ELEMENT_TYPE_STRING[elem->elem_type]);
 
     switch (elem->elem_type) {
+    default:
+        printf("unknown");
+        break;
+
     case ELEM_NUMBER:
         printf("%f\n", *elem->number_value);
         break;
@@ -155,7 +159,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
     case ELEM_FUNCTION:
         printf("%s\n", elem->name_value);
 
-        for (int i = 0; i < elem->args_len; i++) {
+        for (size_t i = 0; i < elem->args_len; i++) {
             print_elem(elem->args[i], indent + 1);
         }
 
@@ -165,7 +169,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
 void free_tokens(struct TOKEN** tokens, size_t token_count)
 {
-    for (int i = 0; i < token_count; i++) {
+    for (size_t i = 0; i < token_count; i++) {
         free(tokens[i]);
     }
 
