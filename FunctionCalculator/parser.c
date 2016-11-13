@@ -28,7 +28,6 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
 
     struct TOKEN* token = container->tokens[*container->index];
     *container->index += 1;
-    struct TREE_ELEMENT* left = NULL;
     enum CALCERR error = CALCERR_NONE;
 
     switch (token->token_type) {
@@ -37,19 +36,19 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         break;
 
     case TOKEN_NAME:
-        error = parse_name(token, container, &left);
+        error = parse_name(token, container, elem_out);
         break;
 
     case TOKEN_NUMBER:
-        error = parse_number(token, container, &left);
+        error = parse_number(token, container, elem_out);
         break;
 
     case TOKEN_NEGATION:
-        error = parse_negation(token, container, &left);
+        error = parse_negation(token, container, elem_out);
         break;
 
     case TOKEN_OPEN_BRACKET:
-        error = parse_group(token, container, &left);
+        error = parse_group(token, container, elem_out);
         break;
     }
 
@@ -59,7 +58,6 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
 
     // no more tokens? we're done
     if (*container->index >= (int)container->token_count) {
-        *elem_out = left;
         return CALCERR_NONE;
     }
 
@@ -68,7 +66,6 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
 
         switch (token->token_type) {
         default:
-            *elem_out = left;
             return CALCERR_NONE;
 
         case TOKEN_ADDITION:
@@ -79,7 +76,7 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         case TOKEN_REMAINDER:
             *container->index += 1;
 
-            if ((error = parse_arithmetic(token, left, container, &left)) !=
+            if ((error = parse_arithmetic(token, *elem_out, container, elem_out)) !=
                 CALCERR_NONE) {
                 return error;
             }
@@ -89,7 +86,7 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         case TOKEN_OPEN_BRACKET:
             *container->index += 1;
 
-            if ((error = parse_function(token, left, container, &left)) !=
+            if ((error = parse_function(token, *elem_out, container, elem_out)) !=
                 CALCERR_NONE) {
                 return error;
             }
@@ -98,7 +95,6 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         }
     }
 
-    *elem_out = left;
     return CALCERR_NONE;
 }
 

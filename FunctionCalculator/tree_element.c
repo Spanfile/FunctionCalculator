@@ -57,9 +57,7 @@ struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
     return elem;
 }
 
-struct TREE_ELEMENT* create_function_element(char* value, size_t value_len,
-                                             struct TREE_ELEMENT** args,
-                                             size_t args_len)
+    struct TREE_ELEMENT* create_function_element(char* value, size_t value_len)
 {
     struct TREE_ELEMENT* elem = create_element(ELEM_FUNCTION);
 
@@ -67,9 +65,7 @@ struct TREE_ELEMENT* create_function_element(char* value, size_t value_len,
     elem->name_value = malloc(value_len + 1);
     strncpy(elem->name_value, value, value_len);
     elem->name_value[value_len] = '\0';
-
-    elem->args = args;
-    elem->args_len = args_len;
+    
     return elem;
 }
 

@@ -15,8 +15,8 @@ int main(void)
     struct TOKEN** tokens = NULL;
     size_t token_count = 0;
     int index = 0;
-    struct PARSER_CONTAINER* container;
-    struct TREE_ELEMENT* root_elem;
+    struct PARSER_CONTAINER* container = NULL;
+    struct TREE_ELEMENT* root_elem = NULL;
 
     if ((error = init_interpreter()) != CALCERR_NONE) {
         printf("error initialising interpreter: %s", CALCERR_STRING[error]);

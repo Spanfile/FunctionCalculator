@@ -50,15 +50,12 @@ enum CALCERR parse_negation(struct TOKEN* token,
                             struct TREE_ELEMENT** elem_out)
 {
     enum CALCERR error = CALCERR_NONE;
-    struct TREE_ELEMENT* elem = NULL;
+    *elem_out = create_negation_element();
 
-    if ((error = parse(container, PRECEDENCE_DEFAULT, &elem)) != CALCERR_NONE) {
-        free_elem(elem);
+    if ((error = parse(container, PRECEDENCE_DEFAULT,
+                       &((*elem_out)->child1))) != CALCERR_NONE) {
         return error;
     }
-
-    *elem_out = create_negation_element();
-    (*elem_out)->child1 = elem;
 
     return CALCERR_NONE;
 }
@@ -112,14 +109,12 @@ enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
     }
 
     *elem_out = create_arithmetic_element(type);
-    struct TREE_ELEMENT* right = NULL;
+    (*elem_out)->child1 = left;
 
-    if ((error = parse(container, precedence, &right)) != CALCERR_NONE) {
+    if ((error = parse(container, precedence, &((*elem_out)->child2))) !=
+        CALCERR_NONE) {
         return error;
     }
-
-    (*elem_out)->child1 = left;
-    (*elem_out)->child2 = right;
 
     return CALCERR_NONE;
 }
@@ -134,15 +129,14 @@ enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
 
     enum CALCERR error = CALCERR_NONE;
     struct TREE_ELEMENT** args = NULL;
-    size_t elem_count = 0;
 
-    if ((error = parse_list(container, &args, &elem_count)) != CALCERR_NONE) {
+    *elem_out = create_function_element(left->name_value, left->name_value_len);
+    free_elem(left);
+
+    if ((error = parse_list(container, &((*elem_out)->args), &((*elem_out)->args_len))) != CALCERR_NONE) {
         return error;
     }
 
-    *elem_out = create_function_element(left->name_value, left->name_value_len,
-                                        args, elem_count);
-    free_elem(left);
     return CALCERR_NONE;
 }
 
