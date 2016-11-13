@@ -14,13 +14,13 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
     do {
         char c = input[i];
 
-        size_t sub_len = 0;
-        int read_start = 0;
-
-        // these characters are the kind that don't need a token allocated
+        // these characters don't need a token allocated
         if (c == ' ' || c == '\0') {
             continue;
         }
+
+        size_t sub_len = 0;
+        int read_start = 0;
 
         struct TOKEN* token_ptr = malloc(sizeof(struct TOKEN));
         // printf("allocate %lu @ %p\n", sizeof(*token_ptr), token_ptr);
