@@ -123,7 +123,7 @@ Toiminnat priorisoituna
 6.1  Käyttäjän omat funktiot | mahdollisesti toteutetaan
 6.2          Käyttäjän omien |
      funktioiden varastointi |
-ÿþÿþ                  tiedostoon | mahdollisesti toteutetaan
+                  tiedostoon | mahdollisesti toteutetaan
 7          "Lazy evaluation" | tuskin toteutetaan
                   
 Versiohistoria
