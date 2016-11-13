@@ -1,41 +1,41 @@
-Harjoitustyˆ: Funktiolaskin
-Tekij‰: Santeri Kasvi, K8598, TTV16S01
+Harjoitusty√∂: Funktiolaskin
+Tekij√§: Santeri Kasvi, K8598, TTV16S01
 Ohjelmoinnin perusteet - TTZC0200
-Aloitusp‰iv‰m‰‰r‰: 26.9.2016
+Aloitusp√§iv√§m√§√§r√§: 26.9.2016
 ============================
-Projektin tavoite on luoda t‰ydellinen, mahdollisesti k‰ytt‰j‰n laajennetta-
+Projektin tavoite on luoda t√§ydellinen, mahdollisesti k√§ytt√§j√§n laajennetta-
 vavissa oleva funktiolaskin, jonka toiminta perustuu abstraktiin syntaksi-
 puuhun
 
 Abstrakti toiminta (suurimmaksi osaksi minun avuksi)
 ====================================================
-Laskin toimii komentorivill‰. K‰ytt‰j‰ syˆtt‰‰ laskun, jonka laskin k‰‰nt‰‰
-syntaksipuuksi, joka syˆtet‰‰n tulkkiin, joka laskee laskunlopullisen tuloksen.
+Laskin toimii komentorivill√§. K√§ytt√§j√§ sy√∂tt√§√§ laskun, jonka laskin k√§√§nt√§√§
+syntaksipuuksi, joka sy√∂tet√§√§n tulkkiin, joka laskee laskunlopullisen tuloksen.
 
 Kuvattu toiminta:
-Lasku -> J‰sent‰j‰ -> K‰‰nt‰j‰ -> Tulkitsija -> Vastaus
+Lasku -> J√§sent√§j√§ -> K√§√§nt√§j√§ -> Tulkitsija -> Vastaus
 
 Tuetut operaatiot:
-- Lis‰ys
-- V‰hennys
+- Lis√§ys
+- V√§hennys
 - Kertominen
 - Jakaminen
-- Jakoj‰‰nnˆs
+- Jakoj√§√§nn√∂s
 - Potenssi
 
 Toiminta vaiheittain
 --------------------
-K‰ytt‰j‰ syˆtt‰‰ esimerkkilaskun:
+K√§ytt√§j√§ sy√∂tt√§√§ esimerkkilaskun:
 (2 + 1 + 2) * (5 - 12 / 2) + 6
 
-1. Laskun j‰sent‰minen
+1. Laskun j√§sent√§minen
 ----------------------
-Lasku syˆtet‰‰n j‰sent‰j‰lle (engl. tokeniser, parser), joka k‰y laskun l‰pi
+Lasku sy√∂tet√§√§n j√§sent√§j√§lle (engl. tokeniser, parser), joka k√§y laskun l√§pi
 merkkijonona, merkki kerrallaan. Se antaa ulos merkkitaulukon (engl.
-merkki = token, ei character). Se ei v‰lit‰ ns. whitespace-merkeist‰, eli
-tyhjist‰ merkeist‰, kuten v‰lilyˆnneist‰.
+merkki = token, ei character). Se ei v√§lit√§ ns. whitespace-merkeist√§, eli
+tyhjist√§ merkeist√§, kuten v√§lily√∂nneist√§.
 
-Jokaisella merkill‰ on oma tyyppi (type) ja arvo (value).
+Jokaisella merkill√§ on oma tyyppi (type) ja arvo (value).
 
 Annettu lasku muodostuu seuraavanlaiseksi taulukoksi:
 
@@ -66,9 +66,9 @@ Tunnetut merkit:
    
 (aritmeettinen = arithmetic)
    
-2. Puun k‰‰nt‰minen
+2. Puun k√§√§nt√§minen
 -------------------
-K‰‰nt‰j‰ muodostaa j‰sennetyist‰ merkeist‰ seuraavanlaisen syntaksipuun:
+K√§√§nt√§j√§ muodostaa j√§sennetyist√§ merkeist√§ seuraavanlaisen syntaksipuun:
 
 Taso | Puu
 ----------
@@ -80,7 +80,7 @@ Taso | Puu
      | |    \
      | |     \----\
      | |           \
-  2  | Yhteen       V‰hennys
+  2  | Yhteen       V√§hennys
      | |     \      |      |
      | |      \     |      |
      | |       \    |      |
@@ -88,25 +88,25 @@ Taso | Puu
      | |    |              |  |
   4  | 2    1              12 2
 
-- Elementtej‰ on kahdenalaisia: operaatioita ja numeroita.
-- Numeroilla ei voi olla lapsielementtej‰.
-- Operaatioilla on aina kaksi lapsielementti‰.
+- Elementtej√§ on kahdenalaisia: operaatioita ja numeroita.
+- Numeroilla ei voi olla lapsielementtej√§.
+- Operaatioilla on aina kaksi lapsielementti√§.
 - Tasot ovat ensin lajiteltu niiden elementtien prioriteetin mukaisesti;
   saman prioriteetin omaavat ovat puussa niiden esiintymisen laskussa mukaisesti.
-- Suurimman tason omaavilla elementeill‰ on suurin prioriteetti laskuj‰rjestyk-
-  sess‰.
-- Tasoilla on aina parillinen m‰‰r‰ elementtej‰, paitsi juuritasolla.
-- Viimeinen taso sis‰lt‰‰ vain numeroelementtej‰.
-- Sulut (eli ryhm‰t) n‰kyv‰t taulukossa elementtien sijaintina.
+- Suurimman tason omaavilla elementeill√§ on suurin prioriteetti laskuj√§rjestyk-
+  sess√§.
+- Tasoilla on aina parillinen m√§√§r√§ elementtej√§, paitsi juuritasolla.
+- Viimeinen taso sis√§lt√§√§ vain numeroelementtej√§.
+- Sulut (eli ryhm√§t) n√§kyv√§t taulukossa elementtien sijaintina.
 - Vakiomuuttujat (esim. pi) muutetaan numeroelementeiksi
 
 3. Puun tulkitseminen
 ---------------------
-Vastauksen laskeminen on yksinkertaisesti ylimm‰n elementin arvon laskeminen.
-Yksitt‰isen elementin arvo lasketaan suorittamalla elementin operaatio sen
+Vastauksen laskeminen on yksinkertaisesti ylimm√§n elementin arvon laskeminen.
+Yksitt√§isen elementin arvo lasketaan suorittamalla elementin operaatio sen
 kahden lapsielementtien arvoilla. Koska elementin arvon laskeminen aiheut-
-taa sen lapsielementin arvon laskemisen, koko puu voidaan k‰yd‰ rekursiivisesti
-l‰pi.
+taa sen lapsielementin arvon laskemisen, koko puu voidaan k√§yd√§ rekursiivisesti
+l√§pi.
 
 
 Toiminnat priorisoituna
@@ -116,14 +116,14 @@ Toiminnat priorisoituna
       varastointi tiedostoon | toteutetaan
 3.            Vakiomuuttujat | toteutetaan
 4.             Vakiofunktiot | toteutetaan
-5.1 K‰ytt‰j‰n omat muuttujat | toteutetaan
-5.2          K‰ytt‰j‰n omien |
+5.1 K√§ytt√§j√§n omat muuttujat | toteutetaan
+5.2          K√§ytt√§j√§n omien |
       muuttujien varastointi |
                   tiedostoon | toteutetaan
-6.1  K‰ytt‰j‰n omat funktiot | mahdollisesti toteutetaan
-6.2          K‰ytt‰j‰n omien |
+6.1  K√§ytt√§j√§n omat funktiot | mahdollisesti toteutetaan
+6.2          K√§ytt√§j√§n omien |
      funktioiden varastointi |
-ˇ˛ˇ˛                  tiedostoon | mahdollisesti toteutetaan
+√ø√æ√ø√æ                  tiedostoon | mahdollisesti toteutetaan
 7          "Lazy evaluation" | tuskin toteutetaan
                   
 Versiohistoria
@@ -134,7 +134,7 @@ Versiohistoria
     Vakiomuuttujat, vakiofunktiot, edelliset tulokset
 
     
-K‰ytetty aika
+K√§ytetty aika
 =============
 
   Pvm  | Aika
