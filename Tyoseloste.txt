@@ -123,7 +123,7 @@ Toiminnat priorisoituna
 6.1  Käyttäjän omat funktiot | mahdollisesti toteutetaan
 6.2          Käyttäjän omien |
      funktioiden varastointi |
-                  tiedostoon | mahdollisesti toteutetaan
+ÿþÿþ                  tiedostoon | mahdollisesti toteutetaan
 7          "Lazy evaluation" | tuskin toteutetaan
                   
 Versiohistoria
@@ -160,3 +160,4 @@ Käytetty aika
   9.11 | 1h
  10.11 | 2h
  11.11 | 3h
+ 13.11 | 2h
