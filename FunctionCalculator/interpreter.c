@@ -24,6 +24,11 @@
 
 #endif
 
+void free_void_func(void* func_ptr)
+{
+    free_func((struct FUNC*)func_ptr);
+}
+
 struct HASHTABLE* names_ht = NULL;
 struct HASHTABLE* functions_ht = NULL;
 
@@ -60,7 +65,8 @@ enum CALCERR init_interpreter(void)
 
 enum CALCERR free_interpreter(void)
 {
-    ht_free(names_ht);
+    ht_free(names_ht, NULL);
+    ht_free(functions_ht, *free_void_func);
     return CALCERR_NONE;
 }
 
@@ -97,20 +103,19 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             return error;
         }
 
-        double* val = malloc(sizeof(double));
         switch (element->arithmetic_type) {
         case ARITH_ADDITION:
-            *val =
+            *element->number_value =
                 *element->child1->number_value + *element->child2->number_value;
             break;
 
         case ARITH_NEGATION:
-            *val =
+            *element->number_value =
                 *element->child1->number_value - *element->child2->number_value;
             break;
 
         case ARITH_MULTIPLICATION:
-            *val =
+            *element->number_value =
                 *element->child1->number_value * *element->child2->number_value;
             break;
 
@@ -119,22 +124,20 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                 return CALCERR_DIVIDE_BY_ZERO;
             }
 
-            *val =
+            *element->number_value =
                 *element->child1->number_value / *element->child2->number_value;
             break;
 
         case ARITH_POWER:
-            *val = pow(*element->child1->number_value,
+            *element->number_value = pow(*element->child1->number_value,
                        *element->child2->number_value);
             break;
 
         case ARITH_REMAINDER:
-            *val = remainder(*element->child1->number_value,
+            *element->number_value = remainder(*element->child1->number_value,
                              *element->child2->number_value);
             break;
         }
-
-        element->number_value = val;
 
         break;
 

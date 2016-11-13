@@ -9,3 +9,4 @@
 #include "CALCERR.h"
 
 enum CALCERR tokenise(char*, size_t, size_t*, struct TOKEN***);
+void free_tokens(struct TOKEN***, size_t);

@@ -51,3 +51,9 @@ enum CALCERR call_func(struct FUNC* func, struct ARG** args, size_t args_count,
 
     return CALCERR_NONE;
 }
+
+void free_func(struct FUNC* func)
+{
+    free(func->arg_types);
+    free(func);
+}

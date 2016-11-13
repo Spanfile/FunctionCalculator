@@ -1,22 +1,29 @@
 #include "tokeniser.h"
 
-int tokenise_name(char*, int*, size_t);
-int tokenise_number(char*, int*, size_t);
+int tokenise_name(char*, size_t*, size_t);
+int tokenise_number(char*, size_t*, size_t);
 
-enum CALCERR tokenise(char* input, size_t input_len,
-    size_t* token_count, struct TOKEN*** tokens)
+enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
+                      struct TOKEN*** tokens)
 {
     size_t tokens_size = 8;
     *tokens = malloc(tokens_size * sizeof(struct TOKEN*));
     (*token_count) = 0;
 
-    int i = 0;
+    size_t i = 0;
     do {
-        struct TOKEN* token_ptr = malloc(sizeof(struct TOKEN));
         char c = input[i];
 
         size_t sub_len = 0;
         int read_start = 0;
+
+        // these characters are the kind that don't need a token allocated
+        if (c == ' ' || c == '\0') {
+            continue;
+        }
+
+        struct TOKEN* token_ptr = malloc(sizeof(struct TOKEN));
+        // printf("allocate %lu @ %p\n", sizeof(*token_ptr), token_ptr);
 
         if (isalpha(c)) { // names
             int start = i;
@@ -41,11 +48,6 @@ enum CALCERR tokenise(char* input, size_t input_len,
             switch (c) {
             default:
                 return CALCERR_INVALID_CHARACTER;
-                break;
-
-            case ' ':
-            case '\0':
-                continue;
 
             case '+':
                 token_ptr->token_type = TOKEN_ADDITION;
@@ -53,7 +55,6 @@ enum CALCERR tokenise(char* input, size_t input_len,
 
             case '-':
                 token_ptr->token_type = TOKEN_NEGATION;
-
                 break;
 
             case '*':
@@ -98,28 +99,29 @@ enum CALCERR tokenise(char* input, size_t input_len,
         strncpy(token_ptr->value, &input[read_start], sub_len);
         token_ptr->value[sub_len] = '\0';
 
-        //printf("%i @ %i,%i: %s\n", token_ptr->type, i, (int)*token_count, token_ptr->value);
+        // printf("%i @ %i,%i: %s\n", token_ptr->type, i, (int)*token_count,
+        // token_ptr->value);
 
         // resize the token array if it's full
         if ((*token_count) + 1 > tokens_size) {
-            *tokens = realloc(*tokens, (tokens_size += 8) * sizeof(struct TOKEN*));
+            *tokens =
+                realloc(*tokens, (tokens_size += 8) * sizeof(struct TOKEN*));
         } // there may be something fishy going on here
 
         (*tokens)[*token_count] = token_ptr;
         *token_count += 1;
-    } while (i++ < (int)input_len);
+    } while (i++ < input_len);
 
     return CALCERR_NONE;
 }
 
-int tokenise_name(char* input, int* index, size_t input_len)
+int tokenise_name(char* input, size_t* index, size_t input_len)
 {
     char c;
 
     int end = *index;
-    while (1)
-    {
-        if (*index >= (int)input_len)
+    while (1) {
+        if (*index >= input_len)
             break;
 
         c = input[*index];
@@ -135,13 +137,13 @@ int tokenise_name(char* input, int* index, size_t input_len)
     return end;
 }
 
-int tokenise_number(char* input, int* index, size_t input_len)
+int tokenise_number(char* input, size_t* index, size_t input_len)
 {
     char c;
 
     int end = *index;
     while (1) {
-        if (*index >= (int)input_len) {
+        if (*index >= input_len) {
             break;
         }
 
@@ -157,4 +159,15 @@ int tokenise_number(char* input, int* index, size_t input_len)
     }
 
     return end;
+}
+
+void free_tokens(struct TOKEN*** tokens, size_t token_count)
+{
+    for (size_t i = 0; i < token_count; i++) {
+        // printf("free %lu @ %p\n", sizeof(*(*tokens)[i]), (*tokens)[i]);
+        free((*tokens)[i]->value);
+        free((*tokens)[i]);
+    }
+
+    free(*tokens);
 }

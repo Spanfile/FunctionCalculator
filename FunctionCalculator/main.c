@@ -1,7 +1,6 @@
 #include "main.h"
 
 void print_elem(struct TREE_ELEMENT*, int);
-void free_tokens(struct TOKEN**, size_t);
 void print_error(enum CALCERR, int);
 
 int main(void)
@@ -97,7 +96,7 @@ int main(void)
         read_buffer = NULL;
 
         if (tokens != NULL) {
-            free_tokens(tokens, token_count);
+            free_tokens(&tokens, token_count);
             tokens = NULL;
         }
 
@@ -106,6 +105,9 @@ int main(void)
             container = NULL;
         }
     }
+
+    free(read_buffer);
+    read_buffer = NULL;
 
     if ((error = free_interpreter()) != CALCERR_NONE) {
         printf("error freeing interpreter: %s", CALCERR_STRING[error]);
@@ -169,13 +171,4 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
         break;
     }
-}
-
-void free_tokens(struct TOKEN** tokens, size_t token_count)
-{
-    for (size_t i = 0; i < token_count; i++) {
-        free(tokens[i]);
-    }
-
-    free(tokens);
 }

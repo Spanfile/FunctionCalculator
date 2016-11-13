@@ -45,11 +45,7 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, void* value_ptr)
         return NULL;
     }
 
-    entry->key = strdup(key);
-    if (entry->key == NULL) {
-        return NULL;
-    }
-
+    entry->key = key;
     entry->value_ptr = value_ptr;
     entry->next = NULL;
 
@@ -114,7 +110,7 @@ int ht_get(struct HASHTABLE* ht, char* key, void** out)
     return 1;
 }
 
-void ht_free(struct HASHTABLE* ht)
+void ht_free(struct HASHTABLE* ht, void (*free_entry)(void*))
 {
     struct HASHTABLE_ENTRY* entry = NULL;
     struct HASHTABLE_ENTRY* next = NULL;
@@ -123,6 +119,13 @@ void ht_free(struct HASHTABLE* ht)
         if ((entry = ht->buckets[i]) != NULL) {
             while (entry != NULL) {
                 next = entry->next;
+
+                if (free_entry != NULL) {
+                    (*free_entry)(entry->value_ptr);
+                } else {
+                    free(entry->value_ptr);
+                }
+
                 free(entry);
                 entry = next;
             }

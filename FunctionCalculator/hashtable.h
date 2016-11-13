@@ -19,4 +19,4 @@ unsigned ht_hash(struct HASHTABLE*, char*);
 struct HASHTABLE_ENTRY* ht_newentry(char*, void*);
 int ht_set(struct HASHTABLE*, char*, void*);
 int ht_get(struct HASHTABLE*, char*, void**);
-void ht_free(struct HASHTABLE*);
+void ht_free(struct HASHTABLE*, void (*)(void*));

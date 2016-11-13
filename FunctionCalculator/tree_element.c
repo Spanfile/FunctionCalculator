@@ -1,5 +1,7 @@
 #include "tree_element.h"
 
+#include <stdio.h>
+
 struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
 {
     struct TREE_ELEMENT* elem = malloc(sizeof(struct TREE_ELEMENT));
@@ -15,6 +17,8 @@ struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
     elem->args = NULL;
     elem->args_len = 0;
     elem->free_number_value = 1;
+
+    // printf("allocate %lu\n", sizeof(*elem->number_value));
 
     return elem;
 }
@@ -77,8 +81,9 @@ void free_elem(struct TREE_ELEMENT* elem)
     if (elem->name_value != NULL) {
         free(elem->name_value);
     }
- 
-    if (elem->number_value != NULL&& elem->free_number_value) {
+
+    if (elem->number_value != NULL && elem->free_number_value) {
+        // printf("free %lu\n", sizeof(*elem->number_value));
         free(elem->number_value);
     }
 
