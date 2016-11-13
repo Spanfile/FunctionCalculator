@@ -62,8 +62,12 @@ struct TREE_ELEMENT* create_function_element(char* value, size_t value_len,
                                              size_t args_len)
 {
     struct TREE_ELEMENT* elem = create_element(ELEM_FUNCTION);
-    elem->name_value = value;
+
     elem->name_value_len = value_len;
+    elem->name_value = malloc(value_len + 1);
+    strncpy(elem->name_value, value, value_len);
+    elem->name_value[value_len] = '\0';
+
     elem->args = args;
     elem->args_len = args_len;
     return elem;
@@ -90,6 +94,14 @@ void free_elem(struct TREE_ELEMENT* elem)
     if (elem->number_value != NULL && elem->free_number_value) {
         // printf("free %lu\n", sizeof(*elem->number_value));
         free(elem->number_value);
+    }
+
+    if (elem->args != NULL) {
+        for (size_t i = 0; i < elem->args_len; i++) {
+            free_elem(elem->args[i]);
+        }
+
+        free(elem->args);
     }
 
     free(elem);

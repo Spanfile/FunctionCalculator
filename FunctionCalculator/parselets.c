@@ -142,6 +142,7 @@ enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
 
     *elem_out = create_function_element(left->name_value, left->name_value_len,
                                         args, elem_count);
+    free_elem(left);
     return CALCERR_NONE;
 }
 

@@ -29,6 +29,15 @@ void free_void_func(void* func_ptr)
     free_func((struct FUNC*)func_ptr);
 }
 
+void free_args(struct ARG** args, size_t len)
+{
+    for (size_t i = 0; i < len; i++) {
+        free(args[i]);
+    }
+
+    free(args);
+}
+
 struct HASHTABLE* names_ht = NULL;
 struct HASHTABLE* functions_ht = NULL;
 
@@ -130,18 +139,19 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         case ARITH_POWER:
             *element->number_value = pow(*element->child1->number_value,
-                       *element->child2->number_value);
+                                         *element->child2->number_value);
             break;
 
         case ARITH_REMAINDER:
             *element->number_value = remainder(*element->child1->number_value,
-                             *element->child2->number_value);
+                                               *element->child2->number_value);
             break;
         }
 
         break;
 
     case ELEM_NAME:
+        free(element->number_value);
         element->free_number_value = 0;
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
@@ -171,14 +181,17 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         struct ARG** args = NULL;
         if ((error = create_args_from_tree(*element->args, element->args_len,
                                            &args)) != CALCERR_NONE) {
+            free_args(args, element->args_len);
             return error;
         }
 
         if ((error = call_func(func, args, element->args_len,
                                element->number_value)) != CALCERR_NONE) {
+            free_args(args, element->args_len);
             return error;
         }
 
+        free_args(args, element->args_len);
         break;
     }
 
