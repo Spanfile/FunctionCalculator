@@ -24,10 +24,19 @@
 
 #endif
 
-void free_void_func(void* func_ptr)
-{
-    free_func((struct FUNC*)func_ptr);
-}
+void free_void_func(void*);
+void free_args(struct ARG**, size_t);
+
+double get_ans_double(double);
+
+struct HASHTABLE* names_ht = NULL;
+struct HASHTABLE* functions_ht = NULL;
+
+double* ans_array = NULL;
+size_t ans_count;
+size_t ans_len;
+
+enum CALCERR func_error = CALCERR_NONE;
 
 void free_args(struct ARG** args, size_t len)
 {
@@ -38,11 +47,31 @@ void free_args(struct ARG** args, size_t len)
     free(args);
 }
 
-struct HASHTABLE* names_ht = NULL;
-struct HASHTABLE* functions_ht = NULL;
+void free_void_func(void* func_ptr)
+{
+    free_func((struct FUNC*)func_ptr);
+}
+
+double get_ans_double(double index_d)
+{
+    int index = (int)index_d;
+    double out = 0;
+    enum CALCERR error = CALCERR_NONE;
+
+    if ((error = get_ans(index, &out)) != CALCERR_NONE) {
+        func_error = error;
+        return 0;
+    }
+
+    return out;
+}
 
 enum CALCERR init_interpreter(void)
 {
+    ans_count = 0;
+    ans_len = 4;
+    ans_array = malloc(ans_len * sizeof(double));
+
     names_ht = ht_create(512);
     functions_ht = ht_create(512);
 
@@ -57,12 +86,23 @@ enum CALCERR init_interpreter(void)
         if (!ht_set(names_ht, "e", double_to_heap(M_E))) {
             return CALCERR_INTR_VALUE_SET_FAILED;
         }
+
+        /* when answers are added to the array, they're pushed to the front
+        this way the array functions as a pointer to the most recent answer */
+        if (!ht_set(names_ht, "ans", ans_array)) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
     }
 
     if (functions_ht == NULL) {
         return CALCERR_INTR_INIT_FAILED;
     } else {
         FOREACH_EXT_FUNC_ONE_ARG(CREATE_FUNC_ONE_ARG);
+
+        if (!ht_set(functions_ht, "ans",
+                    create_ext_func_one_arg(get_ans_double))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
 
         if (!ht_set(functions_ht, "atan2", create_ext_func_two_arg(atan2))) {
             return CALCERR_INTR_VALUE_SET_FAILED;
@@ -191,9 +231,56 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             return error;
         }
 
+        if (func_error != CALCERR_NONE) {
+            func_error = CALCERR_NONE;
+            free_args(args, element->args_len);
+            return func_error;
+        }
+
         free_args(args, element->args_len);
         break;
     }
 
     return CALCERR_NONE;
+}
+
+enum CALCERR add_ans(double ans)
+{
+    if (ans_count >= ans_len) {
+        ans_array = realloc(ans_array, (ans_len += 4) * sizeof(double));
+        // reallocating changed the pointer, update it
+        ht_set(names_ht, "ans", ans_array);
+    }
+
+    if (ans_count > 0) {
+        memmove(ans_array + 1, ans_array, ans_count * sizeof(double));
+    }
+
+    ans_count += 1;
+    ans_array[0] = ans;
+
+    return CALCERR_NONE;
+}
+
+enum CALCERR get_ans(int index, double* out)
+{
+    if (index > ans_count) {
+        return CALCERR_INVALID_ANS_INDEX;
+    }
+
+    *out = ans_array[index];
+    return CALCERR_NONE;
+}
+
+void print_ans()
+{
+    for (size_t i = 0; i < ans_count; i++) {
+        printf("%f", ans_array[i]);
+
+        if (i < ans_count - 1) {
+            printf(", ");
+        }
+    }
+
+    printf("\n");
 }

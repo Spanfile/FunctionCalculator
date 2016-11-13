@@ -14,3 +14,7 @@ enum CALCERR free_interpreter(void);
 // extra_names is used for function calls
 // user values are added to the main name hashtable
 enum CALCERR evaluate_element(struct TREE_ELEMENT*, struct HASHTABLE*);
+
+enum CALCERR add_ans(double);
+enum CALCERR get_ans(int, double*);
+void print_ans();

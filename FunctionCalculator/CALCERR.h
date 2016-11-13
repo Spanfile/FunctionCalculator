@@ -16,7 +16,8 @@
     CALCERR(CALCERR_NAME_NOT_FOUND)                                            \
     CALCERR(CALCERR_ARG_COUNT_MISMATCH)                                        \
     CALCERR(CALCERR_ARG_TYPE_MISMATCH)                                         \
-    CALCERR(CALCERR_ARG_CONVERSION_FAILED)
+    CALCERR(CALCERR_ARG_CONVERSION_FAILED)                                     \
+    CALCERR(CALCERR_INVALID_ANS_INDEX)
 
 #ifndef GENERATE_ENUM
 #define GENERATE_ENUM(ENUM) ENUM,
