@@ -26,8 +26,13 @@ struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
 struct TREE_ELEMENT* create_name_element(char* value, size_t value_len)
 {
     struct TREE_ELEMENT* elem = create_element(ELEM_NAME);
-    elem->name_value = value;
+
     elem->name_value_len = value_len;
+    elem->name_value =
+        malloc(value_len + 1); // null terminator not included in value
+    strncpy(elem->name_value, value, value_len);
+    elem->name_value[value_len] = '\0';
+
     return elem;
 }
 
