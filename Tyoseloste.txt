@@ -111,31 +111,36 @@ läpi.
 
 Toiminnat priorisoituna
 =======================
-1.                Laskeminen | toteutetaan
-2.         Laskujen tulosten |
-      varastointi tiedostoon | toteutetaan
-3.            Vakiomuuttujat | toteutetaan
-4.             Vakiofunktiot | toteutetaan
-5.1 Käyttäjän omat muuttujat | toteutetaan
-5.2          Käyttäjän omien |
-      muuttujien varastointi |
-                  tiedostoon | toteutetaan
-6.1  Käyttäjän omat funktiot | mahdollisesti toteutetaan
-6.2          Käyttäjän omien |
-     funktioiden varastointi |
-                  tiedostoon | mahdollisesti toteutetaan
-7          "Lazy evaluation" | tuskin toteutetaan
+Kohdeversio | Toiminto | Toteutusprioriteetti
+
+v0.1               Laskeminen | toteutetaan
+            Laskujen tulosten |
+v0.4   varastointi tiedostoon | mahdollisesti toteutetaan
+v0.2           Vakiomuuttujat | toteutetaan
+v0.2            Vakiofunktiot | toteutetaan
+v0.3 Käyttäjän omat muuttujat | toteutetaan
+v0.4          Käyttäjän omien |
+       muuttujien varastointi |
+                   tiedostoon | toteutetaan
+v0.3  Käyttäjän omat funktiot | mahdollisesti toteutetaan
+v0.4          Käyttäjän omien |
+      funktioiden varastointi |
+                   tiedostoon | mahdollisesti toteutetaan
+v1.0        "Lazy evaluation" | tuskin toteutetaan
                   
 Versiohistoria
 ==============
-0.1
+v0.1
     Perustoiminta; laskujen laskeminen
-0.2
+v0.2
     Vakiomuuttujat, vakiofunktiot, edelliset tulokset
-0.3
-    Käyttäjän muuttujat + ktiot
+v0.3 - ei vielä julkaistu
+    Käyttäjän muuttujat + funktiot
+v0.4 - ei vielä julkaistu
+    Käyttäjän muuttujien + funktioiden varastointi tiedostoon
+v1.0 - ei vielä julkaistu
+    "Lazy evaluation"
 
-    
 Käytetty aika
 =============
 
@@ -163,4 +168,3 @@ Käytetty aika
  10.11 | 2h
  11.11 | 3h
  13.11 | 7h
-
