@@ -46,8 +46,7 @@ struct TREE_ELEMENT* create_number_element(double* value)
 
 struct TREE_ELEMENT* create_negation_element()
 {
-    struct TREE_ELEMENT* elem = create_element(ELEM_NEGATION);
-    return elem;
+    return create_element(ELEM_NEGATION);
 }
 
 struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
@@ -57,7 +56,7 @@ struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
     return elem;
 }
 
-    struct TREE_ELEMENT* create_function_element(char* value, size_t value_len)
+struct TREE_ELEMENT* create_function_element(char* value, size_t value_len)
 {
     struct TREE_ELEMENT* elem = create_element(ELEM_FUNCTION);
 
@@ -65,7 +64,19 @@ struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type)
     elem->name_value = malloc(value_len + 1);
     strncpy(elem->name_value, value, value_len);
     elem->name_value[value_len] = '\0';
-    
+
+    return elem;
+}
+
+struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len)
+{
+    struct TREE_ELEMENT* elem = create_element(ELEM_ASSIGNMENT);
+
+    elem->name_value_len = value_len;
+    elem->name_value = malloc(value_len + 1);
+    strncpy(elem->name_value, value, value_len);
+    elem->name_value[value_len] = '\0';
+
     return elem;
 }
 

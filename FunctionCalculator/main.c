@@ -129,7 +129,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
     switch (elem->elem_type) {
     default:
-        printf("unknown");
+        printf("unknown\n");
         break;
 
     case ELEM_NUMBER:
@@ -138,9 +138,13 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
     case ELEM_NEGATION:
         printf("\n");
+        
         if (elem->child1 != NULL) {
             print_elem(elem->child1, indent + 1);
+        } else {
+            printf("missing child1\n");
         }
+
         break;
 
     case ELEM_NAME:
@@ -169,6 +173,17 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
         for (size_t i = 0; i < elem->args_len; i++) {
             print_elem(elem->args[i], indent + 1);
+        }
+
+        break;
+
+    case ELEM_ASSIGNMENT:
+        printf("%s\n", elem->name_value);
+
+        if (elem->child1 != NULL) {
+            print_elem(elem->child1, indent + 1);
+        } else {
+            printf("missing child1\n");
         }
 
         break;

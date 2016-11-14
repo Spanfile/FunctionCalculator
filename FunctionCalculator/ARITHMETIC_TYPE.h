@@ -10,6 +10,8 @@
 
 #ifndef GENERATE_ENUM
 #define GENERATE_ENUM(ENUM) ENUM,
+#endif
+#ifndef GENERATE_STRING
 #define GENERATE_STRING(STR) #STR,
 #endif
 

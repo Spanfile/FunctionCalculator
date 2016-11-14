@@ -17,10 +17,13 @@
     CALCERR(CALCERR_ARG_COUNT_MISMATCH)                                        \
     CALCERR(CALCERR_ARG_TYPE_MISMATCH)                                         \
     CALCERR(CALCERR_ARG_CONVERSION_FAILED)                                     \
-    CALCERR(CALCERR_INVALID_ANS_INDEX)
+    CALCERR(CALCERR_INVALID_ANS_INDEX)                                         \
+    CALCERR(CALCERR_NAME_RESERVED)
 
 #ifndef GENERATE_ENUM
 #define GENERATE_ENUM(ENUM) ENUM,
+#endif
+#ifndef GENERATE_STRING
 #define GENERATE_STRING(STR) #STR,
 #endif
 

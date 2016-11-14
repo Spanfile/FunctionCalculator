@@ -28,3 +28,5 @@ enum CALCERR parse_arithmetic(struct TOKEN*, struct TREE_ELEMENT*,
                               struct PARSER_CONTAINER*, struct TREE_ELEMENT**);
 enum CALCERR parse_function(struct TOKEN*, struct TREE_ELEMENT*,
                             struct PARSER_CONTAINER*, struct TREE_ELEMENT**);
+enum CALCERR parse_assignment(struct TOKEN*, struct TREE_ELEMENT*,
+                              struct PARSER_CONTAINER*, struct TREE_ELEMENT**);

@@ -1,31 +1,12 @@
 #include "interpreter.h"
 
-#define FOREACH_EXT_FUNC_ONE_ARG(FUNC)                                         \
-    FUNC(sin)                                                                  \
-    FUNC(cos)                                                                  \
-    FUNC(tan)                                                                  \
-    FUNC(asin)                                                                 \
-    FUNC(acos)                                                                 \
-    FUNC(atan)                                                                 \
-    FUNC(sinh)                                                                 \
-    FUNC(cosh)                                                                 \
-    FUNC(tanh)                                                                 \
-    FUNC(log)                                                                  \
-    FUNC(log10)                                                                \
-    FUNC(sqrt)                                                                 \
-    FUNC(floor)                                                                \
-    FUNC(ceil)
-
-#ifndef CREATE_FUNC
-#define CREATE_FUNC_ONE_ARG(FUNC)                                              \
-    if (!ht_set(functions_ht, #FUNC, create_ext_func_one_arg(FUNC))) {         \
-        return CALCERR_INTR_VALUE_SET_FAILED;                                  \
-    }
-
-#endif
-
 void free_void_func(void*);
 void free_args(struct ARG**, size_t);
+
+static const char* RESERVED_NAMES[] = {
+    FOREACH_EXT_FUNC_ONE_ARG(GENERATE_STRING) "atan2", "pi", "e", "ans"};
+static const size_t RESERVED_NAMES_COUNT =
+    sizeof(RESERVED_NAMES) / sizeof(RESERVED_NAMES[0]);
 
 double get_ans_double(double);
 
@@ -66,8 +47,21 @@ double get_ans_double(double index_d)
     return out;
 }
 
+int is_name_reserved(char* name)
+{
+    for (size_t i = 0; i < RESERVED_NAMES_COUNT; i++) {
+        if (strcmp(name, RESERVED_NAMES[i]) == 0) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 enum CALCERR init_interpreter(void)
 {
+    // printf("%lu reserved names\n", RESERVED_NAMES_COUNT);
+
     ans_count = 0;
     ans_len = 4;
     ans_array = malloc(ans_len * sizeof(double));
@@ -193,6 +187,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
     case ELEM_NAME:
         free(element->number_value);
         element->free_number_value = 0;
+        
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
             if (extra_names != NULL) {
@@ -201,6 +196,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                     break;
                 }
             }
+
             return CALCERR_NAME_NOT_FOUND;
         }
 
@@ -239,6 +235,25 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         free_args(args, element->args_len);
         break;
+
+    case ELEM_ASSIGNMENT: {
+        if (is_name_reserved(element->name_value)) {
+            return CALCERR_NAME_RESERVED;
+        }
+
+        if ((error = evaluate_element(element->child1, NULL)) != CALCERR_NONE) {
+            return error;
+        }
+
+        if (!ht_set(names_ht, element->name_value,
+                    double_to_heap(*element->child1->number_value))) {
+            return CALCERR_INTR_VALUE_SET_FAILED;
+        }
+
+        *element->number_value = *element->child1->number_value;
+
+        break;
+    }
     }
 
     return CALCERR_NONE;

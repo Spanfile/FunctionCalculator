@@ -84,10 +84,15 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
             case ',':
                 token_ptr->token_type = TOKEN_COMMA;
                 break;
+
+            case '=':
+                token_ptr->token_type = TOKEN_EQUAL;
+                break;
             }
 
             if (skip_end == 0) {
-                /* we techically don't need the value of the token with these
+                /* we techically don't need the value of the token with
+                these
                 arithmetic tokens, but ech */
                 sub_len = 1;
                 read_start = i;

@@ -9,6 +9,36 @@
 #include "pointer_help.h"
 #include "func.h"
 
+#define FOREACH_EXT_FUNC_ONE_ARG(FUNC)                                         \
+    FUNC(sin)                                                                  \
+    FUNC(cos)                                                                  \
+    FUNC(tan)                                                                  \
+    FUNC(asin)                                                                 \
+    FUNC(acos)                                                                 \
+    FUNC(atan)                                                                 \
+    FUNC(sinh)                                                                 \
+    FUNC(cosh)                                                                 \
+    FUNC(tanh)                                                                 \
+    FUNC(log)                                                                  \
+    FUNC(log10)                                                                \
+    FUNC(sqrt)                                                                 \
+    FUNC(floor)                                                                \
+    FUNC(ceil)
+
+#ifndef CREATE_FUNC
+#define CREATE_FUNC_ONE_ARG(FUNC)                                              \
+    if (!ht_set(functions_ht, #FUNC, create_ext_func_one_arg(FUNC))) {         \
+        return CALCERR_INTR_VALUE_SET_FAILED;                                  \
+    }
+
+#endif
+
+#ifndef GENERATE_STRING
+#define GENERATE_STRING(STR) #STR,
+#endif
+
+int is_name_reserved(char*);
+
 enum CALCERR init_interpreter(void);
 enum CALCERR free_interpreter(void);
 // extra_names is used for function calls

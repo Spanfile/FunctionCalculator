@@ -49,15 +49,9 @@ enum CALCERR parse_negation(struct TOKEN* token,
                             struct PARSER_CONTAINER* container,
                             struct TREE_ELEMENT** elem_out)
 {
-    enum CALCERR error = CALCERR_NONE;
     *elem_out = create_negation_element();
 
-    if ((error = parse(container, PRECEDENCE_DEFAULT,
-                       &((*elem_out)->child1))) != CALCERR_NONE) {
-        return error;
-    }
-
-    return CALCERR_NONE;
+    return parse(container, PRECEDENCE_DEFAULT, &((*elem_out)->child1));
 }
 
 enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
@@ -66,12 +60,10 @@ enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
 {
     enum ARITHMETIC_TYPE type;
     int precedence = 0;
-    enum CALCERR error = CALCERR_NONE;
 
     switch (token->token_type) {
     default:
-        error = CALCERR_UNEXPECTED_TOKEN;
-        break;
+        return CALCERR_UNEXPECTED_TOKEN;
 
     case TOKEN_ADDITION:
         type = ARITH_ADDITION;
@@ -104,19 +96,10 @@ enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
         break;
     }
 
-    if (error != CALCERR_NONE) {
-        return error;
-    }
-
     *elem_out = create_arithmetic_element(type);
     (*elem_out)->child1 = left;
 
-    if ((error = parse(container, precedence, &((*elem_out)->child2))) !=
-        CALCERR_NONE) {
-        return error;
-    }
-
-    return CALCERR_NONE;
+    return parse(container, precedence, &((*elem_out)->child2));
 }
 
 enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
@@ -127,17 +110,26 @@ enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
         return CALCERR_INVALID_ELEMENT;
     }
 
-    enum CALCERR error = CALCERR_NONE;
-    struct TREE_ELEMENT** args = NULL;
-
     *elem_out = create_function_element(left->name_value, left->name_value_len);
     free_elem(left);
 
-    if ((error = parse_list(container, &((*elem_out)->args), &((*elem_out)->args_len))) != CALCERR_NONE) {
-        return error;
+    return parse_list(container, &((*elem_out)->args),
+                      &((*elem_out)->args_len));
+}
+
+enum CALCERR parse_assignment(struct TOKEN* token, struct TREE_ELEMENT* left,
+                              struct PARSER_CONTAINER* container,
+                              struct TREE_ELEMENT** elem_out)
+{
+    if (left->elem_type != ELEM_NAME) {
+        return CALCERR_INVALID_ELEMENT;
     }
 
-    return CALCERR_NONE;
+    *elem_out =
+        create_assignment_element(left->name_value, left->name_value_len);
+    free_elem(left);
+    
+    return parse(container, PRECEDENCE_DEFAULT, &((*elem_out)->child1));
 }
 
 enum CALCERR parse_list(struct PARSER_CONTAINER* container,

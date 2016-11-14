@@ -75,23 +75,15 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         case TOKEN_POWER:
         case TOKEN_REMAINDER:
             *container->index += 1;
-
-            if ((error = parse_arithmetic(token, *elem_out, container, elem_out)) !=
-                CALCERR_NONE) {
-                return error;
-            }
-
-            break;
+            return parse_arithmetic(token, *elem_out, container, elem_out);
 
         case TOKEN_OPEN_BRACKET:
             *container->index += 1;
+            return parse_function(token, *elem_out, container, elem_out);
 
-            if ((error = parse_function(token, *elem_out, container, elem_out)) !=
-                CALCERR_NONE) {
-                return error;
-            }
-
-            break;
+        case TOKEN_EQUAL:
+            *container->index += 1;
+            return parse_assignment(token, *elem_out, container, elem_out);
         }
     }
 
@@ -123,6 +115,7 @@ int get_precedence(struct PARSER_CONTAINER* container)
     case TOKEN_OPEN_BRACKET:
     case TOKEN_CLOSE_BRACKET:
     case TOKEN_COMMA:
+    case TOKEN_EQUAL:
         return PRECEDENCE_GROUP;
     }
 }

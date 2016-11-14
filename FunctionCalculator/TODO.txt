@@ -1,0 +1,2 @@
+- Something funky going on with custom names and their null terminators. Fucking null terminators.
+- Negation doesn't work properly with -1-1

@@ -11,10 +11,13 @@
     ELEM_TYPE(ELEM_NEGATION)                                                   \
     ELEM_TYPE(ELEM_ARITHMETIC)                                                 \
     ELEM_TYPE(ELEM_NAME)                                                       \
-    ELEM_TYPE(ELEM_FUNCTION)
+    ELEM_TYPE(ELEM_FUNCTION)                                                   \
+    ELEM_TYPE(ELEM_ASSIGNMENT)
 
 #ifndef GENERATE_ENUM
 #define GENERATE_ENUM(ENUM) ENUM,
+#endif
+#ifndef GENERATE_STRING
 #define GENERATE_STRING(STR) #STR,
 #endif
 
@@ -52,5 +55,6 @@ struct TREE_ELEMENT* create_negation_element();
 struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE);
 struct TREE_ELEMENT* create_name_element(char*, size_t);
 struct TREE_ELEMENT* create_function_element(char*, size_t);
+struct TREE_ELEMENT* create_assignment_element(char*, size_t);
 
 void free_elem(struct TREE_ELEMENT*);
