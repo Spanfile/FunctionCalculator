@@ -68,9 +68,11 @@ struct TREE_ELEMENT* create_function_element(char* value, size_t value_len)
     return elem;
 }
 
-struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len)
+struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
+                                               enum ASSIGNMENT_TYPE assign_type)
 {
     struct TREE_ELEMENT* elem = create_element(ELEM_ASSIGNMENT);
+    elem->assign_type = assign_type;
 
     elem->name_value_len = value_len;
     elem->name_value = malloc(value_len + 1);

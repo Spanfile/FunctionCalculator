@@ -14,6 +14,10 @@
     ELEM_TYPE(ELEM_FUNCTION)                                                   \
     ELEM_TYPE(ELEM_ASSIGNMENT)
 
+#define FOREACH_ASSIGNMENT_TYPE(ASSIGN_TYPE)                                   \
+    ASSIGN_TYPE(ASSIGN_NAME)                                                   \
+    ASSIGN_TYPE(ASSIGN_FUNCTION)
+
 #ifndef GENERATE_ENUM
 #define GENERATE_ENUM(ENUM) ENUM,
 #endif
@@ -22,26 +26,34 @@
 #endif
 
 enum TREE_ELEMENT_TYPE { FOREACH_ELEM_TYPE(GENERATE_ENUM) };
+enum ASSIGNMENT_TYPE { FOREACH_ASSIGNMENT_TYPE(GENERATE_ENUM) };
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 static const char* TREE_ELEMENT_TYPE_STRING[] = {
     FOREACH_ELEM_TYPE(GENERATE_STRING)};
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+static const char* ASSIGNMENT_TYPE_STRING[] = {
+    FOREACH_ASSIGNMENT_TYPE(GENERATE_STRING)};
+
 struct TREE_ELEMENT {
     enum TREE_ELEMENT_TYPE elem_type;
 
-    // for TYPE_ARITHMETIC
+    // for ELEM_ARITHMETIC
     enum ARITHMETIC_TYPE arithmetic_type;
 
-    // for TYPE_NUMBER
+    // for ELEM_ASSIGNMENT
+    enum ASSIGNMENT_TYPE assign_type;
+
+    // for ELEM_NUMBER
     int free_number_value;
     double* number_value;
 
-    // for TYPE_NAME and TYPE_FUNCTION
+    // for ELEM_NAME and ELEM_FUNCTION
     size_t name_value_len;
     char* name_value;
 
-    // for TYPE_FUNCTION
+    // for ELEM_FUNCTION
     struct TREE_ELEMENT** args;
     size_t args_len;
 
@@ -55,6 +67,6 @@ struct TREE_ELEMENT* create_negation_element();
 struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE);
 struct TREE_ELEMENT* create_name_element(char*, size_t);
 struct TREE_ELEMENT* create_function_element(char*, size_t);
-struct TREE_ELEMENT* create_assignment_element(char*, size_t);
+struct TREE_ELEMENT* create_assignment_element(char*, size_t, enum ASSIGNMENT_TYPE);
 
 void free_elem(struct TREE_ELEMENT*);

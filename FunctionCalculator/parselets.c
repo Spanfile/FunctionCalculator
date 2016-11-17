@@ -51,7 +51,7 @@ enum CALCERR parse_negation(struct TOKEN* token,
 {
     *elem_out = create_negation_element();
 
-    return parse(container, PRECEDENCE_DEFAULT, &((*elem_out)->child1));
+    return parse(container, PRECEDENCE_SUM, &((*elem_out)->child1));
 }
 
 enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
@@ -121,14 +121,23 @@ enum CALCERR parse_assignment(struct TOKEN* token, struct TREE_ELEMENT* left,
                               struct PARSER_CONTAINER* container,
                               struct TREE_ELEMENT** elem_out)
 {
-    if (left->elem_type != ELEM_NAME) {
+    enum ASSIGNMENT_TYPE assign_type = ASSIGN_NAME;
+
+    switch (left->elem_type) {
+    default:
         return CALCERR_INVALID_ELEMENT;
+
+    case ELEM_FUNCTION:
+        assign_type = ASSIGN_FUNCTION;
+        break;
     }
 
-    *elem_out =
-        create_assignment_element(left->name_value, left->name_value_len);
+    *elem_out = create_assignment_element(left->name_value,
+                                          left->name_value_len, assign_type);
+    /* TODO: GET THE ARGS IN HERE. that means clone them from left to elem */
+    (*elem_out)->args_len = left->args_len;
     free_elem(left);
-    
+
     return parse(container, PRECEDENCE_DEFAULT, &((*elem_out)->child1));
 }
 
@@ -177,9 +186,9 @@ enum CALCERR parse_list(struct PARSER_CONTAINER* container,
             *elems = realloc(*elems, (elem_array_size += 4) *
                                          sizeof(struct TREE_ELEMENT*));
         }
-
-        //*container->index += 1;
     }
+
+    *container->index += 1;
 
     return CALCERR_NONE;
 }

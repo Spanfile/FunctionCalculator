@@ -1,6 +1,7 @@
 #include "main.h"
 
 void print_elem(struct TREE_ELEMENT*, int);
+void print_string(const char*, const size_t);
 void print_error(enum CALCERR, int);
 
 int main(void)
@@ -47,6 +48,8 @@ int main(void)
 
         // replace the newline at the end with a null terminating byte
         read_buffer[--read_len] = '\0';
+
+        print_string(read_buffer, read_len);
 
         // parse commands
         if (read_buffer[0] == ':' && read_len > 1) {
@@ -148,7 +151,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
         break;
 
     case ELEM_NAME:
-        printf("%s\n", elem->name_value);
+        print_string(elem->name_value, elem->name_value_len);
         break;
 
     case ELEM_ARITHMETIC:
@@ -169,7 +172,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
         break;
 
     case ELEM_FUNCTION:
-        printf("%s\n", elem->name_value);
+        print_string(elem->name_value, elem->name_value_len);
 
         for (size_t i = 0; i < elem->args_len; i++) {
             print_elem(elem->args[i], indent + 1);
@@ -178,7 +181,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
         break;
 
     case ELEM_ASSIGNMENT:
-        printf("%s\n", elem->name_value);
+        print_string(elem->name_value, elem->name_value_len);
 
         if (elem->child1 != NULL) {
             print_elem(elem->child1, indent + 1);
@@ -188,4 +191,15 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
         break;
     }
+}
+
+void print_string(const char* str, const size_t len)
+{
+    printf("%s [ ", str);
+
+    for (size_t i = 0; i < len + 1; i++) {
+        printf("%02X ", str[i]);
+    }
+
+    printf("]\n");
 }

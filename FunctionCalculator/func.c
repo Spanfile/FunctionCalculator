@@ -5,11 +5,7 @@ struct FUNC* create_ext_func_one_arg(/*char* name,*/ double (*ext_func)(double))
     struct FUNC* func = malloc(sizeof(struct FUNC));
     // func->name = name;
     func->func_type = FUNC_TYPE_EXTERNAL;
-
-    func->arg_types = malloc(sizeof(enum ARG_TYPE));
-    func->arg_types[0] = ARG_TYPE_NUMBER;
-    func->arg_types_count = 1;
-
+    func->arg_count = 1;
     func->ext_func_one_arg = ext_func;
 
     return func;
@@ -21,32 +17,61 @@ struct FUNC* create_ext_func_two_arg(/*char* name,*/
     struct FUNC* func = malloc(sizeof(struct FUNC));
     // func->name = name;
     func->func_type = FUNC_TYPE_EXTERNAL;
-
-    func->arg_types = malloc(2 * sizeof(enum ARG_TYPE));
-    func->arg_types[0] = ARG_TYPE_NUMBER;
-    func->arg_types[1] = ARG_TYPE_NUMBER;
-    func->arg_types_count = 2;
-
+    func->arg_count = 2;
     func->ext_func_two_arg = ext_func;
 
     return func;
 }
 
-enum CALCERR call_func(struct FUNC* func, struct ARG** args, size_t args_count,
+struct FUNC* create_intr_func(struct TREE_ELEMENT* elem)
+{
+    struct FUNC* func = malloc(sizeof(struct FUNC));
+    func->func_type = FUNC_TYPE_INTERNAL;
+    func->arg_count = elem->args_len;
+    func->elem = elem;
+
+    func->arg_names = malloc(func->arg_count * sizeof(char*));
+    for (size_t i = 0; i < func->arg_count; i++) {
+        func->arg_names[i] = malloc(elem->args[i]->name_value_len);
+        strncpy(func->arg_names[i], elem->args[i]->name_value,
+                elem->args[i]->name_value_len);
+        func->arg_names[i][0] = '\0';
+    }
+
+    return func;
+}
+
+enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
                        double* out)
 {
-    if (args_count != func->arg_types_count) {
+    enum CALCERR error = CALCERR_NONE;
+
+    if (args_count != func->arg_count) {
         return CALCERR_ARG_COUNT_MISMATCH;
     }
 
     if (func->func_type == FUNC_TYPE_EXTERNAL) {
-        if (func->arg_types_count == 1) {
-            *out = (*func->ext_func_one_arg)(args[0]->value);
-        } else if (func->arg_types_count == 2) {
-            *out = (*func->ext_func_two_arg)(args[0]->value, args[1]->value);
+        if (func->arg_count == 1) {
+            *out = (*func->ext_func_one_arg)(*args[0]);
+        } else if (func->arg_count == 2) {
+            *out = (*func->ext_func_two_arg)(*args[0], *args[1]);
         } else {
             return CALCERR_ARG_COUNT_MISMATCH;
         }
+    } else {
+        struct HASHTABLE* args_ht = ht_create(32);
+
+        for (size_t i = 0; i < func->arg_count; i++) {
+            if (!ht_set(args_ht, func->arg_names[i], strlen(func->arg_names[i]),
+                        (void*)args[i], NULL)) {
+                return CALCERR_VALUE_SET_FAILED;
+            }
+        }
+
+        error = evaluate_element(func->elem, args_ht);
+        ht_free(args_ht, NULL);
+        *out = *func->elem->number_value;
+        return error;
     }
 
     return CALCERR_NONE;
@@ -54,6 +79,13 @@ enum CALCERR call_func(struct FUNC* func, struct ARG** args, size_t args_count,
 
 void free_func(struct FUNC* func)
 {
-    free(func->arg_types);
+    if (func->arg_names != NULL) {
+        free(func->arg_names);
+    }
+
+    if (func->elem != NULL) {
+        free_elem(func->elem);
+    }
+
     free(func);
 }

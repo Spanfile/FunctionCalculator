@@ -5,7 +5,7 @@
     CALCERR(CALCERR_MALLOC_FAILED)                                             \
     CALCERR(CALCERR_REALLOC_FAILED)                                            \
     CALCERR(CALCERR_INTR_INIT_FAILED)                                          \
-    CALCERR(CALCERR_INTR_VALUE_SET_FAILED)                                     \
+    CALCERR(CALCERR_VALUE_SET_FAILED)                                          \
     CALCERR(CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED)                              \
     CALCERR(CALCERR_UNEXPECTED_TOKEN)                                          \
     CALCERR(CALCERR_EXPECTED_CLOSING_BRACKET)                                  \

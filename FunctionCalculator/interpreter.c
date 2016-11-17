@@ -1,14 +1,12 @@
 #include "interpreter.h"
 
-void free_void_func(void*);
-void free_args(struct ARG**, size_t);
-
 static const char* RESERVED_NAMES[] = {
     FOREACH_EXT_FUNC_ONE_ARG(GENERATE_STRING) "atan2", "pi", "e", "ans"};
 static const size_t RESERVED_NAMES_COUNT =
     sizeof(RESERVED_NAMES) / sizeof(RESERVED_NAMES[0]);
 
 double get_ans_double(double);
+void free_func_void(void*);
 
 struct HASHTABLE* names_ht = NULL;
 struct HASHTABLE* functions_ht = NULL;
@@ -18,20 +16,6 @@ size_t ans_count;
 size_t ans_len;
 
 enum CALCERR func_error = CALCERR_NONE;
-
-void free_args(struct ARG** args, size_t len)
-{
-    for (size_t i = 0; i < len; i++) {
-        free(args[i]);
-    }
-
-    free(args);
-}
-
-void free_void_func(void* func_ptr)
-{
-    free_func((struct FUNC*)func_ptr);
-}
 
 double get_ans_double(double index_d)
 {
@@ -73,18 +57,18 @@ enum CALCERR init_interpreter(void)
         return CALCERR_INTR_INIT_FAILED;
     } else {
         // these math constants may not always be defined
-        if (!ht_set(names_ht, "pi", double_to_heap(M_PI))) {
-            return CALCERR_INTR_VALUE_SET_FAILED;
+        if (!ht_set(names_ht, "pi", 2, double_to_heap(M_PI), NULL)) {
+            return CALCERR_VALUE_SET_FAILED;
         }
 
-        if (!ht_set(names_ht, "e", double_to_heap(M_E))) {
-            return CALCERR_INTR_VALUE_SET_FAILED;
+        if (!ht_set(names_ht, "e", 1, double_to_heap(M_E), NULL)) {
+            return CALCERR_VALUE_SET_FAILED;
         }
 
         /* when answers are added to the array, they're pushed to the front
         this way the array functions as a pointer to the most recent answer */
-        if (!ht_set(names_ht, "ans", ans_array)) {
-            return CALCERR_INTR_VALUE_SET_FAILED;
+        if (!ht_set(names_ht, "ans", 3, ans_array, NULL)) {
+            return CALCERR_VALUE_SET_FAILED;
         }
     }
 
@@ -93,13 +77,14 @@ enum CALCERR init_interpreter(void)
     } else {
         FOREACH_EXT_FUNC_ONE_ARG(CREATE_FUNC_ONE_ARG);
 
-        if (!ht_set(functions_ht, "ans",
-                    create_ext_func_one_arg(get_ans_double))) {
-            return CALCERR_INTR_VALUE_SET_FAILED;
+        if (!ht_set(functions_ht, "ans", 3,
+                    create_ext_func_one_arg(get_ans_double), NULL)) {
+            return CALCERR_VALUE_SET_FAILED;
         }
 
-        if (!ht_set(functions_ht, "atan2", create_ext_func_two_arg(atan2))) {
-            return CALCERR_INTR_VALUE_SET_FAILED;
+        if (!ht_set(functions_ht, "atan2", 5, create_ext_func_two_arg(atan2),
+                    NULL)) {
+            return CALCERR_VALUE_SET_FAILED;
         }
     }
 
@@ -109,7 +94,7 @@ enum CALCERR init_interpreter(void)
 enum CALCERR free_interpreter(void)
 {
     ht_free(names_ht, NULL);
-    ht_free(functions_ht, *free_void_func);
+    ht_free(functions_ht, free_func_void);
     return CALCERR_NONE;
 }
 
@@ -118,6 +103,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 {
     enum CALCERR error = CALCERR_NONE;
     struct FUNC* func = NULL;
+    int skip_val_set = 0;
 
     switch (element->elem_type) {
     default:
@@ -187,7 +173,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
     case ELEM_NAME:
         free(element->number_value);
         element->free_number_value = 0;
-        
+
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
             if (extra_names != NULL) {
@@ -207,53 +193,79 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             return CALCERR_NAME_NOT_FOUND;
         }
 
+        double** args = malloc(element->args_len * sizeof(double*));
         for (size_t i = 0; i < element->args_len; i++) {
             if ((error = evaluate_element(element->args[i], extra_names)) !=
                 CALCERR_NONE) {
                 return error;
             }
+
+            args[i] = malloc(sizeof(double));
+            *args[i] = *element->args[i]->number_value;
         }
 
-        struct ARG** args = NULL;
-        if ((error = create_args_from_tree(*element->args, element->args_len,
-                                           &args)) != CALCERR_NONE) {
-            free_args(args, element->args_len);
-            return error;
-        }
-
+        func_error = CALCERR_NONE;
         if ((error = call_func(func, args, element->args_len,
                                element->number_value)) != CALCERR_NONE) {
-            free_args(args, element->args_len);
+            free(args);
             return error;
         }
 
+        /* the doubles in args are freed when the hashtable used by call_func
+        is freed */
+        free(args);
+
         if (func_error != CALCERR_NONE) {
-            func_error = CALCERR_NONE;
-            free_args(args, element->args_len);
             return func_error;
         }
 
-        free_args(args, element->args_len);
         break;
 
-    case ELEM_ASSIGNMENT: {
+    case ELEM_ASSIGNMENT:
         if (is_name_reserved(element->name_value)) {
             return CALCERR_NAME_RESERVED;
         }
 
-        if ((error = evaluate_element(element->child1, NULL)) != CALCERR_NONE) {
-            return error;
+        switch (element->assign_type) {
+        case ASSIGN_NAME:
+            if ((error = evaluate_element(element->child1, NULL)) !=
+                CALCERR_NONE) {
+                return error;
+            }
+
+            if (!ht_set(names_ht, element->name_value, element->name_value_len,
+                        double_to_heap(*element->child1->number_value), NULL)) {
+                return CALCERR_VALUE_SET_FAILED;
+            }
+            break;
+
+        case ASSIGN_FUNCTION:
+            for (size_t i = 0; i < element->args_len; i++) {
+                if (element->args[i]->elem_type != ELEM_NAME) {
+                    return CALCERR_ARG_TYPE_MISMATCH;
+                }
+            }
+
+            if (!ht_set(functions_ht, element->name_value,
+                        element->name_value_len,
+                        create_intr_func(element->child1), NULL)) {
+                return CALCERR_VALUE_SET_FAILED;
+            }
+
+            /* this is kinda hackish, but it works
+            remove the element's child, we'll take care of it
+            of course it could be just cloned but that takes effor */
+            element->child1 = NULL;
+            *element->number_value = 0;
+            skip_val_set = 1;
+            break;
         }
 
-        if (!ht_set(names_ht, element->name_value,
-                    double_to_heap(*element->child1->number_value))) {
-            return CALCERR_INTR_VALUE_SET_FAILED;
+        if (!skip_val_set) {
+            *element->number_value = *element->child1->number_value;
         }
-
-        *element->number_value = *element->child1->number_value;
 
         break;
-    }
     }
 
     return CALCERR_NONE;
@@ -264,7 +276,7 @@ enum CALCERR add_ans(double ans)
     if (ans_count >= ans_len) {
         ans_array = realloc(ans_array, (ans_len += 4) * sizeof(double));
         // reallocating changed the pointer, update it
-        ht_set(names_ht, "ans", ans_array);
+        ht_set(names_ht, "ans", 3, ans_array, NULL);
     }
 
     if (ans_count > 0) {
@@ -298,4 +310,9 @@ void print_ans()
     }
 
     printf("\n");
+}
+
+void free_func_void(void* func_void)
+{
+    free_func((struct FUNC*)func_void);
 }

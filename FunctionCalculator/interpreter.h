@@ -27,8 +27,9 @@
 
 #ifndef CREATE_FUNC
 #define CREATE_FUNC_ONE_ARG(FUNC)                                              \
-    if (!ht_set(functions_ht, #FUNC, create_ext_func_one_arg(FUNC))) {         \
-        return CALCERR_INTR_VALUE_SET_FAILED;                                  \
+    if (!ht_set(functions_ht, #FUNC, strlen(#FUNC),                            \
+                create_ext_func_one_arg(FUNC), NULL)) {                        \
+        return CALCERR_VALUE_SET_FAILED;                                       \
     }
 
 #endif

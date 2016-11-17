@@ -1,16 +1,22 @@
 #pragma once
 
-#include "arg.h"
+#include <stdlib.h>
+
+#include "tree_element.h"
+#include "CALCERR.h"
+#include "hashtable.h"
+#include "interpreter.h"
 
 enum FUNC_TYPE { FUNC_TYPE_EXTERNAL, FUNC_TYPE_INTERNAL };
 
 struct FUNC {
-    enum ARG_TYPE* arg_types;
-    size_t arg_types_count;
+    char** arg_names;
+    size_t arg_count;
 
     // char* name;
 
     enum FUNC_TYPE func_type;
+    struct TREE_ELEMENT* elem;
 
     // for external methods (i.e. from math.h)
     double (*ext_func_one_arg)(double);
@@ -20,6 +26,8 @@ struct FUNC {
 struct FUNC* create_ext_func_one_arg(/*char*,*/ double (*)(double));
 struct FUNC* create_ext_func_two_arg(/*char*,*/ double (*)(double, double));
 
-enum CALCERR call_func(struct FUNC*, struct ARG**, size_t, double*);
+struct FUNC* create_intr_func(struct TREE_ELEMENT*);
+
+enum CALCERR call_func(struct FUNC*, double**, size_t, double*);
 
 void free_func(struct FUNC*);

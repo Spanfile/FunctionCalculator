@@ -34,10 +34,11 @@ unsigned ht_hash(struct HASHTABLE* ht, char* key)
         h = (h * 16777619) ^ u_key[i];
     }
 
+    // printf("hash %s: %lu\n", key, h % ht->size);
     return h % ht->size;
 }
 
-struct HASHTABLE_ENTRY* ht_newentry(char* key, void* value_ptr)
+struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr)
 {
     struct HASHTABLE_ENTRY* entry = malloc(sizeof(struct HASHTABLE_ENTRY));
 
@@ -45,14 +46,18 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, void* value_ptr)
         return NULL;
     }
 
-    entry->key = key;
+    entry->key = malloc(key_len + 1);
+    strncpy(entry->key, key, key_len);
+    entry->key[key_len] = '\0';
+
     entry->value_ptr = value_ptr;
     entry->next = NULL;
 
     return entry;
 }
 
-int ht_set(struct HASHTABLE* ht, char* key, void* value_ptr)
+int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
+           void (*free_entry)(void*))
 {
     int bucket = 0;
     struct HASHTABLE_ENTRY* new = NULL;
@@ -68,9 +73,15 @@ int ht_set(struct HASHTABLE* ht, char* key, void* value_ptr)
     }
 
     if (next != NULL && next->key != NULL && strcmp(key, next->key) == 0) {
+        if (free_entry != NULL) {
+            (*free_entry)(next->value_ptr);
+        } else {
+            free(next->value_ptr);
+        }
+
         next->value_ptr = value_ptr;
     } else {
-        new = ht_newentry(key, value_ptr);
+        new = ht_newentry(key, key_len, value_ptr);
 
         if (new == NULL) {
             return 0;
@@ -126,6 +137,7 @@ void ht_free(struct HASHTABLE* ht, void (*free_entry)(void*))
                     free(entry->value_ptr);
                 }
 
+                free(entry->key);
                 free(entry);
                 entry = next;
             }
