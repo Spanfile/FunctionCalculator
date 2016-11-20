@@ -204,15 +204,15 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             *args[i] = *element->args[i]->number_value;
         }
 
-        func_error = CALCERR_NONE;
-        if ((error = call_func(func, args, element->args_len,
-                               element->number_value)) != CALCERR_NONE) {
-            free(args);
-            return error;
-        }
+        func_error =
+            call_func(func, args, element->args_len, element->number_value);
 
-        /* the doubles in args are freed when the hashtable used by call_func
-        is freed */
+        if (func->func_type == FUNC_TYPE_EXTERNAL) {
+            for (size_t i = 0; i < element->args_len; i++) {
+                free(args[i]);
+            }
+        }
+        
         free(args);
 
         if (func_error != CALCERR_NONE) {
@@ -247,8 +247,8 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             }
 
             if (!ht_set(functions_ht, element->name_value,
-                        element->name_value_len,
-                        create_intr_func(element->child1), NULL)) {
+                        element->name_value_len, create_intr_func(element),
+                        NULL)) {
                 return CALCERR_VALUE_SET_FAILED;
             }
 

@@ -82,6 +82,36 @@ struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
     return elem;
 }
 
+void copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src)
+{
+    /* we assume dst has been malloc'd */
+    memcpy(dst, src, sizeof(struct TREE_ELEMENT));
+
+    dst->number_value = malloc(sizeof(double));
+    memcpy(dst->number_value, src->number_value, sizeof(double));
+
+    dst->name_value = malloc(dst->name_value_len);
+    strncpy(dst->name_value, src->name_value, dst->name_value_len);
+
+    if (dst->args != NULL) {
+        dst->args = malloc(dst->args_len * sizeof(struct TREE_ELEMENT*));
+        for (size_t i = 0; i < dst->args_len; i++) {
+            dst->args[i] = malloc(sizeof(struct TREE_ELEMENT));
+            copy_elem(dst->args[i], src->args[i]);
+        }
+    }
+
+    if (dst->child1 != NULL) {
+        dst->child1 = malloc(sizeof(struct TREE_ELEMENT));
+        copy_elem(dst->child1, src->child1);
+    }
+
+    if (dst->child2 != NULL) {
+        dst->child2 = malloc(sizeof(struct TREE_ELEMENT));
+        copy_elem(dst->child2, src->child2);
+    }
+}
+
 void free_elem(struct TREE_ELEMENT* elem)
 {
     if (elem == NULL) {

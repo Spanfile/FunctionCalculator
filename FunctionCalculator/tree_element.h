@@ -69,4 +69,5 @@ struct TREE_ELEMENT* create_name_element(char*, size_t);
 struct TREE_ELEMENT* create_function_element(char*, size_t);
 struct TREE_ELEMENT* create_assignment_element(char*, size_t, enum ASSIGNMENT_TYPE);
 
+void copy_elem(struct TREE_ELEMENT*, struct TREE_ELEMENT*);
 void free_elem(struct TREE_ELEMENT*);

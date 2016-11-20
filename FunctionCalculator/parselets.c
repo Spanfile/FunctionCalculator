@@ -134,8 +134,18 @@ enum CALCERR parse_assignment(struct TOKEN* token, struct TREE_ELEMENT* left,
 
     *elem_out = create_assignment_element(left->name_value,
                                           left->name_value_len, assign_type);
-    /* TODO: GET THE ARGS IN HERE. that means clone them from left to elem */
-    (*elem_out)->args_len = left->args_len;
+
+    if (assign_type == ASSIGN_FUNCTION) {
+        (*elem_out)->args_len = left->args_len;
+        (*elem_out)->args =
+            malloc(left->args_len * sizeof(struct TREE_ELEMENT*));
+
+        for (size_t i = 0; i < left->args_len; i++) {
+            (*elem_out)->args[i] = malloc(sizeof(struct TREE_ELEMENT));
+            copy_elem((*elem_out)->args[i], left->args[i]);
+        }
+    }
+
     free_elem(left);
 
     return parse(container, PRECEDENCE_DEFAULT, &((*elem_out)->child1));

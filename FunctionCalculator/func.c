@@ -28,14 +28,14 @@ struct FUNC* create_intr_func(struct TREE_ELEMENT* elem)
     struct FUNC* func = malloc(sizeof(struct FUNC));
     func->func_type = FUNC_TYPE_INTERNAL;
     func->arg_count = elem->args_len;
-    func->elem = elem;
+    func->elem = elem->child1;
 
     func->arg_names = malloc(func->arg_count * sizeof(char*));
     for (size_t i = 0; i < func->arg_count; i++) {
-        func->arg_names[i] = malloc(elem->args[i]->name_value_len);
+        func->arg_names[i] = malloc(elem->args[i]->name_value_len + 1);
         strncpy(func->arg_names[i], elem->args[i]->name_value,
                 elem->args[i]->name_value_len);
-        func->arg_names[i][0] = '\0';
+        func->arg_names[i][elem->args[i]->name_value_len] = '\0';
     }
 
     return func;
