@@ -70,7 +70,9 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
 
         error = evaluate_element(func->elem, args_ht);
         ht_free(args_ht, NULL);
+        args_ht = NULL;
         *out = *func->elem->number_value;
+
         return error;
     }
 
@@ -80,6 +82,10 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
 void free_func(struct FUNC* func)
 {
     if (func->arg_names != NULL) {
+        for (size_t i = 0; i < func->arg_count; i++) {
+            free(func->arg_names[i]);
+        }
+
         free(func->arg_names);
     }
 
