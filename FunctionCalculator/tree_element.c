@@ -87,11 +87,15 @@ void copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src)
     /* we assume dst has been malloc'd */
     memcpy(dst, src, sizeof(struct TREE_ELEMENT));
 
-    dst->number_value = malloc(sizeof(double));
-    memcpy(dst->number_value, src->number_value, sizeof(double));
+    if (src->number_value != NULL) {
+        dst->number_value = malloc(sizeof(double));
+        memcpy(dst->number_value, src->number_value, sizeof(double));
+    }
 
-    dst->name_value = malloc(dst->name_value_len);
-    strncpy(dst->name_value, src->name_value, dst->name_value_len);
+    if (src->name_value != NULL) {
+        dst->name_value = malloc(src->name_value_len + 1);
+        strncpy(dst->name_value, src->name_value, src->name_value_len + 1);
+    }
 
     if (dst->args != NULL) {
         dst->args = malloc(dst->args_len * sizeof(struct TREE_ELEMENT*));

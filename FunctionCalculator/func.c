@@ -28,13 +28,15 @@ struct FUNC* create_intr_func(struct TREE_ELEMENT* elem)
     struct FUNC* func = malloc(sizeof(struct FUNC));
     func->func_type = FUNC_TYPE_INTERNAL;
     func->arg_count = elem->args_len;
-    func->elem = elem->child1;
+
+    func->elem = malloc(sizeof(struct TREE_ELEMENT));
+    copy_elem(func->elem, elem->child1);
 
     func->arg_names = malloc(func->arg_count * sizeof(char*));
     for (size_t i = 0; i < func->arg_count; i++) {
         func->arg_names[i] = malloc(elem->args[i]->name_value_len + 1);
         strncpy(func->arg_names[i], elem->args[i]->name_value,
-                elem->args[i]->name_value_len);
+                elem->args[i]->name_value_len + 1);
         func->arg_names[i][elem->args[i]->name_value_len] = '\0';
     }
 
@@ -63,15 +65,24 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
 
         for (size_t i = 0; i < func->arg_count; i++) {
             if (!ht_set(args_ht, func->arg_names[i], strlen(func->arg_names[i]),
-                        (void*)args[i], NULL)) {
+                        (void*)double_to_heap(*args[i]), NULL)) {
                 return CALCERR_VALUE_SET_FAILED;
             }
         }
 
-        error = evaluate_element(func->elem, args_ht);
+        /* this is an ugly hack (srsly its ugly):
+        clone the func's elem and evaluate that.
+        this is done because the interpreter is not "stateless" when it comes to
+        elements. meaning the same element cannot be evaluated twice if it has a
+        name element anywhere in it */
+        struct TREE_ELEMENT* elem_clone = malloc(sizeof(struct TREE_ELEMENT));
+        copy_elem(elem_clone, func->elem);
+
+        error = evaluate_element(elem_clone, args_ht);
         ht_free(args_ht, NULL);
-        args_ht = NULL;
-        *out = *func->elem->number_value;
+        *out = *elem_clone->number_value;
+
+        free_elem(elem_clone);
 
         return error;
     }

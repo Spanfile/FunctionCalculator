@@ -103,7 +103,6 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 {
     enum CALCERR error = CALCERR_NONE;
     struct FUNC* func = NULL;
-    int skip_val_set = 0;
 
     switch (element->elem_type) {
     default:
@@ -207,10 +206,8 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         func_error =
             call_func(func, args, element->args_len, element->number_value);
 
-        if (func->func_type == FUNC_TYPE_EXTERNAL) {
-            for (size_t i = 0; i < element->args_len; i++) {
-                free(args[i]);
-            }
+        for (size_t i = 0; i < element->args_len; i++) {
+            free(args[i]);
         }
         
         free(args);
@@ -252,19 +249,11 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                 return CALCERR_VALUE_SET_FAILED;
             }
 
-            /* this is kinda hackish, but it works
-            remove the element's child, we'll take care of it
-            of course it could be just cloned but that takes effor */
-            element->child1 = NULL;
-            *element->number_value = 0;
-            skip_val_set = 1;
+            *element->child1->number_value = 0;
             break;
         }
 
-        if (!skip_val_set) {
-            *element->number_value = *element->child1->number_value;
-        }
-
+        *element->number_value = *element->child1->number_value;
         break;
     }
 
