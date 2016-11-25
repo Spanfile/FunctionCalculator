@@ -39,7 +39,7 @@ unsigned ht_hash(struct HASHTABLE* ht, char* key)
 }
 
 struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr,
-                                    int free_value)
+                                    enum HASHTABLE_FREE_VALUE free_value)
 {
     struct HASHTABLE_ENTRY* entry = malloc(sizeof(struct HASHTABLE_ENTRY));
 
@@ -59,7 +59,7 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr,
 }
 
 int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
-           void (*free_entry)(void*), int free_value)
+           void (*free_entry)(void*), enum HASHTABLE_FREE_VALUE free_value)
 {
     int bucket = 0;
     struct HASHTABLE_ENTRY* new = NULL;

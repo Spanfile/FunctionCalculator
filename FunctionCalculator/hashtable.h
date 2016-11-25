@@ -4,10 +4,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+enum HASHTABLE_FREE_VALUE {
+    FREE_ENTRY_FALSE, FREE_ENTRY_TRUE
+};
+
 struct HASHTABLE_ENTRY {
     char* key;
     void* value_ptr;
-    int free_value;
+    enum HASHTABLE_FREE_VALUE free_value;
     struct HASHTABLE_ENTRY* next;
 };
 
@@ -18,7 +22,7 @@ struct HASHTABLE {
 
 struct HASHTABLE* ht_create(size_t size);
 unsigned ht_hash(struct HASHTABLE*, char*);
-struct HASHTABLE_ENTRY* ht_newentry(char*, size_t, void*, int);
-int ht_set(struct HASHTABLE*, char*, size_t, void*, void (*)(void*), int);
+struct HASHTABLE_ENTRY* ht_newentry(char*, size_t, void*, enum HASHTABLE_FREE_VALUE);
+int ht_set(struct HASHTABLE*, char*, size_t, void*, void (*)(void*), enum HASHTABLE_FREE_VALUE);
 int ht_get(struct HASHTABLE*, char*, void**);
 void ht_free(struct HASHTABLE*, void (*)(void*));
