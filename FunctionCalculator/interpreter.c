@@ -105,6 +105,9 @@ enum CALCERR free_interpreter(void)
 enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                               struct HASHTABLE* extra_names)
 {
+    /* this whole method is basically for settings an element's number_value
+     * properly */
+
     enum CALCERR error = CALCERR_NONE;
     struct FUNC* func = NULL;
 
@@ -186,7 +189,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
-            return CALCERR_NAME_NOT_FOUND; 
+            return CALCERR_NAME_NOT_FOUND;
         }
 
         break;
