@@ -48,7 +48,7 @@ v0.1
     Perustoiminta; laskujen laskeminen
 v0.2
     Vakiomuuttujat, vakiofunktiot, edelliset tulokset
-v0.3 - ei vielä julkaistu
+v0.3
     Käyttäjän muuttujat + funktiot
 v0.4 - ei vielä julkaistu
     Käyttäjän muuttujien + funktioiden varastointi tiedostoon
