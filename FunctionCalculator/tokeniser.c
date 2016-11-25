@@ -22,7 +22,15 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
         size_t sub_len = 0;
         int read_start = 0;
 
-        struct TOKEN* token_ptr = malloc(sizeof(struct TOKEN));
+        // resize the token array if it's full
+        if ((*token_count) + 1 > tokens_size) {
+            *tokens =
+                realloc(*tokens, (tokens_size += 8) * sizeof(struct TOKEN*));
+        } // there may be something fishy going on here
+
+        (*tokens)[*token_count] = malloc(sizeof(struct TOKEN));
+        struct TOKEN* token_ptr = (*tokens)[*token_count];
+        *token_count += 1;
         // printf("allocate %lu @ %p\n", sizeof(*token_ptr), token_ptr);
 
         if (isalpha(c)) { // names
@@ -106,15 +114,6 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
 
         // printf("%i @ %i,%i: %s\n", token_ptr->type, i, (int)*token_count,
         // token_ptr->value);
-
-        // resize the token array if it's full
-        if ((*token_count) + 1 > tokens_size) {
-            *tokens =
-                realloc(*tokens, (tokens_size += 8) * sizeof(struct TOKEN*));
-        } // there may be something fishy going on here
-
-        (*tokens)[*token_count] = token_ptr;
-        *token_count += 1;
     } while (i++ < input_len);
 
     return CALCERR_NONE;
