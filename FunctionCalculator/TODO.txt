@@ -3,3 +3,5 @@
 - Parameter names in headers
 - Check all mallocs for NULL
 - Comment EVERYTHING
+- Save shit to files
+- More commands for shit like answers and such
