@@ -50,24 +50,24 @@ enum CALCERR init_interpreter(void)
     ans_len = 4;
     ans_array = malloc(ans_len * sizeof(double));
 
-    names_ht = ht_create(512);
-    functions_ht = ht_create(512);
+    names_ht = ht_create(128);
+    functions_ht = ht_create(128);
 
     if (names_ht == NULL) {
         return CALCERR_INTR_INIT_FAILED;
     } else {
         // these math constants may not always be defined
-        if (!ht_set(names_ht, "pi", 2, double_to_heap(M_PI), NULL)) {
+        if (!ht_set(names_ht, "pi", 2, double_to_heap(M_PI), NULL, 1)) {
             return CALCERR_VALUE_SET_FAILED;
         }
 
-        if (!ht_set(names_ht, "e", 1, double_to_heap(M_E), NULL)) {
+        if (!ht_set(names_ht, "e", 1, double_to_heap(M_E), NULL, 1)) {
             return CALCERR_VALUE_SET_FAILED;
         }
 
-        /* when answers are added to the array, they're pushed to the front
+        /* when answers are added to the array, they're pushed to the front.
         this way the array functions as a pointer to the most recent answer */
-        if (!ht_set(names_ht, "ans", 3, ans_array, NULL)) {
+        if (!ht_set(names_ht, "ans", 3, ans_array, NULL, 0)) {
             return CALCERR_VALUE_SET_FAILED;
         }
     }
@@ -78,12 +78,12 @@ enum CALCERR init_interpreter(void)
         FOREACH_EXT_FUNC_ONE_ARG(CREATE_FUNC_ONE_ARG);
 
         if (!ht_set(functions_ht, "ans", 3,
-                    create_ext_func_one_arg(get_ans_double), NULL)) {
+                    create_ext_func_one_arg(get_ans_double), NULL, 1)) {
             return CALCERR_VALUE_SET_FAILED;
         }
 
         if (!ht_set(functions_ht, "atan2", 5, create_ext_func_two_arg(atan2),
-                    NULL)) {
+                    NULL, 1)) {
             return CALCERR_VALUE_SET_FAILED;
         }
     }
@@ -95,6 +95,7 @@ enum CALCERR free_interpreter(void)
 {
     ht_free(names_ht, NULL);
     ht_free(functions_ht, free_func_void);
+    free(ans_array);
     return CALCERR_NONE;
 }
 
@@ -209,7 +210,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         for (size_t i = 0; i < element->args_len; i++) {
             free(args[i]);
         }
-        
+
         free(args);
 
         if (func_error != CALCERR_NONE) {
@@ -231,7 +232,8 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             }
 
             if (!ht_set(names_ht, element->name_value, element->name_value_len,
-                        double_to_heap(*element->child1->number_value), NULL)) {
+                        double_to_heap(*element->child1->number_value), NULL,
+                        0)) {
                 return CALCERR_VALUE_SET_FAILED;
             }
             break;
@@ -245,7 +247,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
             if (!ht_set(functions_ht, element->name_value,
                         element->name_value_len, create_intr_func(element),
-                        NULL)) {
+                        NULL, 1)) {
                 return CALCERR_VALUE_SET_FAILED;
             }
 
@@ -265,7 +267,7 @@ enum CALCERR add_ans(double ans)
     if (ans_count >= ans_len) {
         ans_array = realloc(ans_array, (ans_len += 4) * sizeof(double));
         // reallocating changed the pointer, update it
-        ht_set(names_ht, "ans", 3, ans_array, NULL);
+        ht_set(names_ht, "ans", 3, ans_array, NULL, 0);
     }
 
     if (ans_count > 0) {

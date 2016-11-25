@@ -65,7 +65,7 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
 
         for (size_t i = 0; i < func->arg_count; i++) {
             if (!ht_set(args_ht, func->arg_names[i], strlen(func->arg_names[i]),
-                        (void*)double_to_heap(*args[i]), NULL)) {
+                        (void*)double_to_heap(*args[i]), NULL, 1)) {
                 return CALCERR_VALUE_SET_FAILED;
             }
         }

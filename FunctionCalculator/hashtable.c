@@ -38,7 +38,8 @@ unsigned ht_hash(struct HASHTABLE* ht, char* key)
     return h % ht->size;
 }
 
-struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr)
+struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr,
+                                    int free_value)
 {
     struct HASHTABLE_ENTRY* entry = malloc(sizeof(struct HASHTABLE_ENTRY));
 
@@ -51,13 +52,14 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr)
     entry->key[key_len] = '\0';
 
     entry->value_ptr = value_ptr;
+    entry->free_value = free_value;
     entry->next = NULL;
 
     return entry;
 }
 
 int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
-           void (*free_entry)(void*))
+           void (*free_entry)(void*), int free_value)
 {
     int bucket = 0;
     struct HASHTABLE_ENTRY* new = NULL;
@@ -73,15 +75,17 @@ int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
     }
 
     if (next != NULL && next->key != NULL && strcmp(key, next->key) == 0) {
-        if (free_entry != NULL) {
-            (*free_entry)(next->value_ptr);
-        } else {
-            free(next->value_ptr);
+        if (next->free_value) {
+            if (free_entry != NULL) {
+                (*free_entry)(next->value_ptr);
+            } else {
+                free(next->value_ptr);
+            }
         }
 
         next->value_ptr = value_ptr;
     } else {
-        new = ht_newentry(key, key_len, value_ptr);
+        new = ht_newentry(key, key_len, value_ptr, free_value);
 
         if (new == NULL) {
             return 0;
@@ -131,10 +135,12 @@ void ht_free(struct HASHTABLE* ht, void (*free_entry)(void*))
             while (entry != NULL) {
                 next = entry->next;
 
-                if (free_entry != NULL) {
-                    (*free_entry)(entry->value_ptr);
-                } else {
-                    free(entry->value_ptr);
+                if (entry->free_value) {
+                    if (free_entry != NULL) {
+                        (*free_entry)(entry->value_ptr);
+                    } else {
+                        free(entry->value_ptr);
+                    }
                 }
 
                 free(entry->key);
