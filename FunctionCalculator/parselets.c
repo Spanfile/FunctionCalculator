@@ -130,6 +130,9 @@ enum CALCERR parse_assignment(struct TOKEN* token, struct TREE_ELEMENT* left,
     case ELEM_FUNCTION:
         assign_type = ASSIGN_FUNCTION;
         break;
+
+    case ELEM_NAME:
+        break;
     }
 
     *elem_out = create_assignment_element(left->name_value,
