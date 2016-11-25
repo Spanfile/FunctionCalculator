@@ -177,15 +177,15 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         free(element->number_value);
         element->free_number_value = 0;
 
+        if (extra_names != NULL) {
+            if (ht_get(extra_names, element->name_value,
+                       (void**)&element->number_value)) {
+                break;
+            }
+        }
+
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
-            if (extra_names != NULL) {
-                if (ht_get(extra_names, element->name_value,
-                           (void**)&element->number_value)) {
-                    break;
-                }
-            }
-
             return CALCERR_NAME_NOT_FOUND;
         }
 
