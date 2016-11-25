@@ -186,7 +186,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
         if (!ht_get(names_ht, element->name_value,
                     (void**)&element->number_value)) {
-            return CALCERR_NAME_NOT_FOUND;
+            return CALCERR_NAME_NOT_FOUND; 
         }
 
         break;
