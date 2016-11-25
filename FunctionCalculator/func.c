@@ -1,8 +1,22 @@
 #include "func.h"
 
-struct FUNC* create_ext_func_one_arg(/*char* name,*/ double (*ext_func)(double))
+struct FUNC* create_func()
 {
     struct FUNC* func = malloc(sizeof(struct FUNC));
+
+    func->arg_names = NULL;
+    func->arg_count = 0;
+    func->func_type = FUNC_TYPE_EXTERNAL;
+    func->elem = NULL;
+    func->ext_func_one_arg = NULL;
+    func->ext_func_two_arg = NULL;
+
+    return func;
+}
+
+struct FUNC* create_ext_func_one_arg(/*char* name,*/ double (*ext_func)(double))
+{
+    struct FUNC* func = create_func();
     // func->name = name;
     func->func_type = FUNC_TYPE_EXTERNAL;
     func->arg_count = 1;
@@ -14,7 +28,7 @@ struct FUNC* create_ext_func_one_arg(/*char* name,*/ double (*ext_func)(double))
 struct FUNC* create_ext_func_two_arg(/*char* name,*/
                                      double (*ext_func)(double, double))
 {
-    struct FUNC* func = malloc(sizeof(struct FUNC));
+    struct FUNC* func = create_func();
     // func->name = name;
     func->func_type = FUNC_TYPE_EXTERNAL;
     func->arg_count = 2;
