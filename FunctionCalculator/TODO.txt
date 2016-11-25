@@ -1,4 +1,5 @@
-- Something funky going on with custom names and their null terminators. Fucking null terminators.
+- Something funky going on with custom names and their null terminators. Fucking null terminators. DONE possibly
 - Spray consts everywhere
 - Parameter names in headers
 - Check all mallocs for NULL
+- Comment EVERYTHING
