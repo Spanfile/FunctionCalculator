@@ -203,6 +203,13 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         for (size_t i = 0; i < element->args_len; i++) {
             if ((error = evaluate_element(element->args[i], extra_names)) !=
                 CALCERR_NONE) {
+
+                for (size_t j = 0; j < i; j++) {
+                    free(args[j]);
+                }
+
+                free(args);
+
                 return error;
             }
 
