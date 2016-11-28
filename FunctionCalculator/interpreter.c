@@ -204,6 +204,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             if ((error = evaluate_element(element->args[i], extra_names)) !=
                 CALCERR_NONE) {
 
+                // this method could be generalised
                 for (size_t j = 0; j < i; j++) {
                     free(args[j]);
                 }

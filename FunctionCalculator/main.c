@@ -25,6 +25,10 @@ int main(void)
     }
 
     while (running) {
+        if (read_buffer != NULL) {
+            free(read_buffer);
+        }
+
         error = CALCERR_NONE;
 
         read_buffer_size = 16;
@@ -67,6 +71,12 @@ int main(void)
                 printf("Commands:\n");
                 printf(":h - displays this help\n");
                 printf(":q - quits the application\n");
+                printf(":a - prints saved answers\n");
+                printf(":c - clears user values and functions\n");
+                continue;
+
+            case COMMAND_ANS:
+                print_ans();
                 continue;
             }
         }
@@ -96,9 +106,6 @@ int main(void)
             free_elem(root_elem);
             root_elem = NULL;
         }
-
-        free(read_buffer);
-        read_buffer = NULL;
 
         if (tokens != NULL) {
             free_tokens(&tokens, token_count);
@@ -141,7 +148,7 @@ void print_elem(struct TREE_ELEMENT* elem, int indent)
 
     case ELEM_NEGATION:
         printf("\n");
-        
+
         if (elem->child1 != NULL) {
             print_elem(elem->child1, indent + 1);
         } else {
