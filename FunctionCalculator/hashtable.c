@@ -69,11 +69,14 @@ int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
     bucket = ht_hash(ht, key);
     next = ht->buckets[bucket];
 
+    /* go through all the entries in the linked list, find a position for the
+     * new key */
     while (next != NULL && next->key != NULL && strcmp(key, next->key) > 0) {
         last = next;
         next = next->next; // well that sounds stupid
     }
 
+    /* found the exact same key; replace it */
     if (next != NULL && next->key != NULL && strcmp(key, next->key) == 0) {
         if (next->free_value) {
             if (free_entry != NULL) {
@@ -85,18 +88,25 @@ int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
 
         next->value_ptr = value_ptr;
     } else {
+        /* else create a new entry */
         new = ht_newentry(key, key_len, value_ptr, free_value);
 
         if (new == NULL) {
             return 0;
         }
 
+        /* it goes in the start */
         if (next == ht->buckets[bucket]) {
             new->next = next;
             ht->buckets[bucket] = new;
-        } else if (next == NULL) {
+        } else if (next == NULL) { /* it goes in the end */
+            /* this and the next one are hash collisions */
+            printf("hash collision with %s and %s: %u\n", key, last->key,
+                   bucket);
             last->next = new;
-        } else {
+        } else { /* it goes somewhere in the middle */
+            printf("hash collision with %s and %s: %u\n", key, last->key,
+                   bucket);
             new->next = next;
             last->next = new;
         }
