@@ -11,6 +11,9 @@ void free_func_void(void*);
 struct HASHTABLE* names_ht = NULL;
 struct HASHTABLE* functions_ht = NULL;
 
+struct LINKED_LIST_NODE* uservalues_ll = NULL;
+struct LINKED_LIST_NODE* userfunctions_ll = NULL;
+
 double* ans_array = NULL;
 size_t ans_count;
 size_t ans_len;
@@ -99,6 +102,15 @@ enum CALCERR free_interpreter(void)
     ht_free(names_ht, NULL);
     ht_free(functions_ht, free_func_void);
     free(ans_array);
+
+    if (uservalues_ll != NULL) {
+        ll_free(uservalues_ll);
+    }
+
+    if (userfunctions_ll != NULL) {
+        ll_free(userfunctions_ll);
+    }
+
     return CALCERR_NONE;
 }
 
@@ -245,11 +257,25 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                 return error;
             }
 
+            double* val = double_to_heap(*element->child1->number_value);
+
             if (!ht_set(names_ht, element->name_value, element->name_value_len,
-                        double_to_heap(*element->child1->number_value), NULL,
-                        FREE_ENTRY_TRUE)) {
+                        val, NULL, FREE_ENTRY_TRUE)) {
+                free(val);
                 return CALCERR_VALUE_SET_FAILED;
             }
+
+            if (uservalues_ll == NULL) {
+                uservalues_ll = ll_newnode(element->name_value,
+                                           element->name_value_len, (void*)val);
+            } else {
+                if (!ll_insert(uservalues_ll, element->name_value,
+                               element->name_value_len, (void*)val, 0)) {
+                    free(val);
+                    return CALCERR_VALUE_SET_FAILED;
+                }
+            }
+
             break;
 
         case ASSIGN_FUNCTION:
@@ -259,10 +285,23 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                 }
             }
 
+            struct FUNC* func = create_intr_func(element);
+
             if (!ht_set(functions_ht, element->name_value,
-                        element->name_value_len, create_intr_func(element),
-                        NULL, FREE_ENTRY_TRUE)) {
+                        element->name_value_len, func, NULL, FREE_ENTRY_TRUE)) {
+                free_func(func);
                 return CALCERR_VALUE_SET_FAILED;
+            }
+
+            if (userfunctions_ll == NULL) {
+                userfunctions_ll = ll_newnode(
+                    element->name_value, element->name_value_len, (void*)func);
+            } else {
+                if (!ll_insert(userfunctions_ll, element->name_value,
+                               element->name_value_len, (void*)func, 0)) {
+                    free_func(func);
+                    return CALCERR_VALUE_SET_FAILED;
+                }
             }
 
             *element->child1->number_value = 0;

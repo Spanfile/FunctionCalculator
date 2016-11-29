@@ -8,6 +8,7 @@
 #include "CALCERR.h"
 #include "pointer_help.h"
 #include "func.h"
+#include "linked_list.h"
 
 #define FOREACH_EXT_FUNC_ONE_ARG(FUNC)                                         \
     FUNC(sin)                                                                  \
