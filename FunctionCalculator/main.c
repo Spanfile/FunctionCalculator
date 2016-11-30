@@ -24,6 +24,8 @@ int main(void)
         return 1; // this is a critical error
     }
 
+    load_uservalues();
+
     while (running) {
         if (read_buffer != NULL) {
             free(read_buffer);
@@ -120,6 +122,11 @@ int main(void)
 
     free(read_buffer);
     read_buffer = NULL;
+
+    if ((error = save_uservalues()) != CALCERR_NONE) {
+        printf("error saving uservalues: %s", CALCERR_STRING[error]);
+        /* this isn't a critical error */
+    }
 
     if ((error = free_interpreter()) != CALCERR_NONE) {
         printf("error freeing interpreter: %s", CALCERR_STRING[error]);

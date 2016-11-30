@@ -43,6 +43,8 @@ int is_name_reserved(char*);
 
 enum CALCERR init_interpreter(void);
 enum CALCERR free_interpreter(void);
+enum CALCERR load_uservalues(void);
+enum CALCERR save_uservalues(void);
 // extra_names is used for function calls
 // user values are added to the main name hashtable
 enum CALCERR evaluate_element(struct TREE_ELEMENT*, struct HASHTABLE*);

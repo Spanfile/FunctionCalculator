@@ -22,6 +22,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 *.out
+user*.bin
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -244,3 +245,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
