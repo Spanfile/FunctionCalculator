@@ -116,12 +116,24 @@ enum CALCERR free_interpreter(void)
 
 enum CALCERR load_uservalues(void)
 {
-    if ((uservalues_ll = ll_fromfile("uservalues.bin")) == NULL) {
-        printf("no previous uservalues found\n");
+    if ((uservalues_ll = ll_fromfile("uservalues.bin")) != NULL) {
+        struct LINKED_LIST_NODE* node = uservalues_ll;
+        do
+        {
+            if (!ht_set(names_ht, node->key, node->key_len, node->value_ptr, NULL, FREE_ENTRY_TRUE)) {
+                return CALCERR_VALUE_SET_FAILED;
+            }
+        } while ((node = node->next) != NULL);
     }
 
-    if ((userfunctions_ll = ll_fromfile("userfunctions_ll")) == NULL) {
-        printf("no previous userfunctions found\n");
+    if ((userfunctions_ll = ll_fromfile("userfunctions.bin")) != NULL) {
+        struct LINKED_LIST_NODE* node = userfunctions_ll;
+        do
+        {
+            if (!ht_set(functions_ht, node->key, node->key_len, node->value_ptr, NULL, FREE_ENTRY_TRUE)) {
+                return CALCERR_VALUE_SET_FAILED;
+            }
+        } while ((node = node->next) != NULL);
     }
 
     return CALCERR_NONE;

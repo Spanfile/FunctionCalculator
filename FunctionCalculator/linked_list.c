@@ -112,17 +112,22 @@ struct LINKED_LIST_NODE* ll_fromfile(char* file)
 
     for (int i = 0; i < depth; i++) {
         fread(&key_len, sizeof(key_len), 1, fp);
-        fread(&key, key_len, 1, fp);
+        key = malloc(key_len);
+        fread(key, key_len, 1, fp);
+        
         fread(&value_ptr_len, sizeof(value_ptr_len), 1, fp);
-        fread(&value_ptr, value_ptr_len, 1, fp);
+        value_ptr = malloc(value_ptr_len);
+        fread(value_ptr, value_ptr_len, 1, fp);
 
-        if (first) {
+        if (first == NULL) {
             first = ll_newnode(key, key_len, value_ptr, value_ptr_len);
             prev = first;
         } else {
             prev->next = ll_newnode(key, key_len, value_ptr, value_ptr_len);
             prev = prev->next;
         }
+
+        free(key);
     }
 
     fclose(fp);
