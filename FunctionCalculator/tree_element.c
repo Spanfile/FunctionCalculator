@@ -1,7 +1,5 @@
 #include "tree_element.h"
 
-#include <stdio.h>
-
 struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
 {
     struct TREE_ELEMENT* elem = malloc(sizeof(struct TREE_ELEMENT));

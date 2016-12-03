@@ -58,7 +58,8 @@ int ll_depth(struct LINKED_LIST_NODE* node)
     return depth;
 }
 
-int ll_tofile(struct LINKED_LIST_NODE* node, char* file)
+int ll_tofile(struct LINKED_LIST_NODE* node, char* file,
+              void (*custom_write)(FILE* fp, void* value_ptr))
 {
     FILE* fp = NULL;
 
@@ -76,8 +77,13 @@ int ll_tofile(struct LINKED_LIST_NODE* node, char* file)
     do {
         fwrite(&next->key_len, sizeof(next->key_len), 1, fp);
         fwrite(next->key, next->key_len, 1, fp);
-        fwrite(&next->value_ptr_len, sizeof(next->value_ptr_len), 1, fp);
-        fwrite(next->value_ptr, next->value_ptr_len, 1, fp);
+
+        if (custom_write != NULL) {
+            custom_write(fp, next->value_ptr);
+        } else {
+            fwrite(&next->value_ptr_len, sizeof(next->value_ptr_len), 1, fp);
+            fwrite(next->value_ptr, next->value_ptr_len, 1, fp);
+        }
 
         depth += 1;
     } while ((next = next->next) != NULL);
@@ -90,7 +96,7 @@ int ll_tofile(struct LINKED_LIST_NODE* node, char* file)
     return 1;
 }
 
-struct LINKED_LIST_NODE* ll_fromfile(char* file)
+struct LINKED_LIST_NODE* ll_fromfile(char* file, void* (*custom_read)(FILE* fp))
 {
     FILE* fp = NULL;
 
@@ -114,10 +120,14 @@ struct LINKED_LIST_NODE* ll_fromfile(char* file)
         fread(&key_len, sizeof(key_len), 1, fp);
         key = malloc(key_len);
         fread(key, key_len, 1, fp);
-        
-        fread(&value_ptr_len, sizeof(value_ptr_len), 1, fp);
-        value_ptr = malloc(value_ptr_len);
-        fread(value_ptr, value_ptr_len, 1, fp);
+
+        if (custom_read != NULL) {
+            value_ptr = custom_read(fp);
+        } else {
+            fread(&value_ptr_len, sizeof(value_ptr_len), 1, fp);
+            value_ptr = malloc(value_ptr_len);
+            fread(value_ptr, value_ptr_len, 1, fp);
+        }
 
         if (first == NULL) {
             first = ll_newnode(key, key_len, value_ptr, value_ptr_len);

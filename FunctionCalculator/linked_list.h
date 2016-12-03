@@ -17,5 +17,5 @@ int ll_insert(struct LINKED_LIST_NODE* node, char* key, size_t key_len,
               void* value, size_t value_len, int index);
 void ll_free(struct LINKED_LIST_NODE* node);
 int ll_depth(struct LINKED_LIST_NODE* node);
-int ll_tofile(struct LINKED_LIST_NODE* node, char* file);
-struct LINKED_LIST_NODE* ll_fromfile(char* file);
+int ll_tofile(struct LINKED_LIST_NODE* node, char* file, void (*)(FILE*, void*));
+struct LINKED_LIST_NODE* ll_fromfile(char* file, void* (*)(FILE*));

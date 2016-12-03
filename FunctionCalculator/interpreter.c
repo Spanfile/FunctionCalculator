@@ -12,7 +12,6 @@ struct HASHTABLE* names_ht = NULL;
 struct HASHTABLE* functions_ht = NULL;
 
 struct LINKED_LIST_NODE* uservalues_ll = NULL;
-struct LINKED_LIST_NODE* userfunctions_ll = NULL;
 
 double* ans_array = NULL;
 size_t ans_count;
@@ -107,30 +106,16 @@ enum CALCERR free_interpreter(void)
         ll_free(uservalues_ll);
     }
 
-    if (userfunctions_ll != NULL) {
-        ll_free(userfunctions_ll);
-    }
-
     return CALCERR_NONE;
 }
 
 enum CALCERR load_uservalues(void)
 {
-    if ((uservalues_ll = ll_fromfile("uservalues.bin")) != NULL) {
+    if ((uservalues_ll = ll_fromfile("uservalues.bin", NULL)) != NULL) {
         struct LINKED_LIST_NODE* node = uservalues_ll;
-        do
-        {
-            if (!ht_set(names_ht, node->key, node->key_len, node->value_ptr, NULL, FREE_ENTRY_TRUE)) {
-                return CALCERR_VALUE_SET_FAILED;
-            }
-        } while ((node = node->next) != NULL);
-    }
-
-    if ((userfunctions_ll = ll_fromfile("userfunctions.bin")) != NULL) {
-        struct LINKED_LIST_NODE* node = userfunctions_ll;
-        do
-        {
-            if (!ht_set(functions_ht, node->key, node->key_len, node->value_ptr, NULL, FREE_ENTRY_TRUE)) {
+        do {
+            if (!ht_set(names_ht, node->key, node->key_len, node->value_ptr,
+                        NULL, FREE_ENTRY_TRUE)) {
                 return CALCERR_VALUE_SET_FAILED;
             }
         } while ((node = node->next) != NULL);
@@ -142,14 +127,8 @@ enum CALCERR load_uservalues(void)
 enum CALCERR save_uservalues(void)
 {
     if (uservalues_ll != NULL) {
-        if (!ll_tofile(uservalues_ll, "uservalues.bin")) {
+        if (!ll_tofile(uservalues_ll, "uservalues.bin", NULL)) {
             return CALCERR_USERVALUE_SAVING_FAILED;
-        }
-    }
-
-    if (userfunctions_ll != NULL) {
-        if (!ll_tofile(userfunctions_ll, "userfunctions.bin")) {
-            return CALCERR_USERFUNC_SAVING_FAILED;
         }
     }
 
@@ -335,19 +314,6 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                         element->name_value_len, func, NULL, FREE_ENTRY_TRUE)) {
                 free_func(func);
                 return CALCERR_VALUE_SET_FAILED;
-            }
-
-            if (userfunctions_ll == NULL) {
-                userfunctions_ll =
-                    ll_newnode(element->name_value, element->name_value_len,
-                               (void*)func, sizeof(*func));
-            } else {
-                if (!ll_insert(userfunctions_ll, element->name_value,
-                               element->name_value_len, (void*)func,
-                               sizeof(*func), 0)) {
-                    free_func(func);
-                    return CALCERR_VALUE_SET_FAILED;
-                }
             }
 
             *element->child1->number_value = 0;
