@@ -48,7 +48,7 @@ enum CALCERR init_interpreter(void)
 {
     // printf("%lu reserved names\n", RESERVED_NAMES_COUNT);
 
-    load_ans();
+    //load_ans();
 
     names_ht = ht_create(128);
     functions_ht = ht_create(128);
@@ -289,11 +289,15 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
                     ll_newnode(element->name_value, element->name_value_len,
                                (void*)val, sizeof(*val));
             } else {
-                if (!ll_insert(uservalues_ll, element->name_value,
-                               element->name_value_len, (void*)val,
-                               sizeof(*val), 0)) {
-                    free(val);
-                    return CALCERR_VALUE_SET_FAILED;
+                /* first try setting an existing name */
+                if (!ll_setval(uservalues_ll, element->name_value,
+                    (void*)val, sizeof(*val))) {
+                    /* that failed, try adding a new one */
+                    if (!ll_insert(uservalues_ll, element->name_value,
+                        element->name_value_len, (void*)val, sizeof(*val), 0)) {
+                        free(val);
+                        return CALCERR_VALUE_SET_FAILED;
+                    }
                 }
             }
 

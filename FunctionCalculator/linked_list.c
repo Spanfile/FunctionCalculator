@@ -11,6 +11,7 @@ struct LINKED_LIST_NODE* ll_newnode(char* key, size_t key_len, void* value,
 
     node->value_ptr = value;
     node->value_ptr_len = value_len;
+    node->next = NULL;
 
     return node;
 }
@@ -31,6 +32,25 @@ int ll_insert(struct LINKED_LIST_NODE* node, char* key, size_t key_len,
     struct LINKED_LIST_NODE* new = ll_newnode(key, key_len, value, value_len);
     new->next = next->next;
     next->next = new;
+
+    return 1;
+}
+
+int ll_setval(struct LINKED_LIST_NODE* node, char* key, void* new_val,
+              size_t new_val_len)
+{
+    struct LINKED_LIST_NODE* next = node;
+
+    while (strcmp(key, next->key) != 0) {
+        next = next->next;
+
+        if (next == NULL) {
+            return 0;
+        }
+    }
+
+    node->value_ptr = new_val;
+    node->value_ptr_len = new_val_len;
 
     return 1;
 }
