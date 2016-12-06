@@ -23,11 +23,12 @@ struct FUNC {
     double (*ext_func_two_arg)(double, double);
 };
 
-struct FUNC* create_ext_func_one_arg(/*char*,*/ double (*)(double));
-struct FUNC* create_ext_func_two_arg(/*char*,*/ double (*)(double, double));
+struct FUNC* create_ext_func_one_arg(/*char*,*/ double (*ext_func)(double));
+struct FUNC* create_ext_func_two_arg(/*char*,*/ double (*ext_func)(double, double));
 
-struct FUNC* create_intr_func(struct TREE_ELEMENT*);
+struct FUNC* create_intr_func(struct TREE_ELEMENT* elem);
 
-enum CALCERR call_func(struct FUNC*, double**, size_t, double*);
+enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
+                       double* out);
 
-void free_func(struct FUNC*);
+void free_func(struct FUNC* func);

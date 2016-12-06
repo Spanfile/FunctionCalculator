@@ -133,7 +133,7 @@ enum CALCERR save_uservalues(void)
     return CALCERR_NONE;
 }
 
-enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
+enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
                               struct HASHTABLE* extra_names)
 {
     /* this whole method is basically for settings an element's number_value
@@ -142,7 +142,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
     enum CALCERR error = CALCERR_NONE;
     struct FUNC* func = NULL;
 
-    switch (element->elem_type) {
+    switch (elem->elem_type) {
     default:
         return CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED;
 
@@ -150,89 +150,89 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         break; // number elements already have their number value set
 
     case ELEM_NEGATION:
-        if ((error = evaluate_element(element->child1, extra_names)) !=
+        if ((error = evaluate_element(elem->child1, extra_names)) !=
             CALCERR_NONE) {
             return error;
         }
 
-        *element->number_value = -*element->child1->number_value;
+        *elem->number_value = -*elem->child1->number_value;
         break;
 
     case ELEM_ARITHMETIC:
-        if ((error = evaluate_element(element->child1, extra_names)) !=
+        if ((error = evaluate_element(elem->child1, extra_names)) !=
             CALCERR_NONE) {
             return error;
         }
 
-        if ((error = evaluate_element(element->child2, extra_names)) !=
+        if ((error = evaluate_element(elem->child2, extra_names)) !=
             CALCERR_NONE) {
             return error;
         }
 
-        switch (element->arithmetic_type) {
+        switch (elem->arithmetic_type) {
         case ARITH_ADDITION:
-            *element->number_value =
-                *element->child1->number_value + *element->child2->number_value;
+            *elem->number_value =
+                *elem->child1->number_value + *elem->child2->number_value;
             break;
 
         case ARITH_NEGATION:
-            *element->number_value =
-                *element->child1->number_value - *element->child2->number_value;
+            *elem->number_value =
+                *elem->child1->number_value - *elem->child2->number_value;
             break;
 
         case ARITH_MULTIPLICATION:
-            *element->number_value =
-                *element->child1->number_value * *element->child2->number_value;
+            *elem->number_value =
+                *elem->child1->number_value * *elem->child2->number_value;
             break;
 
         case ARITH_DIVISION:
-            if (*element->child2->number_value == 0) {
+            if (*elem->child2->number_value == 0) {
                 return CALCERR_DIVIDE_BY_ZERO;
             }
 
-            *element->number_value =
-                *element->child1->number_value / *element->child2->number_value;
+            *elem->number_value =
+                *elem->child1->number_value / *elem->child2->number_value;
             break;
 
         case ARITH_POWER:
-            *element->number_value = pow(*element->child1->number_value,
-                                         *element->child2->number_value);
+            *elem->number_value = pow(*elem->child1->number_value,
+                                         *elem->child2->number_value);
             break;
 
         case ARITH_REMAINDER:
-            *element->number_value = remainder(*element->child1->number_value,
-                                               *element->child2->number_value);
+            *elem->number_value = remainder(*elem->child1->number_value,
+                                               *elem->child2->number_value);
             break;
         }
 
         break;
 
     case ELEM_NAME:
-        free(element->number_value);
-        element->free_number_value = 0;
+        free(elem->number_value);
+        elem->free_number_value = 0;
 
         if (extra_names != NULL) {
-            if (ht_get(extra_names, element->name_value,
-                       (void**)&element->number_value)) {
+            if (ht_get(extra_names, elem->name_value,
+                       (void**)&elem->number_value)) {
                 break;
             }
         }
 
-        if (!ht_get(names_ht, element->name_value,
-                    (void**)&element->number_value)) {
+        if (!ht_get(names_ht, elem->name_value,
+                    (void**)&elem->number_value)) {
             return CALCERR_NAME_NOT_FOUND;
         }
 
         break;
 
     case ELEM_FUNCTION:
-        if (!ht_get(functions_ht, element->name_value, (void**)&func)) {
+        if (!ht_get(functions_ht, elem->name_value, (void**)&func)) {
             return CALCERR_NAME_NOT_FOUND;
         }
 
-        double** args = malloc(element->args_len * sizeof(double*));
-        for (size_t i = 0; i < element->args_len; i++) {
-            if ((error = evaluate_element(element->args[i], extra_names)) !=
+        double** args = malloc(elem->args_len * sizeof(double*));
+        for (size_t i = 0; i < elem->args_len; i++) {
+            if ((error = evaluate_element(elem->args[i], extra_names)) !=
                 CALCERR_NONE) {
 
                 // this method could be generalised
@@ -246,13 +246,13 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             }
 
             args[i] = malloc(sizeof(double));
-            *args[i] = *element->args[i]->number_value;
+            *args[i] = *elem->args[i]->number_value;
         }
 
         func_error =
-            call_func(func, args, element->args_len, element->number_value);
+            call_func(func, args, elem->args_len, elem->number_value);
 
-        for (size_t i = 0; i < element->args_len; i++) {
+        for (size_t i = 0; i < elem->args_len; i++) {
             free(args[i]);
         }
 
@@ -265,20 +265,20 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
         break;
 
     case ELEM_ASSIGNMENT:
-        if (is_name_reserved(element->name_value)) {
+        if (is_name_reserved(elem->name_value)) {
             return CALCERR_NAME_RESERVED;
         }
 
-        switch (element->assign_type) {
+        switch (elem->assign_type) {
         case ASSIGN_NAME:
-            if ((error = evaluate_element(element->child1, NULL)) !=
+            if ((error = evaluate_element(elem->child1, NULL)) !=
                 CALCERR_NONE) {
                 return error;
             }
 
-            double* val = double_to_heap(*element->child1->number_value);
+            double* val = double_to_heap(*elem->child1->number_value);
 
-            if (!ht_set(names_ht, element->name_value, element->name_value_len,
+            if (!ht_set(names_ht, elem->name_value, elem->name_value_len,
                         val, NULL, FREE_ENTRY_TRUE)) {
                 free(val);
                 return CALCERR_VALUE_SET_FAILED;
@@ -286,15 +286,15 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
 
             if (uservalues_ll == NULL) {
                 uservalues_ll =
-                    ll_newnode(element->name_value, element->name_value_len,
+                    ll_newnode(elem->name_value, elem->name_value_len,
                                (void*)val, sizeof(*val));
             } else {
                 /* first try setting an existing name */
-                if (!ll_setval(uservalues_ll, element->name_value,
+                if (!ll_setval(uservalues_ll, elem->name_value,
                     (void*)val, sizeof(*val))) {
                     /* that failed, try adding a new one */
-                    if (!ll_insert(uservalues_ll, element->name_value,
-                        element->name_value_len, (void*)val, sizeof(*val), 0)) {
+                    if (!ll_insert(uservalues_ll, elem->name_value,
+                        elem->name_value_len, (void*)val, sizeof(*val), 0)) {
                         free(val);
                         return CALCERR_VALUE_SET_FAILED;
                     }
@@ -304,25 +304,25 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* element,
             break;
 
         case ASSIGN_FUNCTION:
-            for (size_t i = 0; i < element->args_len; i++) {
-                if (element->args[i]->elem_type != ELEM_NAME) {
+            for (size_t i = 0; i < elem->args_len; i++) {
+                if (elem->args[i]->elem_type != ELEM_NAME) {
                     return CALCERR_ARG_TYPE_MISMATCH;
                 }
             }
 
-            struct FUNC* func = create_intr_func(element);
+            struct FUNC* func = create_intr_func(elem);
 
-            if (!ht_set(functions_ht, element->name_value,
-                        element->name_value_len, func, NULL, FREE_ENTRY_TRUE)) {
+            if (!ht_set(functions_ht, elem->name_value,
+                        elem->name_value_len, func, NULL, FREE_ENTRY_TRUE)) {
                 free_func(func);
                 return CALCERR_VALUE_SET_FAILED;
             }
 
-            *element->child1->number_value = 0;
+            *elem->child1->number_value = 0;
             break;
         }
 
-        *element->number_value = *element->child1->number_value;
+        *elem->number_value = *elem->child1->number_value;
         break;
     }
 

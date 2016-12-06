@@ -21,10 +21,10 @@ struct HASHTABLE {
 };
 
 struct HASHTABLE* ht_create(size_t size);
-unsigned ht_hash(struct HASHTABLE*, char*);
-struct HASHTABLE_ENTRY* ht_newentry(char*, size_t, void*,
-                                    enum HASHTABLE_FREE_VALUE);
-int ht_set(struct HASHTABLE*, char*, size_t, void*, void (*)(void*),
-           enum HASHTABLE_FREE_VALUE);
-int ht_get(struct HASHTABLE*, char*, void**);
-void ht_free(struct HASHTABLE*, void (*)(void*));
+unsigned ht_hash(struct HASHTABLE* ht, char* key);
+struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr,
+                                    enum HASHTABLE_FREE_VALUE free_value);
+int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
+           void (*free_entry)(void*), enum HASHTABLE_FREE_VALUE free_value);
+int ht_get(struct HASHTABLE* ht, char* key, void** out);
+void ht_free(struct HASHTABLE* ht, void (*free_entry)(void*));

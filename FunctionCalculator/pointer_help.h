@@ -2,4 +2,4 @@
 
 #include <stdlib.h>
 
-double* double_to_heap(double);
+double* double_to_heap(double val);

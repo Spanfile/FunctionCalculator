@@ -8,5 +8,6 @@
 #include "TOKEN.h"
 #include "CALCERR.h"
 
-enum CALCERR tokenise(char*, size_t, size_t*, struct TOKEN***);
-void free_tokens(struct TOKEN***, size_t);
+enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
+                      struct TOKEN*** tokens);
+void free_tokens(struct TOKEN*** tokens, size_t token_count);

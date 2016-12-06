@@ -9,7 +9,7 @@
 #include "parselets.h"
 #include "CALCERR.h"
 
-enum CALCERR create_parser_container(struct TOKEN**, size_t, int*,
-    struct PARSER_CONTAINER**);
-enum CALCERR parse(struct PARSER_CONTAINER*, int precedence,
-    struct TREE_ELEMENT**);
+enum CALCERR create_parser_container(struct TOKEN** tokens, size_t token_count,
+    int* index, struct PARSER_CONTAINER** container_out);
+enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
+    struct TREE_ELEMENT** elem_out);

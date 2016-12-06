@@ -61,13 +61,14 @@ struct TREE_ELEMENT {
     struct TREE_ELEMENT* child2;
 };
 
-struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE);
-struct TREE_ELEMENT* create_number_element(double*);
-struct TREE_ELEMENT* create_negation_element();
-struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE);
-struct TREE_ELEMENT* create_name_element(char*, size_t);
-struct TREE_ELEMENT* create_function_element(char*, size_t);
-struct TREE_ELEMENT* create_assignment_element(char*, size_t, enum ASSIGNMENT_TYPE);
+struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type);
+struct TREE_ELEMENT* create_number_element(double* value);
+struct TREE_ELEMENT* create_negation_element(void);
+struct TREE_ELEMENT* create_arithmetic_element(enum ARITHMETIC_TYPE type);
+struct TREE_ELEMENT* create_name_element(char* value, size_t value_len);
+struct TREE_ELEMENT* create_function_element(char* value, size_t value_len);
+struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
+                                               enum ASSIGNMENT_TYPE assign_type);
 
-void copy_elem(struct TREE_ELEMENT*, struct TREE_ELEMENT*);
-void free_elem(struct TREE_ELEMENT*);
+void copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src);
+void free_elem(struct TREE_ELEMENT* elem);
