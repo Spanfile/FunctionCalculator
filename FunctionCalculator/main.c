@@ -123,6 +123,11 @@ int main(void)
     free(read_buffer);
     read_buffer = NULL;
 
+    if ((error = save_ans()) != CALCERR_NONE) {
+        printf("error saving answers: %s", CALCERR_STRING[error]);
+        /* this isn't a critical error */
+    }
+
     if ((error = save_uservalues()) != CALCERR_NONE) {
         printf("error saving uservalues: %s", CALCERR_STRING[error]);
         /* this isn't a critical error */

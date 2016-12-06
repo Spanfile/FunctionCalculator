@@ -48,9 +48,7 @@ enum CALCERR init_interpreter(void)
 {
     // printf("%lu reserved names\n", RESERVED_NAMES_COUNT);
 
-    ans_count = 0;
-    ans_len = 4;
-    ans_array = malloc(ans_len * sizeof(double));
+    load_ans();
 
     names_ht = ht_create(128);
     functions_ht = ht_create(128);
@@ -366,6 +364,43 @@ void print_ans()
     }
 
     printf("\n");
+}
+
+enum CALCERR save_ans()
+{
+    FILE* fp = NULL;
+
+    fp = fopen("ans.bin", "wb");
+    if (fp == NULL) {
+        return CALCERR_ANS_SAVING_FAILED;
+    }
+
+    fwrite(&ans_len, sizeof(ans_len), 1, fp);
+    fwrite(ans_array, ans_len * sizeof(double), ans_len, fp);
+    fwrite(&ans_count, sizeof(ans_count), 1, fp);
+
+    fclose(fp);
+
+    return CALCERR_NONE;
+}
+
+enum CALCERR load_ans()
+{
+    FILE* fp = NULL;
+
+    fp = fopen("ans.bin", "rb");
+    if (fp == NULL) {
+        return CALCERR_ANS_LOADING_FAILED;
+    }
+
+    fread(&ans_len, sizeof(ans_len), 1, fp);
+    ans_array = malloc(ans_len * sizeof(double));
+    fread(ans_array, ans_len * sizeof(double), ans_len, fp);
+    fread(&ans_count, sizeof(ans_count), 1, fp);
+
+    fclose(fp);
+
+    return CALCERR_NONE;
 }
 
 void free_func_void(void* func_void)

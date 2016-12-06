@@ -52,3 +52,5 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT*, struct HASHTABLE*);
 enum CALCERR add_ans(double);
 enum CALCERR get_ans(int, double*);
 void print_ans();
+enum CALCERR save_ans();
+enum CALCERR load_ans();

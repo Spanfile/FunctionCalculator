@@ -20,9 +20,9 @@
     CALCERR(CALCERR_INVALID_ANS_INDEX)                                         \
     CALCERR(CALCERR_NAME_RESERVED)                                             \
     CALCERR(CALCERR_USERVALUE_SAVING_FAILED)                                   \
-    CALCERR(CALCERR_USERFUNC_SAVING_FAILED)                                    \
     CALCERR(CALCERR_USERVALUE_LOADING_FAILED)                                  \
-    CALCERR(CALCERR_USERFUNC_LOADING_FAILED)
+    CALCERR(CALCERR_ANS_SAVING_FAILED)                                         \
+    CALCERR(CALCERR_ANS_LOADING_FAILED)
 
 #ifndef GENERATE_ENUM
 #define GENERATE_ENUM(ENUM) ENUM,
