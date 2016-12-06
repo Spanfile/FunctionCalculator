@@ -27,9 +27,8 @@ struct TREE_ELEMENT* create_name_element(char* value, size_t value_len)
 
     elem->name_value_len = value_len;
     elem->name_value =
-        malloc(value_len + 1); // null terminator not included in value
-    strncpy(elem->name_value, value, value_len);
-    elem->name_value[value_len] = '\0';
+        malloc((value_len + 1) * sizeof(char)); // null terminator not included in value
+    strncpy_s(elem->name_value, (value_len + 1) * sizeof(char), value, value_len * sizeof(char));
 
     return elem;
 }
@@ -59,9 +58,8 @@ struct TREE_ELEMENT* create_function_element(char* value, size_t value_len)
     struct TREE_ELEMENT* elem = create_element(ELEM_FUNCTION);
 
     elem->name_value_len = value_len;
-    elem->name_value = malloc(value_len + 1);
-    strncpy(elem->name_value, value, value_len);
-    elem->name_value[value_len] = '\0';
+    elem->name_value = malloc((value_len + 1) * sizeof(char));
+    strncpy_s(elem->name_value, (value_len + 1) * sizeof(char), value, value_len * sizeof(char));
 
     return elem;
 }
@@ -73,9 +71,8 @@ struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
     elem->assign_type = assign_type;
 
     elem->name_value_len = value_len;
-    elem->name_value = malloc(value_len + 1);
-    strncpy(elem->name_value, value, value_len);
-    elem->name_value[value_len] = '\0';
+    elem->name_value = malloc((value_len + 1) * sizeof(char));
+    strncpy_s(elem->name_value, (value_len + 1) * sizeof(char), value, value_len * sizeof(char));
 
     return elem;
 }
@@ -91,8 +88,8 @@ void copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src)
     }
 
     if (src->name_value != NULL) {
-        dst->name_value = malloc(src->name_value_len + 1);
-        strncpy(dst->name_value, src->name_value, src->name_value_len + 1);
+        dst->name_value = malloc((src->name_value_len + 1) * sizeof(char));
+        strncpy_s(dst->name_value, (src->name_value_len + 1) * sizeof(char), src->name_value, src->name_value_len * sizeof(char));
     }
 
     if (dst->args != NULL) {

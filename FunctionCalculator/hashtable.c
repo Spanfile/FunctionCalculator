@@ -47,9 +47,8 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr,
         return NULL;
     }
 
-    entry->key = malloc(key_len + 1);
-    strncpy(entry->key, key, key_len);
-    entry->key[key_len] = '\0';
+    entry->key = malloc((key_len + 1) * sizeof(char));
+    strncpy_s(entry->key, (key_len + 1) * sizeof(char), key, key_len * sizeof(char));
 
     entry->value_ptr = value_ptr;
     entry->free_value = free_value;

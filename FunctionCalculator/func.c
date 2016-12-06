@@ -48,10 +48,9 @@ struct FUNC* create_intr_func(struct TREE_ELEMENT* elem)
 
     func->arg_names = malloc(func->arg_count * sizeof(char*));
     for (size_t i = 0; i < func->arg_count; i++) {
-        func->arg_names[i] = malloc(elem->args[i]->name_value_len + 1);
-        strncpy(func->arg_names[i], elem->args[i]->name_value,
-                elem->args[i]->name_value_len + 1);
-        func->arg_names[i][elem->args[i]->name_value_len] = '\0';
+        func->arg_names[i] = malloc((elem->args[i]->name_value_len + 1) * sizeof(char));
+        strncpy_s(func->arg_names[i], (elem->args[i]->name_value_len + 1) * sizeof(char), elem->args[i]->name_value,
+                elem->args[i]->name_value_len * sizeof(char));
     }
 
     return func;

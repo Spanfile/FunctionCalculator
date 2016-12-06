@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A98C81C7-83BB-40E5-99E9-8E3AEC2B41BC}</ProjectGuid>
+    <ProjectGuid>{7BFE296E-70F4-4A66-815E-811A0ADE2B1C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>FunctionCalculator</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -146,19 +146,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="tokeniser.cpp" />
-    <ClCompile Include="TREE_ELEMENT.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ARITHMETIC_TYPE.h" />
+    <ClInclude Include="CALCERR.h" />
+    <ClInclude Include="COMMAND_TYPE.h" />
+    <ClInclude Include="func.h" />
+    <ClInclude Include="hashtable.h" />
     <ClInclude Include="interpreter.h" />
+    <ClInclude Include="linked_list.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="parselets.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="PARSER_CONTAINER.h" />
+    <ClInclude Include="pointer_help.h" />
+    <ClInclude Include="PRECEDENCE.h" />
     <ClInclude Include="TOKEN.h" />
     <ClInclude Include="tokeniser.h" />
-    <ClInclude Include="TREE_ELEMENT.h" />
+    <ClInclude Include="tree_element.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="func.c" />
+    <ClCompile Include="hashtable.c" />
+    <ClCompile Include="interpreter.c" />
+    <ClCompile Include="linked_list.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="parselets.c" />
+    <ClCompile Include="parser.c" />
+    <ClCompile Include="pointer_help.c" />
+    <ClCompile Include="tokeniser.c" />
+    <ClCompile Include="tree_element.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -370,7 +370,7 @@ enum CALCERR save_ans()
 {
     FILE* fp = NULL;
 
-    fp = fopen("ans.bin", "wb");
+    fopen_s(&fp, "ans.bin", "wb");
     if (fp == NULL) {
         return CALCERR_ANS_SAVING_FAILED;
     }
@@ -388,7 +388,7 @@ enum CALCERR load_ans()
 {
     FILE* fp = NULL;
 
-    fp = fopen("ans.bin", "rb");
+    fopen_s(&fp, "ans.bin", "rb");
     if (fp == NULL) {
         return CALCERR_ANS_LOADING_FAILED;
     }

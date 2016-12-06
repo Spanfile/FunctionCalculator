@@ -108,9 +108,8 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
         }
 
         token_ptr->value_length = sub_len;
-        token_ptr->value = malloc(sub_len + 1);
-        strncpy(token_ptr->value, &input[read_start], sub_len);
-        token_ptr->value[sub_len] = '\0';
+        token_ptr->value = malloc((sub_len + 1) * sizeof(char));
+        strncpy_s(token_ptr->value, (sub_len + 1) * sizeof(char), &input[read_start], sub_len * sizeof(char));
 
         // printf("%i @ %i,%i: %s\n", token_ptr->type, i, (int)*token_count,
         // token_ptr->value);

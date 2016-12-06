@@ -6,9 +6,8 @@ struct LINKED_LIST_NODE* ll_newnode(char* key, size_t key_len, void* value,
     struct LINKED_LIST_NODE* node = malloc(sizeof(struct LINKED_LIST_NODE));
 
     node->key_len = key_len;
-    node->key = malloc(key_len + 1);
-    strncpy(node->key, key, key_len);
-    node->key[key_len] = '\0';
+    node->key = malloc((key_len + 1) * sizeof(char));
+    strncpy_s(node->key, (key_len + 1) * sizeof(char), key, key_len * sizeof(char));
 
     node->value_ptr = value;
     node->value_ptr_len = value_len;
@@ -63,7 +62,7 @@ int ll_tofile(struct LINKED_LIST_NODE* node, char* file,
 {
     FILE* fp = NULL;
 
-    fp = fopen(file, "wb");
+    fopen_s(&fp, file, "wb");
     if (fp == NULL) {
         return 0;
     }
@@ -100,7 +99,7 @@ struct LINKED_LIST_NODE* ll_fromfile(char* file, void* (*custom_read)(FILE* fp))
 {
     FILE* fp = NULL;
 
-    fp = fopen(file, "rb");
+    fopen_s(&fp, file, "rb");
     if (fp == NULL) {
         return NULL;
     }
