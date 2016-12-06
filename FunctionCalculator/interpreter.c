@@ -48,7 +48,7 @@ enum CALCERR init_interpreter(void)
 {
     // printf("%lu reserved names\n", RESERVED_NAMES_COUNT);
 
-    //load_ans();
+    load_ans();
 
     names_ht = ht_create(128);
     functions_ht = ht_create(128);
