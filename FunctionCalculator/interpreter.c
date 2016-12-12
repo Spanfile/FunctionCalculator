@@ -378,13 +378,14 @@ enum CALCERR save_ans()
     FILE* fp = NULL;
 
     fopen_s(&fp, "ans.bin", "wb");
+
     if (fp == NULL) {
         return CALCERR_ANS_SAVING_FAILED;
     }
 
     fwrite(&ans_len, sizeof(ans_len), 1, fp);
-    fwrite(ans_array, ans_len * sizeof(double), ans_len, fp);
     fwrite(&ans_count, sizeof(ans_count), 1, fp);
+    fwrite(ans_array, sizeof(double), ans_count, fp);
 
     fclose(fp);
 
@@ -396,14 +397,15 @@ enum CALCERR load_ans()
     FILE* fp = NULL;
 
     fopen_s(&fp, "ans.bin", "rb");
+
     if (fp == NULL) {
         return CALCERR_ANS_LOADING_FAILED;
     }
 
     fread(&ans_len, sizeof(ans_len), 1, fp);
-    ans_array = malloc(ans_len * sizeof(double));
-    fread(ans_array, ans_len * sizeof(double), ans_len, fp);
     fread(&ans_count, sizeof(ans_count), 1, fp);
+    ans_array = malloc(ans_len * sizeof(double));
+    fread(ans_array, sizeof(double), ans_count, fp);
 
     fclose(fp);
 
