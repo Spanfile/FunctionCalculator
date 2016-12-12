@@ -2,7 +2,7 @@
 
 double* double_to_heap(double val)
 {
-    double* ptr = malloc(sizeof(double));
+    double* ptr = malloc(sizeof(val));
     *ptr = val;
     return ptr;
 }

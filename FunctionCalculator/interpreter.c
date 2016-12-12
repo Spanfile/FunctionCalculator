@@ -48,7 +48,10 @@ enum CALCERR init_interpreter(void)
 {
     // printf("%lu reserved names\n", RESERVED_NAMES_COUNT);
 
-    load_ans();
+    enum CALCERR error = CALCERR_NONE;
+    if ((error = load_ans()) != CALCERR_NONE) {
+        printf("ans loading failed (%s)\n", CALCERR_STRING[error]);
+    }
 
     names_ht = ht_create(128);
     functions_ht = ht_create(128);
@@ -57,12 +60,12 @@ enum CALCERR init_interpreter(void)
         return CALCERR_INTR_INIT_FAILED;
     } else {
         // these math constants may not always be defined
-        if (!ht_set(names_ht, "pi", 2, double_to_heap(M_PI), NULL,
+        if (!ht_set(names_ht, "pi", 2, double_to_heap(3.1415928538), NULL,
                     FREE_ENTRY_TRUE)) {
             return CALCERR_VALUE_SET_FAILED;
         }
 
-        if (!ht_set(names_ht, "e", 1, double_to_heap(M_E), NULL,
+        if (!ht_set(names_ht, "e", 1, double_to_heap(2.71828), NULL,
                     FREE_ENTRY_TRUE)) {
             return CALCERR_VALUE_SET_FAILED;
         }
@@ -98,7 +101,7 @@ enum CALCERR free_interpreter(void)
 {
     ht_free(names_ht, NULL);
     ht_free(functions_ht, free_func_void);
-    free(ans_array);
+    /* ans_array is freed with names_ht */
 
     if (uservalues_ll != NULL) {
         ll_free(uservalues_ll);

@@ -9,16 +9,16 @@ struct HASHTABLE* ht_create(size_t size)
         return NULL;
     }
 
-    ht->buckets = malloc(sizeof(struct HASHTABLE_ENTRY*) * size);
+    ht->size = size;
+
+    ht->buckets = malloc(sizeof(struct HASHTABLE_ENTRY*) * ht->size);
     if (ht->buckets == NULL) {
         return NULL;
     }
 
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < ht->size; i++) {
         ht->buckets[i] = NULL;
     }
-
-    ht->size = size;
 
     return ht;
 }
@@ -26,7 +26,7 @@ struct HASHTABLE* ht_create(size_t size)
 unsigned ht_hash(struct HASHTABLE* ht, char* key)
 {
     // FNV hash
-    unsigned char* u_key = key;
+    unsigned char* u_key = (unsigned char*)key;
     unsigned h = 2166136261;
     int len = strlen(key);
 
