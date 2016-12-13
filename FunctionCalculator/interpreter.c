@@ -12,6 +12,7 @@ struct HASHTABLE* names_ht = NULL;
 struct HASHTABLE* functions_ht = NULL;
 
 struct LINKED_LIST_NODE* uservalues_ll = NULL;
+struct LINKED_LIST_NODE* userfunctions_ll = NULL;
 
 double* ans_array = NULL;
 size_t ans_count;
@@ -106,6 +107,10 @@ enum CALCERR free_interpreter(void)
         ll_free(uservalues_ll);
     }
 
+    if (userfunctions_ll != NULL) {
+        ll_free(userfunctions_ll);
+    }
+
     return CALCERR_NONE;
 }
 
@@ -150,6 +155,16 @@ void clear_uservalues(void)
 
     ll_free(uservalues_ll);
     uservalues_ll = NULL;
+    
+    node = userfunctions_ll;
+
+    do
+    {
+        ht_remove(functions_ht, node->key, free_func_void);
+    } while ((node = node->next) != NULL);
+
+    ll_free(userfunctions_ll);
+    userfunctions_ll = NULL;
 }
 
 enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
@@ -307,6 +322,10 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
 
             double* val = double_to_heap(*elem->child1->number_value);
 
+            if (val == NULL) {
+                return CALCERR_MALLOC_FAILED;
+            }
+
             if (!ht_set(names_ht, elem->name_value, elem->name_value_len,
                         val, NULL, FREE_ENTRY_TRUE)) {
                 free(val);
@@ -341,10 +360,27 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
 
             struct FUNC* func = create_intr_func(elem);
 
+            if (func == NULL) {
+                return CALCERR_MALLOC_FAILED;
+            }
+
             if (!ht_set(functions_ht, elem->name_value,
                         elem->name_value_len, func, NULL, FREE_ENTRY_TRUE)) {
                 free_func(func);
                 return CALCERR_VALUE_SET_FAILED;
+            }
+
+            if (userfunctions_ll == NULL) {
+                userfunctions_ll =
+                    ll_newnode(elem->name_value, elem->name_value_len, NULL, 0);
+            }
+            else {
+                if (!ll_setval(userfunctions_ll, elem->name_value, NULL, 0)) {
+                    if (!ll_insert(userfunctions_ll, elem->name_value,
+                        elem->name_value_len, NULL, 0, 0)) {
+                        return CALCERR_VALUE_SET_FAILED;
+                    }
+                }
             }
 
             *elem->child1->number_value = 0;
@@ -362,8 +398,15 @@ enum CALCERR add_ans(double ans)
 {
     if (ans_count >= ans_len) {
         ans_array = realloc(ans_array, (ans_len += 4) * sizeof(double));
+
+        if (ans_array == NULL) {
+            return CALCERR_REALLOC_FAILED;
+        }
+
         /* reallocating changed the pointer, update it */
-        ht_set(names_ht, "ans", 3, ans_array, NULL, FREE_ENTRY_FALSE);
+        if (!ht_set(names_ht, "ans", 3, ans_array, NULL, FREE_ENTRY_FALSE)) {
+            return CALCERR_VALUE_SET_FAILED;
+        }
     }
 
     if (ans_count > 0) {
