@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_HASHTABLE
+#define _H_HASHTABLE
 
 #include <stdio.h>
 #include <string.h>
@@ -6,9 +7,10 @@
 
 enum HASHTABLE_FREE_VALUE { FREE_ENTRY_FALSE, FREE_ENTRY_TRUE };
 
-/* the entries are just linked lists but automatically sorted with their key.
- * this hashtable implements its own internal linked list for the sorting. */
 struct HASHTABLE_ENTRY {
+    /* the entries are just linked lists but automatically sorted with their key.
+       even though there is an existing implementation for linked list, this
+       hashtable implements its own internal linked list for the sorting. */
     char* key;
     void* value_ptr;
     enum HASHTABLE_FREE_VALUE free_value;
@@ -29,3 +31,5 @@ int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
 int ht_get(struct HASHTABLE* ht, char* key, void** out);
 int ht_remove(struct HASHTABLE* ht, char* key, void (*free_entry)(void*));
 void ht_free(struct HASHTABLE* ht, void (*free_entry)(void*));
+
+#endif

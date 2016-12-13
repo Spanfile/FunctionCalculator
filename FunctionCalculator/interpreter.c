@@ -59,13 +59,12 @@ enum CALCERR init_interpreter(void)
     if (names_ht == NULL) {
         return CALCERR_INTR_INIT_FAILED;
     } else {
-        // these math constants may not always be defined
-        if (!ht_set(names_ht, "pi", 2, double_to_heap(3.1415928538), NULL,
+        if (!ht_set(names_ht, "pi", 2, double_to_heap(M_PI), NULL,
                     FREE_ENTRY_TRUE)) {
             return CALCERR_VALUE_SET_FAILED;
         }
 
-        if (!ht_set(names_ht, "e", 1, double_to_heap(2.71828), NULL,
+        if (!ht_set(names_ht, "e", 1, double_to_heap(M_E), NULL,
                     FREE_ENTRY_TRUE)) {
             return CALCERR_VALUE_SET_FAILED;
         }
@@ -167,7 +166,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
         return CALCERR_INTR_ELEMENT_NOT_IMPLEMENTED;
 
     case ELEM_NUMBER:
-        break; // number elements already have their number value set
+        break; /* number elements already have their number value set */
 
     case ELEM_NEGATION:
         if ((error = evaluate_element(elem->child1, extra_names)) !=
@@ -255,7 +254,7 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
             if ((error = evaluate_element(elem->args[i], extra_names)) !=
                 CALCERR_NONE) {
 
-                // this method could be generalised
+                /* this method could be generalised */
                 for (size_t j = 0; j < i; j++) {
                     free(args[j]);
                 }
@@ -353,7 +352,7 @@ enum CALCERR add_ans(double ans)
 {
     if (ans_count >= ans_len) {
         ans_array = realloc(ans_array, (ans_len += 4) * sizeof(double));
-        // reallocating changed the pointer, update it
+        /* reallocating changed the pointer, update it */
         ht_set(names_ht, "ans", 3, ans_array, NULL, FREE_ENTRY_FALSE);
     }
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_COMMAND_TYPE
+#define _H_COMMAND_TYPE
 
 enum COMMAND_TYPE {
     COMMAND_QUIT = 'q',
@@ -6,3 +7,5 @@ enum COMMAND_TYPE {
     COMMAND_ANS = 'a',
     COMMAND_CLEAR = 'c',
 };
+
+#endif

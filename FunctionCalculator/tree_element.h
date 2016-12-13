@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_TREE_ELEMENT
+#define _H_TREE_ELEMENT
 
 #include <stdlib.h>
 #include <math.h>
@@ -39,21 +40,21 @@ static const char* ASSIGNMENT_TYPE_STRING[] = {
 struct TREE_ELEMENT {
     enum TREE_ELEMENT_TYPE elem_type;
 
-    // for ELEM_ARITHMETIC
+    /* for ELEM_ARITHMETIC */
     enum ARITHMETIC_TYPE arithmetic_type;
 
-    // for ELEM_ASSIGNMENT
+    /* for ELEM_ASSIGNMENT */
     enum ASSIGNMENT_TYPE assign_type;
 
-    // for ELEM_NUMBER
+    /* for ELEM_NUMBER */
     int free_number_value;
     double* number_value;
 
-    // for ELEM_NAME and ELEM_FUNCTION
+    /* for ELEM_NAME and ELEM_FUNCTION */
     size_t name_value_len;
     char* name_value;
 
-    // for ELEM_FUNCTION
+    /* for ELEM_FUNCTION */
     struct TREE_ELEMENT** args;
     size_t args_len;
 
@@ -72,3 +73,5 @@ struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
 
 void copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src);
 void free_elem(struct TREE_ELEMENT* elem);
+
+#endif

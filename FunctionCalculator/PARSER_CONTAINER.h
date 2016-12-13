@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_PARSER_CONTAINER
+#define _H_PARSER_CONTAINER
 
 #include <stdlib.h>
 
@@ -9,3 +10,5 @@ struct PARSER_CONTAINER {
     size_t token_count;
     int* index;
 };
+
+#endif

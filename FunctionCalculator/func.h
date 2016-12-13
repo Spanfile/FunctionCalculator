@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_FUNC
+#define _H_FUNC
 
 #include <stdlib.h>
 
@@ -18,7 +19,7 @@ struct FUNC {
     enum FUNC_TYPE func_type;
     struct TREE_ELEMENT* elem;
 
-    // for external methods (i.e. from math.h)
+    /* function pointers for external methods (i.e. from math.h) */
     double (*ext_func_one_arg)(double);
     double (*ext_func_two_arg)(double, double);
 };
@@ -32,3 +33,5 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
                        double* out);
 
 void free_func(struct FUNC* func);
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_PRECEDENCE
+#define _H_PRECEDENCE
 
 enum {
     PRECEDENCE_DEFAULT = 0,
@@ -8,3 +9,5 @@ enum {
     PRECEDENCE_GROUP,
     PRECEDENCE_ASSIGNMENT
 };
+
+#endif

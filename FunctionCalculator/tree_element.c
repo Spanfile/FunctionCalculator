@@ -5,7 +5,6 @@ struct TREE_ELEMENT* create_element(enum TREE_ELEMENT_TYPE type)
     struct TREE_ELEMENT* elem = malloc(sizeof(struct TREE_ELEMENT));
     elem->elem_type = type;
 
-    // initialise all fields to default values
     elem->child1 = NULL;
     elem->child2 = NULL;
     elem->name_value = NULL;
@@ -27,7 +26,7 @@ struct TREE_ELEMENT* create_name_element(char* value, size_t value_len)
 
     elem->name_value_len = value_len;
     elem->name_value =
-        malloc((value_len + 1) * sizeof(char)); // null terminator not included in value
+        malloc((value_len + 1) * sizeof(char));
     strncpy_s(elem->name_value, (value_len + 1) * sizeof(char), value, value_len * sizeof(char));
 
     return elem;
@@ -79,7 +78,7 @@ struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
 
 void copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src)
 {
-    /* we assume dst has been malloc'd */
+    /* assume dst has been malloc'd */
     memcpy(dst, src, sizeof(struct TREE_ELEMENT));
 
     if (src->number_value != NULL) {

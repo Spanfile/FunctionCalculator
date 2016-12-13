@@ -56,11 +56,13 @@ enum CALCERR parse(struct PARSER_CONTAINER* container, int precedence,
         return error;
     }
 
-    // no more tokens? we're done
+    /* no more tokens? we're done */
     if (*container->index >= (int)container->token_count) {
         return CALCERR_NONE;
     }
 
+    /* precedence is a funny thing. keep parsing tokens as long as the current
+       token has a smaller precedence than the one after it */
     while (precedence < get_precedence(container)) {
         token = container->tokens[*container->index];
 
@@ -99,6 +101,7 @@ int get_precedence(struct PARSER_CONTAINER* container)
         return 0;
     }
 
+    /* high precedence = high "importance" */
     switch (container->tokens[*container->index]->token_type) {
     default:
         return 0;

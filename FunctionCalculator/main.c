@@ -35,16 +35,16 @@ int main(void)
 
         read_buffer_size = 16;
         read_len = 0;
-        read_buffer = malloc(read_buffer_size); // TODO: memory check?
+        read_buffer = malloc(read_buffer_size);
         token_count = 0;
         index = 0;
 
-        // read characters into a dynamically expanding buffer
+        /* read characters into a dynamically expanding buffer */
         printf("> ");
         do {
             input = getchar();
 
-            // resize the buffer if it's full
+            /* resize the buffer if it's full */
             if (read_len + 1 > read_buffer_size)
                 read_buffer = realloc(read_buffer, read_buffer_size += 8);
 
@@ -52,14 +52,14 @@ int main(void)
 
         } while (input != '\n');
 
-        // replace the newline at the end with a null terminating byte
+        /* replace the newline at the end with a null terminating byte */
         read_buffer[--read_len] = '\0';
 
 #if _DEBUG
         print_string(read_buffer, read_len);
 #endif
 
-        // parse commands
+        /* parse commands */
         if (read_buffer[0] == ':' && read_len > 1) {
             enum COMMAND_TYPE cmd = read_buffer[1];
             switch (cmd) {
@@ -90,7 +90,7 @@ int main(void)
             }
         }
 
-        // or parse math
+        /* or parse math */
         if ((error = tokenise(read_buffer, read_len, &token_count, &tokens)) !=
             CALCERR_NONE) {
             printf("tokenising error: %s\n", CALCERR_STRING[error]);

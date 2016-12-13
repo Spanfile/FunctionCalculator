@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_CALCERR
+#define _H_CALCERR
 
 #define FOREACH_CALCERR(CALCERR)                                               \
     CALCERR(CALCERR_NONE)                                                      \
@@ -35,3 +36,5 @@ enum CALCERR { FOREACH_CALCERR(GENERATE_ENUM) };
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 static const char* CALCERR_STRING[] = {FOREACH_CALCERR(GENERATE_STRING)};
+
+#endif

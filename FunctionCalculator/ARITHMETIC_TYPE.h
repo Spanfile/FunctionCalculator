@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_ARITHMETIC_TYPE
+#define _H_ARITHMETIC_TYPE
 
 #define FOREACH_ARITHMETIC_TYPE(ARITH_TYPE)                                    \
     ARITH_TYPE(ARITH_ADDITION)                                                 \
@@ -20,3 +21,5 @@ enum ARITHMETIC_TYPE { FOREACH_ARITHMETIC_TYPE(GENERATE_ENUM) };
 #pragma GCC diagnostic ignored "-Wunused-variable"
 static const char* ARITHMETIC_TYPE_STRING[] = {
     FOREACH_ARITHMETIC_TYPE(GENERATE_STRING)};
+
+#endif

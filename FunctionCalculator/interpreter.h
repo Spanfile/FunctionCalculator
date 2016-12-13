@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_INTERPRETER
+#define _H_INTERPRETER
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -47,8 +48,7 @@ enum CALCERR free_interpreter(void);
 enum CALCERR load_uservalues(void);
 enum CALCERR save_uservalues(void);
 void clear_uservalues(void);
-// extra_names is used for function calls
-// user values are added to the main name hashtable
+/* extra_names is for function args when called */
 enum CALCERR evaluate_element(struct TREE_ELEMENT* elem, struct HASHTABLE* extra_names);
 
 enum CALCERR add_ans(double ans);
@@ -57,3 +57,5 @@ void print_ans(void);
 enum CALCERR save_ans(void);
 enum CALCERR load_ans(void);
 void clear_ans(void);
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_TOKEN
+#define _H_TOKEN
 
 enum TOKEN_TYPE {
     TOKEN_NAME, TOKEN_NUMBER,
@@ -12,3 +13,5 @@ struct TOKEN {
     size_t value_length;
     char* value;
 };
+
+#endif

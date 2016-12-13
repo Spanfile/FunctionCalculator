@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_LINKED_LIST
+#define _H_LINKED_LIST
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,3 +21,5 @@ void ll_free(struct LINKED_LIST_NODE* node);
 int ll_depth(struct LINKED_LIST_NODE* node);
 int ll_tofile(struct LINKED_LIST_NODE* node, char* file, void (*custom_write)(FILE* fp, void* value_ptr));
 struct LINKED_LIST_NODE* ll_fromfile(char* file, void* (*custom_read)(FILE* fp));
+
+#endif

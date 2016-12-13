@@ -84,7 +84,7 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
             }
         }
 
-        /* this is an ugly hack (srsly its ugly):
+        /* this is an ugly hack (seriously, its ugly):
         clone the func's elem and evaluate that.
         this is done because the interpreter is not "stateless" when it comes to
         elements. meaning the same element cannot be evaluated twice if it has a

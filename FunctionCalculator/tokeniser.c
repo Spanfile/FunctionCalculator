@@ -14,7 +14,7 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
     do {
         char c = input[i];
 
-        // these characters don't need a token allocated
+        /* these characters don't need a token allocated */
         if (c == ' ' || c == '\0') {
             continue;
         }
@@ -22,11 +22,11 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
         size_t sub_len = 0;
         int read_start = 0;
 
-        // resize the token array if it's full
+        /* resize the token array if it's full */
         if ((*token_count) + 1 > tokens_size) {
             *tokens =
                 realloc(*tokens, (tokens_size += 8) * sizeof(struct TOKEN*));
-        } // there may be something fishy going on here
+        }
 
         (*tokens)[*token_count] = malloc(sizeof(struct TOKEN));
         struct TOKEN* token_ptr = (*tokens)[*token_count];
@@ -41,7 +41,8 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
             read_start = start;
 
             token_ptr->token_type = TOKEN_NAME;
-        } else if (isdigit(c)) { // numbers
+        } else if (isdigit(c)) {
+            /* numbers */
             int start = i;
             int end = tokenise_number(input, &i, input_len);
 
@@ -49,8 +50,9 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
             read_start = start;
 
             token_ptr->token_type = TOKEN_NUMBER;
-        } else { // everything else
-            // note: ugly goto-blocker
+        } else {
+            /* everything else */
+            /* note: skip_end is an ugly goto-blocker */
             int skip_end = 0;
 
             switch (c) {
@@ -100,8 +102,7 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
 
             if (skip_end == 0) {
                 /* we techically don't need the value of the token with
-                these
-                arithmetic tokens, but ech */
+                   these arithmetic tokens, but ech */
                 sub_len = 1;
                 read_start = i;
             }
@@ -131,6 +132,8 @@ int tokenise_name(char* input, size_t* index, size_t input_len)
         end += 1;
 
         c = input[*index + 1];
+        /* names must start with a letter, but they can then contain numbers
+           too */
         if ((!isalpha(c) && !isdigit(c)) || c == ' ')
             break;
 

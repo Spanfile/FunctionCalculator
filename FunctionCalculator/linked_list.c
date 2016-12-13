@@ -87,8 +87,8 @@ int ll_tofile(struct LINKED_LIST_NODE* node, char* file,
         return 0;
     }
 
-    /* we store the amount of links to the beginning of the file: the depth is
-     * known only after writing */
+    /* depth is stored at the beginning of the file, but it's only known after
+    writing all the nodes */
     fseek(fp, sizeof(int), SEEK_SET);
 
     int depth = 0;
@@ -129,7 +129,7 @@ struct LINKED_LIST_NODE* ll_fromfile(char* file, void* (*custom_read)(FILE* fp))
 
     struct LINKED_LIST_NODE* first = NULL;
     struct LINKED_LIST_NODE* prev = NULL;
-    /* ALLOCATE UR SHIT BOI */
+
     size_t key_len;
     char* key;
     size_t value_ptr_len;

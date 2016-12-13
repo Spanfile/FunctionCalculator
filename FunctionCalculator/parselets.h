@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _H_PARSELETS
+#define _H_PARSELETS
 
 #include "parser.h"
 #include "PARSER_CONTAINER.h"
@@ -22,11 +23,12 @@ enum CALCERR parse_negation(struct TOKEN* token, struct PARSER_CONTAINER* contai
 
 /* "postfix" parselets
     they're otherwise the same as prefix parselets, except they take in the
-   element
-    to their left */
+    element to their left */
 enum CALCERR parse_arithmetic(struct TOKEN* token, struct TREE_ELEMENT* left,
                               struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out);
 enum CALCERR parse_function(struct TOKEN* token, struct TREE_ELEMENT* left,
                             struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out);
 enum CALCERR parse_assignment(struct TOKEN* token, struct TREE_ELEMENT* left,
                               struct PARSER_CONTAINER* container, struct TREE_ELEMENT** elem_out);
+
+#endif
