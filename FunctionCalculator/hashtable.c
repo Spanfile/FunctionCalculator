@@ -25,7 +25,7 @@ struct HASHTABLE* ht_create(size_t size)
 
 unsigned ht_hash(struct HASHTABLE* ht, char* key)
 {
-    // FNV hash
+    /* FNV hash */
     unsigned char* u_key = (unsigned char*)key;
     unsigned h = 2166136261;
     int len = strlen(key);
@@ -100,12 +100,16 @@ int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
             ht->buckets[bucket] = new;
         } else if (next == NULL) { /* it goes in the end */
             /* this and the next one are hash collisions */
+#if _DEBUG
             printf("hash collision with %s and %s: %u\n", key, last->key,
                    bucket);
+#endif
             last->next = new;
         } else { /* it goes somewhere in the middle */
+#if _DEBUG
             printf("hash collision with %s and %s: %u\n", key, last->key,
                    bucket);
+#endif
             new->next = next;
             last->next = new;
         }
@@ -131,6 +135,49 @@ int ht_get(struct HASHTABLE* ht, char* key, void** out)
     }
 
     *out = entry->value_ptr;
+    return 1;
+}
+
+int ht_remove(struct HASHTABLE* ht, char* key, void (*free_entry)(void*))
+{
+    int bucket = 0;
+    struct HASHTABLE_ENTRY* prev = NULL;
+    struct HASHTABLE_ENTRY* next = NULL;
+
+    bucket = ht_hash(ht, key);
+    next = ht->buckets[bucket];
+
+    while (next != NULL && next->key != NULL && strcmp(key, next->key) > 0) {
+        prev = next;
+        next = next->next;
+    }
+
+    if (next == NULL || next->key == NULL || strcmp(key, next->key) != 0) {
+        return 0;
+    }
+
+    if (prev == NULL) {
+        /* the entry is the first entry in the list */
+        ht->buckets[bucket] = next->next;
+    }
+    else if (next->next == NULL) {
+        /* it's the last one */
+        prev->next = NULL;
+    }
+    else {
+        /* or it's in the middle */
+        prev->next = next->next;
+    }
+
+    if (next->free_value) {
+        if (free_entry != NULL) {
+            (*free_entry)(next->value_ptr);
+        }
+        else {
+            free(next->value_ptr);
+        }
+    }
+
     return 1;
 }
 

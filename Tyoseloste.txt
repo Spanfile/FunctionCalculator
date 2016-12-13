@@ -2,12 +2,13 @@ Harjoitustyö: Funktiolaskin
 Tekijä: Santeri Kasvi, K8598, TTV16S01
 Ohjelmoinnin perusteet - TTZC0200
 Aloituspäivämäärä: 26.9.2016
+
 ============================
 Projektin tavoite on luoda täydellinen, mahdollisesti käyttäjän laajennetta-
 vavissa oleva funktiolaskin, jonka toiminta perustuu abstraktiin syntaksi-
-puuhun
+puuhun.
 
-Abstrakti toiminta (suurimmaksi osaksi minun avuksi)
+Abstrakti toiminta
 ====================================================
 Laskin toimii komentorivillä. Käyttäjä syöttää laskun, jonka laskin kääntää
 syntaksipuuksi, joka syötetään tulkkiin, joka laskee laskunlopullisen tuloksen.
@@ -52,11 +53,12 @@ v0.3
     Käyttäjän muuttujat + funktiot
 v0.4 - ei vielä julkaistu
     Käyttäjän muuttujien + funktioiden varastointi tiedostoon
-v1.0 - ei vielä julkaistu
+v1.0 - ei vielä julkaistu - tuskin julkaistaankaan
     "Lazy evaluation"
 
 Käytetty aika
 =============
+Aikaa käytetty yhteensä: 75.5h
 
   Pvm  | Aika
 -------------
@@ -94,3 +96,6 @@ Käytetty aika
  30.11 | 2h
   2.12 | 1h
   3.12 | 2h
+  6.12 | 3h
+ 12.12 | 2h
+ 13.12 | 2h

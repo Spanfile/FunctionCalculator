@@ -50,7 +50,7 @@ enum CALCERR init_interpreter(void)
 
     enum CALCERR error = CALCERR_NONE;
     if ((error = load_ans()) != CALCERR_NONE) {
-        printf("ans loading failed (%s)\n", CALCERR_STRING[error]);
+        printf("no previous ans found (%s)\n", CALCERR_STRING[error]);
     }
 
     names_ht = ht_create(128);
@@ -134,6 +134,23 @@ enum CALCERR save_uservalues(void)
     }
 
     return CALCERR_NONE;
+}
+
+void clear_uservalues(void)
+{
+    if (uservalues_ll == NULL) {
+        return;
+    }
+
+    struct LINKED_LIST_NODE* node = uservalues_ll;
+
+    do
+    {
+        ht_remove(names_ht, node->key, NULL);
+    } while ((node = node->next) != NULL);
+
+    ll_free(uservalues_ll);
+    uservalues_ll = NULL;
 }
 
 enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
@@ -360,7 +377,7 @@ enum CALCERR get_ans(int index, double* out)
     return CALCERR_NONE;
 }
 
-void print_ans()
+void print_ans(void)
 {
     for (size_t i = 0; i < ans_count; i++) {
         printf("%f", ans_array[i]);
@@ -373,7 +390,7 @@ void print_ans()
     printf("\n");
 }
 
-enum CALCERR save_ans()
+enum CALCERR save_ans(void)
 {
     FILE* fp = NULL;
 
@@ -392,7 +409,7 @@ enum CALCERR save_ans()
     return CALCERR_NONE;
 }
 
-enum CALCERR load_ans()
+enum CALCERR load_ans(void)
 {
     FILE* fp = NULL;
 
@@ -410,6 +427,12 @@ enum CALCERR load_ans()
     fclose(fp);
 
     return CALCERR_NONE;
+}
+
+void clear_ans(void)
+{
+    memset(ans_array, 0, ans_len * sizeof(double));
+    ans_count = 0;
 }
 
 void free_func_void(void* func_void)

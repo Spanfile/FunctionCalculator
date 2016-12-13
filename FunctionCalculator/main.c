@@ -55,7 +55,9 @@ int main(void)
         // replace the newline at the end with a null terminating byte
         read_buffer[--read_len] = '\0';
 
+#if _DEBUG
         print_string(read_buffer, read_len);
+#endif
 
         // parse commands
         if (read_buffer[0] == ':' && read_len > 1) {
@@ -79,6 +81,11 @@ int main(void)
 
             case COMMAND_ANS:
                 print_ans();
+                continue;
+
+            case COMMAND_CLEAR:
+                clear_uservalues();
+                clear_ans();
                 continue;
             }
         }
@@ -104,7 +111,9 @@ int main(void)
         }
 
         if (root_elem != NULL) {
+#if _DEBUG
             print_elem(root_elem, 0);
+#endif
             free_elem(root_elem);
             root_elem = NULL;
         }

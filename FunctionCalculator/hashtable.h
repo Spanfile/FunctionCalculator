@@ -27,4 +27,5 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr,
 int ht_set(struct HASHTABLE* ht, char* key, size_t key_len, void* value_ptr,
            void (*free_entry)(void*), enum HASHTABLE_FREE_VALUE free_value);
 int ht_get(struct HASHTABLE* ht, char* key, void** out);
+int ht_remove(struct HASHTABLE* ht, char* key, void (*free_entry)(void*));
 void ht_free(struct HASHTABLE* ht, void (*free_entry)(void*));
