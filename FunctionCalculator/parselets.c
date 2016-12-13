@@ -143,8 +143,17 @@ enum CALCERR parse_assignment(struct TOKEN* token, struct TREE_ELEMENT* left,
         (*elem_out)->args =
             malloc(left->args_len * sizeof(struct TREE_ELEMENT*));
 
+        if ((*elem_out)->args == NULL) {
+            return CALCERR_MALLOC_FAILED;
+        }
+
         for (size_t i = 0; i < left->args_len; i++) {
             (*elem_out)->args[i] = malloc(sizeof(struct TREE_ELEMENT));
+
+            if ((*elem_out)->args[i] == NULL) {
+                return CALCERR_MALLOC_FAILED;
+            }
+
             copy_elem((*elem_out)->args[i], left->args[i]);
         }
     }
@@ -166,6 +175,11 @@ enum CALCERR parse_list(struct PARSER_CONTAINER* container,
 
     size_t elem_array_size = 4;
     *elems = malloc(elem_array_size * sizeof(struct TREE_ELEMENT*));
+
+    if (*elems == NULL) {
+        return CALCERR_MALLOC_FAILED;
+    }
+
     *elem_count = 0;
 
     while (1) {

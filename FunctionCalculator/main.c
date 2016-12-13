@@ -2,7 +2,6 @@
 
 void print_elem(struct TREE_ELEMENT*, int);
 void print_string(const char*, const size_t);
-void print_error(enum CALCERR, int);
 
 int main(void)
 {
@@ -36,6 +35,12 @@ int main(void)
         read_buffer_size = 16;
         read_len = 0;
         read_buffer = malloc(read_buffer_size);
+
+        if (read_buffer == NULL) {
+            printf("error allocating read buffer\n");
+            return 1;
+        }
+
         token_count = 0;
         index = 0;
 

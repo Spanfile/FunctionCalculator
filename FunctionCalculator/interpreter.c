@@ -250,6 +250,11 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
         }
 
         double** args = malloc(elem->args_len * sizeof(double*));
+
+        if (args == NULL) {
+            return CALCERR_MALLOC_FAILED;
+        }
+
         for (size_t i = 0; i < elem->args_len; i++) {
             if ((error = evaluate_element(elem->args[i], extra_names)) !=
                 CALCERR_NONE) {
@@ -265,6 +270,11 @@ enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
             }
 
             args[i] = malloc(sizeof(double));
+
+            if (args[i] == NULL) {
+                return CALCERR_MALLOC_FAILED;
+            }
+
             *args[i] = *elem->args[i]->number_value;
         }
 
@@ -421,6 +431,11 @@ enum CALCERR load_ans(void)
     fread(&ans_len, sizeof(ans_len), 1, fp);
     fread(&ans_count, sizeof(ans_count), 1, fp);
     ans_array = malloc(ans_len * sizeof(double));
+
+    if (ans_array == NULL) {
+        return CALCERR_MALLOC_FAILED;
+    }
+
     fread(ans_array, sizeof(double), ans_count, fp);
 
     fclose(fp);

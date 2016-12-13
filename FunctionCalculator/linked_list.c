@@ -5,8 +5,17 @@ struct LINKED_LIST_NODE* ll_newnode(char* key, size_t key_len, void* value,
 {
     struct LINKED_LIST_NODE* node = malloc(sizeof(struct LINKED_LIST_NODE));
 
+    if (node == NULL) {
+        return NULL;
+    }
+
     node->key_len = key_len;
     node->key = malloc((key_len + 1) * sizeof(char));
+
+    if (node->key == NULL) {
+        return NULL;
+    }
+
     strncpy_s(node->key, (key_len + 1) * sizeof(char), key, key_len * sizeof(char));
 
     node->value_ptr = value;
@@ -138,6 +147,11 @@ struct LINKED_LIST_NODE* ll_fromfile(char* file, void* (*custom_read)(FILE* fp))
     for (int i = 0; i < depth; i++) {
         fread(&key_len, sizeof(key_len), 1, fp);
         key = malloc(key_len);
+
+        if (key == NULL) {
+            return NULL;
+        }
+
         fread(key, key_len, 1, fp);
 
         if (custom_read != NULL) {
@@ -145,6 +159,11 @@ struct LINKED_LIST_NODE* ll_fromfile(char* file, void* (*custom_read)(FILE* fp))
         } else {
             fread(&value_ptr_len, sizeof(value_ptr_len), 1, fp);
             value_ptr = malloc(value_ptr_len);
+
+            if (value_ptr == NULL) {
+                return NULL;
+            }
+
             fread(value_ptr, value_ptr_len, 1, fp);
         }
 

@@ -4,6 +4,10 @@ struct FUNC* create_func()
 {
     struct FUNC* func = malloc(sizeof(struct FUNC));
 
+    if (func == NULL) {
+        return NULL;
+    }
+
     func->arg_names = NULL;
     func->arg_count = 0;
     func->func_type = FUNC_TYPE_EXTERNAL;
@@ -17,6 +21,11 @@ struct FUNC* create_func()
 struct FUNC* create_ext_func_one_arg(/*char* name,*/ double (*ext_func)(double))
 {
     struct FUNC* func = create_func();
+
+    if (func == NULL) {
+        return NULL;
+    }
+
     // func->name = name;
     func->func_type = FUNC_TYPE_EXTERNAL;
     func->arg_count = 1;
@@ -29,6 +38,11 @@ struct FUNC* create_ext_func_two_arg(/*char* name,*/
                                      double (*ext_func)(double, double))
 {
     struct FUNC* func = create_func();
+
+    if (func == NULL) {
+        return NULL;
+    }
+
     // func->name = name;
     func->func_type = FUNC_TYPE_EXTERNAL;
     func->arg_count = 2;
@@ -40,15 +54,35 @@ struct FUNC* create_ext_func_two_arg(/*char* name,*/
 struct FUNC* create_intr_func(struct TREE_ELEMENT* elem)
 {
     struct FUNC* func = malloc(sizeof(struct FUNC));
+
+    if (func == NULL) {
+        return NULL;
+    }
+
     func->func_type = FUNC_TYPE_INTERNAL;
     func->arg_count = elem->args_len;
 
     func->elem = malloc(sizeof(struct TREE_ELEMENT));
+
+    if (func->elem == NULL) {
+        return NULL;
+    }
+
     copy_elem(func->elem, elem->child1);
 
     func->arg_names = malloc(func->arg_count * sizeof(char*));
+
+    if (func->arg_names == NULL) {
+        return NULL;
+    }
+
     for (size_t i = 0; i < func->arg_count; i++) {
         func->arg_names[i] = malloc((elem->args[i]->name_value_len + 1) * sizeof(char));
+
+        if (func->arg_names[i] == NULL) {
+            return NULL;
+        }
+
         strncpy_s(func->arg_names[i], (elem->args[i]->name_value_len + 1) * sizeof(char), elem->args[i]->name_value,
                 elem->args[i]->name_value_len * sizeof(char));
     }
@@ -90,6 +124,11 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
         elements. meaning the same element cannot be evaluated twice if it has a
         name element anywhere in it */
         struct TREE_ELEMENT* elem_clone = malloc(sizeof(struct TREE_ELEMENT));
+
+        if (elem_clone == NULL) {
+            return CALCERR_MALLOC_FAILED;
+        }
+
         copy_elem(elem_clone, func->elem);
 
         error = evaluate_element(elem_clone, args_ht);

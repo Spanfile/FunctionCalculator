@@ -5,13 +5,14 @@ struct HASHTABLE* ht_create(size_t size)
     struct HASHTABLE* ht = NULL;
 
     ht = malloc(sizeof(struct HASHTABLE));
+
     if (ht == NULL) {
         return NULL;
     }
 
     ht->size = size;
-
     ht->buckets = malloc(sizeof(struct HASHTABLE_ENTRY*) * ht->size);
+
     if (ht->buckets == NULL) {
         return NULL;
     }
@@ -48,6 +49,11 @@ struct HASHTABLE_ENTRY* ht_newentry(char* key, size_t key_len, void* value_ptr,
     }
 
     entry->key = malloc((key_len + 1) * sizeof(char));
+
+    if (entry->key == NULL) {
+        return NULL;
+    }
+
     strncpy_s(entry->key, (key_len + 1) * sizeof(char), key, key_len * sizeof(char));
 
     entry->value_ptr = value_ptr;

@@ -1,2 +1,1 @@
-- Check all mallocs for NULL?
-- More commands for shit like answers and such
+- Check all mallocs for NULL

@@ -8,6 +8,11 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
 {
     size_t tokens_size = 8;
     *tokens = malloc(tokens_size * sizeof(struct TOKEN*));
+
+    if (*tokens == NULL) {
+        return CALCERR_MALLOC_FAILED;
+    }
+
     (*token_count) = 0;
 
     size_t i = 0;
@@ -29,6 +34,11 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
         }
 
         (*tokens)[*token_count] = malloc(sizeof(struct TOKEN));
+
+        if ((*tokens)[*token_count] == NULL) {
+            return CALCERR_MALLOC_FAILED;
+        }
+
         struct TOKEN* token_ptr = (*tokens)[*token_count];
         *token_count += 1;
         // printf("allocate %lu @ %p\n", sizeof(*token_ptr), token_ptr);
@@ -110,6 +120,11 @@ enum CALCERR tokenise(char* input, size_t input_len, size_t* token_count,
 
         token_ptr->value_length = sub_len;
         token_ptr->value = malloc((sub_len + 1) * sizeof(char));
+
+        if (token_ptr->value == NULL) {
+            return CALCERR_MALLOC_FAILED;
+        }
+
         strncpy_s(token_ptr->value, (sub_len + 1) * sizeof(char), &input[read_start], sub_len * sizeof(char));
 
         // printf("%i @ %i,%i: %s\n", token_ptr->type, i, (int)*token_count,

@@ -11,7 +11,7 @@ puuhun.
 Abstrakti toiminta
 ====================================================
 Laskin toimii komentorivillä. Käyttäjä syöttää laskun, jonka laskin kääntää
-syntaksipuuksi, joka syötetään tulkkiin, joka laskee laskunlopullisen tuloksen.
+syntaksipuuksi, joka syötetään tulkkiin, joka laskee lopullisen tuloksen.
 
 Kuvattu toiminta:
 Lasku -> Jäsentäjä -> Kääntäjä -> Tulkitsija -> Vastaus
@@ -24,9 +24,16 @@ Tuetut operaatiot:
 - Jakojäännös
 - Potenssi
 
+Tuetut toiminnot:
+- Funktiot
+- Vakioarvot
+- Käyttäjän funktiot
+- Käyttäjän vakioarvot
+- Aikaisemmat tulokset
+
 Toiminnat priorisoituna
 =======================
-Kohdeversio | Toiminto | Toteutusprioriteetti
+Kohdeversio          Toiminto | Toteutusprioriteetti
 
 v0.1               Laskeminen | toteutetaan
             Laskujen tulosten |

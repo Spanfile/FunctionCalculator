@@ -71,7 +71,7 @@ struct TREE_ELEMENT* create_function_element(char* value, size_t value_len);
 struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
                                                enum ASSIGNMENT_TYPE assign_type);
 
-void copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src);
+int copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src);
 void free_elem(struct TREE_ELEMENT* elem);
 
 #endif
