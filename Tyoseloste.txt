@@ -8,8 +8,10 @@ Projektin tavoite on luoda täydellinen, mahdollisesti käyttäjän laajennetta-
 vavissa oleva funktiolaskin, jonka toiminta perustuu abstraktiin syntaksi-
 puuhun.
 
+Kieli: C
+
 Abstrakti toiminta
-====================================================
+==================
 Laskin toimii komentorivillä. Käyttäjä syöttää laskun, jonka laskin kääntää
 syntaksipuuksi, joka syötetään tulkkiin, joka laskee lopullisen tuloksen.
 
@@ -26,9 +28,9 @@ Tuetut operaatiot:
 
 Tuetut toiminnot:
 - Funktiot
-- Vakioarvot
+- Vakiomuuttujat
 - Käyttäjän funktiot
-- Käyttäjän vakioarvot
+- Käyttäjän vakiomuuttujat
 - Aikaisemmat tulokset
 
 Toiminnat priorisoituna
@@ -58,14 +60,12 @@ v0.2
     Vakiomuuttujat, vakiofunktiot, edelliset tulokset
 v0.3
     Käyttäjän muuttujat + funktiot
-v0.4 - ei vielä julkaistu
+v0.4
     Käyttäjän muuttujien + funktioiden varastointi tiedostoon
-v1.0 - ei vielä julkaistu - tuskin julkaistaankaan
-    "Lazy evaluation"
 
 Käytetty aika
 =============
-Aikaa käytetty yhteensä: 75.5h
+Aikaa käytetty yhteensä 79.5h
 
   Pvm  | Aika
 -------------
@@ -105,4 +105,4 @@ Aikaa käytetty yhteensä: 75.5h
   3.12 | 2h
   6.12 | 3h
  12.12 | 2h
- 13.12 | 2h
+ 13.12 | 4h

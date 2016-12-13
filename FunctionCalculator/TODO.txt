@@ -1,1 +1,1 @@
-- Check all mallocs for NULL
+- Clear user functions with :c

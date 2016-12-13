@@ -1,5 +1,5 @@
-Toiminta vaiheittain
---------------------
+Esimerkkitoiminta vaiheittain
+=============================
 Käyttäjä syöttää esimerkkilaskun:
 (2 + 1 + 2) * (5 - 12 / 2) + 6
 
@@ -32,14 +32,14 @@ Indeksi |     Tyyppi     |  Arvo
    13   | Aritmeettinen  |   +
    14   |     Numero     |   6
 
-Tunnetut merkit:
+Matemaattiset merkit:
 - Numero
-- Aritmeettinen (+ - * / ^ %)
+- Aritmeettinen (`+ - * / ^ %`)
 - Sulku auki
 - Sulku kiinni
 - Nimi
 
-Seuraavia merkkejä käytetään funktioissa:
+Funktioissa käytetyt merkit:
 - Pilkku
 - Yhtäkuin
    
@@ -72,3 +72,83 @@ Yksittäisen elementin arvo lasketaan suorittamalla elementin operaatio sen
 kahden lapsielementtien arvoilla. Koska elementin arvon laskeminen aiheut-
 taa sen lapsielementin arvon laskemisen, koko puu voidaan käydä rekursiivisesti
 läpi.
+
+Lisätoiminta
+============
+Edelliset vastaukset
+--------------------
+Laskin tallentaa laskujen vastaukset, jotta niitä voidaan käyttää myöhemmissä
+laskuissa. Edellisiin vastauksiin pääsee käsiksi kahdella tavalla:
+
+1. Käyttämällä vakiomuuttujaa `ans`
+Vakiomuuttuja `ans` sisältää aina edellisen laskun tuloksen.
+
+2. Käyttämällä vakiofunktiota `ans(i)`
+Funktiota kutsumalla voidaan saada mikä tahansa aikaisempi laskun vastaus sen
+indeksin perusteella. Indeksissä 0 (ans(0)) on edellinen lasku, indeksissä 1
+(ans(1)) sitä edellinen, ja niin edelleen.
+
+Muuttujat
+---------
+Laskin sisältää ennaltamääriteltyjä muuttujia.
+
+ Muuttuja |          Arvo          
+-----------------------------------
+    Pi    | 3.1415928538.. .       
+    e     | 2.71828182...          
+   ans    | Edellisen laskun tulos 
+
+Käyttäjä voi määritellä omia muuttujia.
+<nimi> = <arvo>
+
+Esimerkiksi:
+a = 1
+
+Tämän jälkeen muuttujaa 'a' voidaan käyttää laskuissa. Käyttäjän määrittelemät
+muttujat tallennetaan tiedostoon (uservalues.bin), joten ne säilyvät vaikka
+laskin käynnistettäisiinkin uudelleen.
+
+Käyttäjän muuttujissa tulee huomata, että niiden arvo lasketaan sekä
+asetetaan määrittelyhetkellä, ja niitä ei lasketa uudelleen muuttujia
+käytettäessä.
+
+Funktiot
+--------
+Laskin sisältää ennaltamääriteltyjä funktioita.
+
+Muoto: {lisä}nimi{lisä}(parametrit)
+
+{a}sin{h}(x)
+{a}cos{h}(x)
+{a}tan{h}(x)
+log{10}(x)
+sqrt(x)
+floor(x)
+ceil(x)
+atan2(y, x)
+ans(i)
+
+Käyttäjä voi määritellä omia funktioita.
+<nimi>(<parametrit>) = <lasku>
+
+Esimerkiksi:
+summa(a, b) = a + b
+
+Tämän jälkeen funktiota 'summa' voidaan käyttää laskuissa. Käyttäjän
+määrittelemiä funktioita ei tallenneta tiedostoon.
+
+Käyttäjän funktioissa tulee huomata, että niiden parametrit ovat ensisijaisia
+muihin muuttujiin.
+
+Komennot
+--------
+Laskin sisältää ennaltamääriteltyjä komentoja. Niitä käytetään aloittamalla
+syöte kaksoispisteellä.
+
+ Komento | Toiminto
+-------------------
+    :h   | Tulostaa aputekstin komennoista
+    :q   | Tallentaa tarvittavat asiat ja sulkee laskimen
+    :a   | Tulostaa edelliset vastaukset
+    :c   | Poistaa käyttäjän määrittelemät muuttujat ja funktiot sekä edelliset
+         | vastaukset
