@@ -130,6 +130,7 @@ struct TREE_ELEMENT* create_assignment_element(char* value, size_t value_len,
     return elem;
 }
 
+/* returns 1 when successful, 0 if a malloc failed */
 int copy_elem(struct TREE_ELEMENT* dst, struct TREE_ELEMENT* src)
 {
     /* assume dst has been malloc'd */

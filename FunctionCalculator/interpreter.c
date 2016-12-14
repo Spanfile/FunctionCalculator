@@ -148,30 +148,34 @@ void clear_uservalues(void)
 
     struct LINKED_LIST_NODE* node = uservalues_ll;
 
-    do
-    {
-        ht_remove(names_ht, node->key, NULL);
-    } while ((node = node->next) != NULL);
+    if (node != NULL) {
+        do
+        {
+            ht_remove(names_ht, node->key, NULL);
+        } while ((node = node->next) != NULL);
 
-    ll_free(uservalues_ll);
-    uservalues_ll = NULL;
+        ll_free(uservalues_ll);
+        uservalues_ll = NULL;
+    }
     
     node = userfunctions_ll;
 
-    do
-    {
-        ht_remove(functions_ht, node->key, free_func_void);
-    } while ((node = node->next) != NULL);
+    if (node != NULL) {
+        do
+        {
+            ht_remove(functions_ht, node->key, free_func_void);
+        } while ((node = node->next) != NULL);
 
-    ll_free(userfunctions_ll);
-    userfunctions_ll = NULL;
+        ll_free(userfunctions_ll);
+        userfunctions_ll = NULL;
+    }
 }
 
 enum CALCERR evaluate_element(struct TREE_ELEMENT* elem,
                               struct HASHTABLE* extra_names)
 {
     /* this whole method is basically for settings an element's number_value
-     * properly */
+       properly */
 
     enum CALCERR error = CALCERR_NONE;
     struct FUNC* func = NULL;
@@ -410,6 +414,8 @@ enum CALCERR add_ans(double ans)
     }
 
     if (ans_count > 0) {
+        /* move elements on the array to the right. the array is guaranteed
+           to have enough space for the move. */
         memmove(ans_array + 1, ans_array, ans_count * sizeof(double));
     }
 
@@ -454,6 +460,7 @@ enum CALCERR save_ans(void)
 
     fwrite(&ans_len, sizeof(ans_len), 1, fp);
     fwrite(&ans_count, sizeof(ans_count), 1, fp);
+    /* only store the recorded answers, not the entire array */
     fwrite(ans_array, sizeof(double), ans_count, fp);
 
     fclose(fp);

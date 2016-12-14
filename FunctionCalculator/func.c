@@ -122,14 +122,17 @@ enum CALCERR call_func(struct FUNC* func, double** args, size_t args_count,
         clone the func's elem and evaluate that.
         this is done because the interpreter is not "stateless" when it comes to
         elements. meaning the same element cannot be evaluated twice if it has a
-        name element anywhere in it */
+        name element anywhere in it. it could be fixed but it requires
+        rewriting most of the interpreter logic */
         struct TREE_ELEMENT* elem_clone = malloc(sizeof(struct TREE_ELEMENT));
 
         if (elem_clone == NULL) {
             return CALCERR_MALLOC_FAILED;
         }
 
-        copy_elem(elem_clone, func->elem);
+        if (!copy_elem(elem_clone, func->elem)) {
+            return CALCERR_MALLOC_FAILED;
+        }
 
         error = evaluate_element(elem_clone, args_ht);
         ht_free(args_ht, NULL);
